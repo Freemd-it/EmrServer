@@ -29,7 +29,7 @@ UserModel.Insert = function(callback){
     .then(result => {
         callback(result);
     })
-    .on("error" => {
+    .error(result => {
         console.log("error");
         console.log(error);
         callback(error);

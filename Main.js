@@ -18,8 +18,6 @@ var config = require('./Common/Config.js');
 var sessionService = require('./Service/SessionService.js');
 var redisService = require('./Service/RedisService.js');
 var routesService = require('./Service/RoutesService.js');
-var sequelizeService = require('./Service/SequelizeService.js');
-//var dbService = require('./Service/DBService.js');
 
 global.app = new express();
 
@@ -123,8 +121,6 @@ Cluster.ProcessRun = function(workerId){
     redisService.Init(workerId);
     sessionService.Init();
     routesService.Init();
-    sequelizeService.Init();
-    //dbService.Init();
 
     http.createServer(app).listen(app.get('port'), function () {
         console.log(util.format('## [processRun] [pid:%d] [childNo:%d] Server running at %d ##', process.pid, workerId, config.serverConfig.port));

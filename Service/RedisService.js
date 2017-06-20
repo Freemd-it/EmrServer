@@ -1,6 +1,6 @@
 var ioRedis = require('ioredis');
 var util = require('util');
-var config = require('../common/Config.js');
+var config = require('../Common/Config.js');
 
 var RedisService = function(){};
 

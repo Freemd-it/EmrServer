@@ -3,6 +3,7 @@ var util = require('util');
 
 var config = require('../Common/Config.js');
 var userController = require('../Controller/UserController.js');
+var authController = require('../Controller/AuthController.js');
 
 var csrfProtection = new csurf({ cookie: true });
 
@@ -25,6 +26,7 @@ RoutesService.Init = function(){
     });
 
     app.use('/user', userController);
+    app.use('/auth', authController);
 
     console.log("## setup routes ##");
 }
