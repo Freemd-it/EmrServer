@@ -10,7 +10,7 @@ DBService.Init = function () {
         user: config.storeConfig.mysqlUser,
         password: config.storeConfig.mysqlPassword,
         database: config.storeConfig.mysqlDatabase,
-        connectionLimit: config.storeConfig.connectionLimit,
+        connectionLimit: config.storeConfig.ConnectionLimit,
     });
 
     // 사용 가능한 커넥션이 없을경우

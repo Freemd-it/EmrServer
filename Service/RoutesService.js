@@ -2,8 +2,7 @@ var csurf = require('csurf');
 var util = require('util');
 
 var config = require('../Common/Config.js');
-var kakaoTalkMessageController = require('../Controller/KakaoTalkMessageController.js');
-var iotKakaoTalkMessageController = require('../Controller/IotKakaoTalkMessageController.js');
+var userController = require('../Controller/UserController.js');
 
 var csrfProtection = new csurf({ cookie: true });
 
@@ -19,12 +18,13 @@ RoutesService.Init = function(){
 
     app.use(function log(req, res, next){
 
+        res.header('Access-Control-Allow-Origin', config.serverConfig.accept_domain);
+        res.header('Access-Control-Allow-Methods', 'GET,POST');
         console.log(util.format("## URL : %s / IP : %s ##", req.originalUrl, req.ip));
         next();
     });
 
-    app.use('/kakao', kakaoTalkMessageController);
-    app.use('/iot', iotKakaoTalkMessageController);
+    app.use('/user', userController);
 
     console.log("## setup routes ##");
 }
