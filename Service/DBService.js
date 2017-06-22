@@ -5,6 +5,7 @@ var util = require('util');
 var DBService = function(){};
 
 DBService.Init = function () {
+
     this._pool = mysql.createPool({
         host: config.storeConfig.mysqlHost,
         user: config.storeConfig.mysqlUser,
@@ -22,6 +23,7 @@ DBService.Init = function () {
 };
 
 DBService.Query = function (query, value, succEvent) {
+  
     this._pool.getConnection(function (err, connection) {
         connection.query(query, value, function (err, rows) {
             if (err) {
