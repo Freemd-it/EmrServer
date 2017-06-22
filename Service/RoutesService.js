@@ -20,7 +20,7 @@ RoutesService.Init = function(){
     app.use(function log(req, res, next){
 
         res.header('Access-Control-Allow-Origin', config.serverConfig.accept_domain);
-        res.header('Access-Control-Allow-Methods', 'GET,POST');
+        res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         console.log(util.format("## URL : %s / IP : %s ##", req.originalUrl, req.ip));
         next();
     });
