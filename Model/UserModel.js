@@ -16,7 +16,7 @@ UserModel.Insert = function(callback){
         callback(result);
     })
     .catch(error => {
-        if (UserModel.DBErrorCheck(error, callback)) UserModel.Insert(callback);
+        callback(error);
     });
 }
 
@@ -34,7 +34,7 @@ UserModel.List = function(callback){
         callback(result);
     })
     .catch(error => {
-        if (UserModel.DBErrorCheck(error, callback)) UserModel.List(callback);
+        callback(error);
     });
 }
 
@@ -67,16 +67,11 @@ UserModel.Delete = function(callback){
     });
 }
 
-UserModel.DBErrorCheck = function(error, callback){
+UserModel.FindAndCreate = function(data, callback){
 
-    if(error.original.errno === 1146){
-        user.sync();
-        return true;
-    }
-    else
-    {
-        callback(error);
-    }
+    user.findAll({
+
+    })
 }
 
 module.exports = UserModel;

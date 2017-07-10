@@ -1,5 +1,5 @@
 var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth2').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 var config = require('../Common/Config.js');
 
@@ -10,40 +10,28 @@ PassportService.Init = function(app){
     passport.use(new GoogleStrategy({
           clientID : config.googleConfig.google_client_id,
           clientSecret : config.googleConfig.google_client_password,
-          callbackURL : "http://localhost/auth/google/callback",
-          passReqToCallback : true
+          callbackURL : "http://localhost/auth/google/callback"
         },
         function(accessToken, refreshToken, profile, done) {
 
-            return done;
+            /* TODO 1. User.findAndCreate */
+            /* TODO 2. Session Managing */
+            console.log(profile._json);
+            return done(null, profile);
+
         }
     ));
-
-    passport.serializeUser(function(user, done) {
-
-        done(null, user);
-    });
-
-    passport.deserializeUser(function(obj, done) {
-
-        done(null, obj);
-    });
 }
 
-PassportService.ExtractProfile = function(profile){
+passport.serializeUser(function(user, done) {
 
-    let imageUrl = '';
+    done(null, user);
+});
 
-    if(profile.photos && profile.photos.length){
-        imageUrl = profile.photos[0].value;
-    }
-    return{
-        id : profile.id,
-        displayName : profile.displayName,
-        image : imageUrl
-    }
-}
+passport.deserializeUser(function(obj, done) {
+
+    done(null, obj);
+});
 
 PassportService.passport = passport;
-
 module.exports = PassportService;

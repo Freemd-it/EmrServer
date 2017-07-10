@@ -1,9 +1,9 @@
 var sequelize = require('sequelize');
 var dbService = require('../Service/SequelizeService.js');
 
-const Chart = dbService.define('CHART', {
+const Chart = dbService.define('chart', {
 
-    chartNo : { type : sequelize.String(12), allowNull : false}
+    chartNo : { type : sequelize.STRING(12), allowNull : false}
 });
 
-module.exports = User;
+module.exports = Chart;
