@@ -16,9 +16,10 @@ var process = require('process');
 
 var config = require('./Common/Config.js');
 var sessionService = require('./Service/SessionService.js');
+var passportService = require('./Service/PassportService.js');
 var redisService = require('./Service/RedisService.js');
 var routesService = require('./Service/RoutesService.js');
-var dbService = require('./Service/DBService.js');
+var entityService = require('./Service/EntityService.js');
 
 global.app = new express();
 
@@ -31,10 +32,13 @@ Cluster.Master = function(){
 
     console.log("## Master Cluster Start ##");
 
-    for(var i = 0; i < cpuNo; i++){
+    // for(var i = 0; i < cpuNo; i++){
+    for(var i = 0; i < 1; i++){
 
         var worker = cluster.fork();
     }
+
+    entityService.Init(); // 테이블 생성
 
     cluster.on("disconnect", function(worker){
 
@@ -113,6 +117,8 @@ Cluster.ProcessRun = function(workerId){
     app.set('port', process.env.PORT || config.serverConfig.port);
 
     app.use(compression());
+    app.use(passportService.passport.initialize());
+    app.use(passportService.passport.session());
     app.use(cookieParser(config.serverConfig.cookie_secret));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
@@ -122,7 +128,7 @@ Cluster.ProcessRun = function(workerId){
     redisService.Init(workerId);
     sessionService.Init();
     routesService.Init();
-    dbService.Init();
+    passportService.Init();
 
     http.createServer(app).listen(app.get('port'), function () {
         console.log(util.format('## [processRun] [pid:%d] [childNo:%d] Server running at %d ##', process.pid, workerId, config.serverConfig.port));
