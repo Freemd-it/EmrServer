@@ -26,63 +26,13 @@ router.get('/login', passportService.passport.authenticate('google', { scope:
 
 
 router.get('/google/callback', passportService.passport.authenticate('google'), function(req, res){
+    if (req.user._json.domain !== 'freemed.or.kr') {
+        req.logout();
+        return res.redirect('http://localhost:8080/views/login.html?err=account');
+    }
 
-    /* 여기서 세션 생성하고 ㅇ */
-    res.redirect('http://localhost:3000');
+    res.redirect('http://localhost:8080');
 });
-
-// router.get('/login', passport.authenticate('google',
-//     { scope:
-//       [ 'https://www.googleapis.com/auth/plus.login',
-//       , 'https://www.googleapis.com/auth/plus.profile.emails.read' ]
-//     }
-// ));
-//
-// router.get('/google/callback', passportService.passport.authenticate( 'google',
-//     { successRedirect: '/auth/google/success',
-//       failureRedirect: '/auth/google/failure'},
-//     function(req, res, next){
-//
-//         console.log('auth google callback');
-//         console.log(res);
-//         console.log(typeof(res));
-//
-//         //console.log(next);
-//         //res.status(200).json({"success":"success"});
-//     }
-// ));
-
-
-router.get('/google/success', function(req, res){
-
-    res.status(200).json({"success":"success"});
-});
-
-router.get('/google/failure', function(req, res){
-
-    res.status(200).json({"failure":"failure"});
-});
-
-module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // router.get('/login', function(req, res){
 //
