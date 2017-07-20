@@ -2,3 +2,4 @@
 node_modules/*
 dist/*
 Config/*
+npm-debug.log

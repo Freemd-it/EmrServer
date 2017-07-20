@@ -10,7 +10,7 @@ PassportService.Init = function(app){
     passport.use(new GoogleStrategy({
           clientID : config.googleConfig.google_client_id,
           clientSecret : config.googleConfig.google_client_password,
-          callbackURL : "http://localhost/auth/google/callback"
+          callbackURL : "http://localhost:3000/auth/google/callback"
         },
         function(accessToken, refreshToken, profile, done) {
 
@@ -21,7 +21,7 @@ PassportService.Init = function(app){
 
         }
     ));
-}
+};
 
 passport.serializeUser(function(user, done) {
 
