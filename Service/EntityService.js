@@ -1,6 +1,7 @@
 var user = require('../Entity/User');
 var chart = require('../Entity/Chart');
-
+const sequelize = require('./SequelizeService');
+const patients = require('../Entity/Patient');
 var EntityService = function(){};
 
 EntityService.Init = function(){
@@ -10,6 +11,7 @@ EntityService.Init = function(){
     user.sync().then(() => {
 
         chart.sync();
+        patients.sync();
     });
 }
 
