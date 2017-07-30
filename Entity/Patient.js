@@ -10,9 +10,12 @@ const Patient = dbService.define('patients', {
     gender : { type : sequelize.ENUM('male', 'female'), allowNull : false },
     birth : { type : sequelize.DATE, allowNull : false },
     height : { type : sequelize.INTEGER, allowNull : false },
-    weight : { type : sequelize.INTEGER, allowNull : false}/*,
-    smoke : { type : sequelize.STRING, allowNull : false },
-    alcohol : { type : sequelize.STRING, allowNull : false }*/
+    weight : { type : sequelize.INTEGER, allowNull : false },
+    bmi : { type : sequelize.DOUBLE, allowNull : false },
+    smokingPeriod : { type : sequelize.INTEGER, allowNull : false },
+    drinkingPeriod : { type : sequelize.INTEGER, allowNull : false },
+    smokingAmount : { type : sequelize.INTEGER, allowNull : false },
+    drinkingAmount : { type : sequelize.INTEGER, allowNull : false }
 });
 
 module.exports = Patient;

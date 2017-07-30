@@ -19,7 +19,7 @@ ReceiptModel.FindAll = function(name, callback){
         where: {
             name,
         },
-        attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt','gender','drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod']
+        attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt', 'gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod']
     })
         .then(result => {
             callback(result);
@@ -34,7 +34,7 @@ ReceiptModel.Find = function(id, callback){
         where : {
             id
         },
-        attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt','gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod']
+        attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt', 'gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod']
     })
         .then(result => {
             callback(result);
