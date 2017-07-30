@@ -14,9 +14,12 @@ var ReceiptModel = function(data){
 
 
 /* Read */
-ReceiptModel.FindAll = function(callback){
+ReceiptModel.FindAll = function(name, callback){
     patient.findAll({
-        attributes: ['id', 'name', 'birth']
+        where: {
+            name,
+        },
+        attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt','gender','drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod']
     })
         .then(result => {
             callback(result);
@@ -29,8 +32,9 @@ ReceiptModel.FindAll = function(callback){
 ReceiptModel.Find = function(id, callback){
     patient.find({
         where : {
-            id : id
-        }
+            id
+        },
+        attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt','gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod']
     })
         .then(result => {
             callback(result);

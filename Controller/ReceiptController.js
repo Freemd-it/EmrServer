@@ -18,10 +18,8 @@ router.use(function log(req, res, next) {
 });
 
 router.get('/patients',function (req, res) {
-
-    console.log(req.query);
-    receiptModel.FindAll(result => {
-        //console.log(result);
+    const name = req.query.name;
+    receiptModel.FindAll(name, result => {
         res.send(result);
     });
 });
@@ -35,7 +33,6 @@ router.get('/patient', function (req, res){
 
 
 router.post('/patient', function (req, res){
-    console.log(req.body);
     receiptModel.Insert (req.body, result => {
         res.send(result);
     })
