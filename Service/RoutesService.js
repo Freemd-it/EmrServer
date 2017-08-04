@@ -26,6 +26,16 @@ RoutesService.Init = function(){
         next();
     });
 
+    /* 테스트 화면 출력용 */
+    app.get('/', (req, res, callback) => {
+
+        var height = "175";
+        var weight = "60";
+        var result = (Number(weight) / (Number(height / 100) * Number(height / 100))).toFixed(1);
+        result = new Date();
+
+        res.status(200).json({ "result" : result });
+    });
     app.use('/user', userController);
     app.use('/auth', authController);
     app.use('/receipt', receiptController);
