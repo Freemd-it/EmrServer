@@ -46,11 +46,18 @@ ReceiptModel.Find = function(id, callback){
 
 ReceiptModel.Insert = function (data, callback){
     patient.create({
+        firstVisit : sequelize.fn('NOW'),
         name : data.name,
         gender : data.gender,
+        marital : data.marital,
         birth : data.birth,
         height : data.height,
-        weight : data.weight
+        weight : data.weight,
+        BMI : data.BMI,
+        smokingAmount : data.smokingAmount,
+        smokingPeriod : data.smokingPeriod,
+        drinkingAmount : data.drinkingAmount,
+        drinkingWeekly : data.drinkingWeekly
     })
         .then(result => {
             callback(result);
@@ -59,6 +66,5 @@ ReceiptModel.Insert = function (data, callback){
             callback(error);
         });
 }
-
 
 module.exports = ReceiptModel;
