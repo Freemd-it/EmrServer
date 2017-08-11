@@ -6,6 +6,7 @@
 var sequelize = require('sequelize');
 var dbService = require('../Service/SequelizeService.js');
 var patient = require('../Entity/Patient.js');
+let history = require('../Entity/History');
 
 var ReceiptModel = function(data){
     this.data = data;
@@ -19,7 +20,10 @@ ReceiptModel.FindAll = function(name, callback){
         where: {
             name,
         },
-        attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt', 'gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod']
+        attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt', 'gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod', 'firstVisit'],
+        include: {
+                model: history,
+            }
     })
         .then(result => {
             callback(result);
@@ -34,7 +38,10 @@ ReceiptModel.Find = function(id, callback){
         where : {
             id
         },
-        attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt', 'gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod']
+        attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt', 'gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod', 'firstVisit'],
+        include: {
+            model: history,
+        }
     })
         .then(result => {
             callback(result);
@@ -44,23 +51,78 @@ ReceiptModel.Find = function(id, callback){
         });
 }
 
-ReceiptModel.Insert = function (data, callback){
-    patient.create({
-        firstVisit : sequelize.fn('NOW'),
-        name : data.name,
-        gender : data.gender,
-        marital : data.marital,
-        birth : data.birth,
-        height : data.height,
-        weight : data.weight,
-        BMI : data.BMI,
-        smokingAmount : data.smokingAmount,
-        smokingPeriod : data.smokingPeriod,
-        drinkingAmount : data.drinkingAmount,
-        drinkingWeekly : data.drinkingWeekly
-    })
-        .then(result => {
-            callback(result);
+ReceiptModel.UpdateOrCreate = function (data, callback){
+    const birth = data.birth + 'T00:00:00.000Z';
+
+    patient.find({
+        where : {
+            name: data.name,
+            birth
+        },
+        attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt', 'gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod', 'firstVisit'],
+        include: {
+            model: history,
+        }
+    }).then(result => {
+            if(result) {
+                result.update({
+                    name : data.name,
+                    gender : data.gender,
+                    birth : data.birth,
+                    height : data.height,
+                    weight : data.weight,
+                    BMI : data.BMI,
+                    smokingAmount : data.smokingAmount,
+                    smokingPeriod : data.smokingPeriod,
+                    drinkingAmount : data.drinkingAmount,
+                    drinkingPeriod : data.drinkingPeriod,
+                }, {
+                    include: {
+                        model: history,
+                    }
+            }).then(result => {
+                    result.histories[0].update({
+                        pastHistory : data.pastHistory,
+                        pastHistoryComment : data.pastHistoryComment,
+                        allergy : data.allergy,
+                        allergyComment : data.allergyComment,
+                        pastMedical : data.pastMedical,
+                        pastMedicalTime : data.pastMedicalTime,
+                        pastMedicalArea : data.pastMedicalArea,
+                        pastMedicationPeriod : data.pastMedicationPeriod,
+                        pastMedicationType : data.pastMedicationType,
+                        pastMedication : data.pastMedication,
+                    })
+                })
+            } else {
+                patient.create({
+                    firstVisit : sequelize.fn('NOW'),
+                    name : data.name,
+                    gender : data.gender,
+                    birth : data.birth,
+                    height : data.height,
+                    weight : data.weight,
+                    BMI : data.BMI,
+                    smokingAmount : data.smokingAmount,
+                    smokingPeriod : data.smokingPeriod,
+                    drinkingAmount : data.drinkingAmount,
+                    drinkingPeriod : data.drinkingPeriod,
+                    histories: {
+                        pastHistory : data.pastHistory,
+                        pastHistoryComment : data.pastHistoryComment,
+                        allergy : data.allergy,
+                        allergyComment : data.allergyComment,
+                        pastMedical : data.pastMedical,
+                        pastMedicalTime : data.pastMedicalTime,
+                        pastMedicalArea : data.pastMedicalArea,
+                        pastMedicationPeriod : data.pastMedicationPeriod,
+                        pastMedicationType : data.pastMedicationType,
+                        pastMedication : data.pastMedication,
+                    }
+                }, {
+                    include: [ history ]
+                });
+            }
         })
         .catch(error => {
             callback(error);

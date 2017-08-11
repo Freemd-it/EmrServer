@@ -33,9 +33,7 @@ router.get('/patient', function (req, res){
 
 router.post('/patient', function (req, res){
 
-    req.body.BMI = String((Number(req.body.weight) / (Number(req.body.height / 100) * Number(req.body.height / 100))).toFixed(1));
-
-    receiptModel.Insert (req.body, result => {
+    receiptModel.UpdateOrCreate (req.body, result => {
         res.send(result);
     });
 });

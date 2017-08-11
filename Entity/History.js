@@ -2,8 +2,8 @@
  * Created by donghyun on 2017. 7. 24..
  */
 
- var sequelize = require('sequelize');
- var dbService = require('../Service/SequelizeService.js');
+var sequelize = require('sequelize');
+var dbService = require('../Service/SequelizeService.js');
 
 const History = dbService.define('history', {
 
