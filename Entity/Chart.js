@@ -4,7 +4,7 @@ var dbService = require('../Service/SequelizeService.js');
 const Chart = dbService.define('chart', {
 
     prescription_id	: { type :	sequelize.INTEGER(11), allowNull : true, unique : true },
-    chartNumber	: { type :	sequelize.INTEGER(11), allowNull : false },
+    chartNumber	: { type :	sequelize.INTEGER(12), allowNull : false },
     status : { type :	sequelize.INTEGER(1), allowNull : true },
     heartRate : { type :	sequelize.INTEGER(3), allowNull : true },
     pulseRate : { type :	sequelize.INTEGER(3), allowNull : true },

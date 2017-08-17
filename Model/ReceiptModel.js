@@ -65,6 +65,8 @@ ReceiptModel.UpdateOrCreate = function (data, callback){
         }
     }).then(result => {
             if(result) {
+                const passingResult = result;
+
                 result.update({
                     name : data.name,
                     gender : data.gender,
@@ -92,7 +94,10 @@ ReceiptModel.UpdateOrCreate = function (data, callback){
                         pastMedicationPeriod : data.pastMedicationPeriod,
                         pastMedicationType : data.pastMedicationType,
                         pastMedication : data.pastMedication,
-                    })
+                    }).then(() => {
+                        passingResult['sqlStatus'] = 200;
+                        callback(passingResult);
+                    });
                 })
             } else {
                 patient.create({
@@ -121,7 +126,10 @@ ReceiptModel.UpdateOrCreate = function (data, callback){
                     }
                 }, {
                     include: [ history ]
-                });
+                }).then(result => {
+                    result['sqlStatus'] = 200;
+                    callback(result);
+                })
             }
         })
         .catch(error => {

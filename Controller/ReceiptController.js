@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var sequelize = require('../Service/SequelizeService.js');
 
 var receiptModel = require('../Model/ReceiptModel.js');
+const waitingModel = require('../Model/WaitingModel.js');
+const chartModel = require('../Model/ChartModel.js');
 
 
 var router = express.Router();
@@ -34,7 +36,14 @@ router.get('/patient', function (req, res){
 router.post('/patient', function (req, res){
 
     receiptModel.UpdateOrCreate (req.body, result => {
-        res.send(result);
+        if(result.sqlStatus === 200) {
+
+            chartModel.create(result.dataValues, chartResult => {
+                waitingModel.Insert(chartResult , result => {
+                    res.send(result);
+                });
+            });
+        }
     });
 });
 
