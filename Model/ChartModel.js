@@ -8,8 +8,10 @@ ChartModel.create = function (data, callback) {
     const chartDate = new Date().toISOString().slice(0,10).replace(/-/g,"");
 
     chart.findAll({
-        chartNumber : {
-            $lt : chartDate + '00',
+        where : {
+            chartNumber : {
+                $gt : chartDate + '00',
+            }
         }
     }).then(results => {
         const num = results.length > 8 ? results.length + 1 : '0' + (results.length + 1);
