@@ -6,6 +6,7 @@ var userController = require('../Controller/UserController.js');
 var authController = require('../Controller/AuthController.js');
 var receiptController = require('../Controller/ReceiptController.js');
 const waitingController = require('../Controller/WaitingController.js');
+const chartController = require('../Controller/ChartController.js');
 
 var csrfProtection = new csurf({ cookie: true });
 
@@ -41,6 +42,7 @@ RoutesService.Init = function(){
     app.use('/auth', authController);
     app.use('/receipt', receiptController);
     app.use('/waitingList', waitingController);
+    app.use('/chart', chartController);
 
     console.log("## setup routes ##");
 }

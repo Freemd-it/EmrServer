@@ -32,6 +32,7 @@ EntityService.Init = function(){
     chart.hasMany( complaint, { foreignKey : 'chart_id', onUpdate : 'CASCADE' });
     chart.hasMany( ocs, { foreignKey : 'chart_id', onUpdate : 'CASCADE' });
     chart.hasOne( prescription, { foreignKey : 'chart_id', onUpdate : 'CASCADE' });
+    chart.belongsTo(patient, { foreignKey : 'patient_id'});
     /*
       차트 : CC = 1 : N
       차트 : OCS = 1 : N

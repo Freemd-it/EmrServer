@@ -1,4 +1,5 @@
 const chart = require('../Entity/Chart.js');
+const patient = require('../Entity/Patient.js');
 
 var ChartModel = function (data) {
     this.data = data;
@@ -24,6 +25,20 @@ ChartModel.create = function (data, callback) {
         })
     });
 
+}
+
+ChartModel.getChartByChartNumber = function (data, callback) {
+
+    chart.find({
+        where : {
+            chartNumber : data.chartNumber
+        },
+        include: {
+            model: patient,
+        }
+    }).then(result => {
+            callback(result);
+    })
 }
 
 module.exports = ChartModel;
