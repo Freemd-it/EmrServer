@@ -22,6 +22,18 @@ WaitingModel.FindAll = function(status, callback){
         });
 }
 
+WaitingModel.Update = function (data, callback) {
+
+    waiting.update({
+        status : data.status
+    },{
+        where : {
+            chart_id : data.chart_id
+        }
+    }).then(results => {
+        callback(results);
+    });
+}
 
 /* Create */
 WaitingModel.Insert = function(data, callback){

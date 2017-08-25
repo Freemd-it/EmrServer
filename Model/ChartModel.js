@@ -37,7 +37,27 @@ ChartModel.getChartByChartNumber = function (data, callback) {
             model: patient,
         }
     }).then(result => {
-            callback(result);
+        callback(result);
+    })
+}
+
+ChartModel.updateChartByChartNumber = function (data, callback) {
+
+    chart.update({
+        heartRate : data.heartRate ? data.heartRate : 0,
+        pulseRate : data.pulseRate ? data.pulseRate : 0,
+        bodyTemporature : data.bodyTemporature ? data.bodyTemporature : 0,
+        systoleBloodPressure : data.systoleBloodPressure ? data.systoleBloodPressure : 0,
+        diastoleBloodPressure : data.diastoleBloodPressure ? data.diastoleBloodPressure : 0,
+        bloodGlucose : data.bloodGlucose ? data.bloodGlucose : 0,
+        mealTerm: data.mealTerm ? data.mealTerm : 0,
+    }, {
+        where : {
+                chartNumber : data.chartNumber
+        }
+    }).then(results => {
+
+        callback(results)
     })
 }
 
