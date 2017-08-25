@@ -1,6 +1,8 @@
 const chart = require('../Entity/Chart.js');
 const patient = require('../Entity/Patient.js');
 
+const complaint = require('./ComplaintModel');
+
 var ChartModel = function (data) {
     this.data = data;
 }
@@ -57,7 +59,7 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
         }
     }).then(results => {
 
-        callback(results)
+        complaint.Insert(data, callback)
     })
 }
 
