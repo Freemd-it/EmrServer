@@ -33,4 +33,20 @@ router.post('/update', function (req, res) {
     })
 });
 
+router.get('/pastAll', function (req, res) {
+
+    chartModel.getPastChart(req.query, result => {
+        res.send(result)
+    });
+
+});
+
+router.get('/pastOne', function (req, res) {
+
+    chartModel.getOnePastChart(req.query, result => {
+        res.send(result);
+    });
+
+});
+
 module.exports = router;

@@ -1,5 +1,6 @@
 const chart = require('../Entity/Chart.js');
 const patient = require('../Entity/Patient.js');
+const complaintEntity = require('../Entity/Complaint.js');
 
 const complaint = require('./ComplaintModel');
 
@@ -61,6 +62,48 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
 
         complaint.Insert(data, callback)
     })
+}
+
+ChartModel.getPastChart = function (data, callback) {
+    const chartDate = new Date().toISOString().slice(0,10).replace(/-/g,"");
+
+    chart.find({
+        where : {
+            chartNumber : data.chartId,
+        },
+    }).then(result => {
+        console.log(result.dataValues.patient_id);
+
+        chart.findAll({
+            where : {
+                patient_id : result.dataValues.patient_id,
+                $and: { chartNumber : {
+                    $lt : chartDate + '00',
+                }}
+            },
+            limit : 10,
+            order : [['chartNumber', 'DESC']],
+        }).then(result => {
+            callback(result);
+        });
+    });
+
+}
+
+ChartModel.getOnePastChart = function (data, callback) {
+
+    chart.find({
+        where : {
+            chartNumber : data.chartNumber,
+        },
+        include: {
+            model: complaintEntity,
+        }
+    }).then(result => {
+
+        callback(result);
+    });
+
 }
 
 module.exports = ChartModel;
