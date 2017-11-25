@@ -38,7 +38,7 @@ Cluster.Master = function(){
         var worker = cluster.fork();
     }
 
-    entityService.Init(); // 테이블 생성
+
 
     cluster.on("disconnect", function(worker){
 
@@ -125,10 +125,10 @@ Cluster.ProcessRun = function(workerId){
     app.use(methodOverride());
     app.set('trust proxy', config.serverConfig.trust_proxy_host);
 
-    redisService.Init(workerId);
     sessionService.Init();
     routesService.Init();
     passportService.Init();
+    entityService.Init(); // 테이블 생성
 
     http.createServer(app).listen(app.get('port'), function () {
         console.log(util.format('## [processRun] [pid:%d] [childNo:%d] Server running at %d ##', process.pid, workerId, config.serverConfig.port));

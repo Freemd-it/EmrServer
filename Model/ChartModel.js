@@ -45,6 +45,7 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
 
     chart.update({
         heartRate : data.heartRate ? data.heartRate : 0,
+        heartRate : data.heartRate ? data.heartRate : 0,
         pulseRate : data.pulseRate ? data.pulseRate : 0,
         bodyTemporature : data.bodyTemporature ? data.bodyTemporature : 0,
         systoleBloodPressure : data.systoleBloodPressure ? data.systoleBloodPressure : 0,

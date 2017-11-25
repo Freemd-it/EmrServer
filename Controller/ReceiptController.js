@@ -28,21 +28,28 @@ router.get('/patients',function (req, res) {
 
 router.get('/patient', function (req, res){
     receiptModel.Find (req.query.id, result => {
-        //console.log(result);
         res.send(result);
     });
 });
 
 router.post('/patient', function (req, res){
 
+    let waitingInsertBirth = req.body.birth;
+
+    console.log(req.body);
+
     receiptModel.UpdateOrCreate (req.body, result => {
         if(result.sqlStatus === 200) {
 
             chartModel.create(result.dataValues, chartResult => {
+                chartResult.birth = waitingInsertBirth;
                 waitingModel.Insert(chartResult , result => {
                     res.send(result);
                 });
             });
+        }else{
+
+          console.log(result);
         }
     });
 });
