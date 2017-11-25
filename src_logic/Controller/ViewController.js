@@ -1,7 +1,8 @@
- 
 
-var express = require('express');  
-var router = express.Router();
+
+const express = require('express');
+const { respondHtml } = require('../Utils/respond');
+const router = express.Router();
 
 router.use(function log(req, res, next) {
 
@@ -9,27 +10,27 @@ router.use(function log(req, res, next) {
     next();
 });
 
-router.get('/receipt',(req,res,next)=>{
-    res.render('receipt');
+router.get('/receipt', (req, res, next) => {
+    respondHtml(res, 'receipt');
 })
 
-router.get('/ocs',(req,res,next)=>{
-    res.render('ocs');
+router.get('/ocs', (req, res, next) => {
+    respondHtml(res, 'ocs');
 })
 
-router.get('/prediagnosis',(req,res,next)=>{
-    res.render('prediagnosis');
+router.get('/prediagnosis', (req, res, next) => {
+    respondHtml(res, 'prediagnosis');
 })
 
-router.get('/pharmacy',(req,res,next)=>{
-    res.render('pharmacy');
+router.get('/pharmacy', (req, res, next) => {
+    respondHtml(res, 'pharmacy');
 })
 
-router.get('/main',(req,res,next)=>{
-    res.render('main');
+router.get('/main', (req, res, next) => {
+    respondHtml(res, 'main');
 })
-router.get('/management',(req,res,next)=>{
-    res.render('management');
+router.get('/management', (req, res, next) => {
+    respondHtml(res, 'management');
 })
- 
+
 module.exports = router;
