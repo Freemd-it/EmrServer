@@ -21,7 +21,7 @@ const helpers = require('view-helpers');
 const config = require('./');
 const pkg = require('../package.json');
 
-const env = process.env.NODE_ENV || 'sendbox';
+const env = process.env.NODE_ENV || 'developement';
 
 
 /**
