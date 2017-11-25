@@ -1,0 +1,315 @@
+ 
+/* Color */ 
+$pink : #E08283;
+$bgColor : #bcbcbc;
+
+/* PATH */
+$bgPath : 'img/freemed_body.jpg';
+
+/* ----------------------------------------------- */
+/* BASIC SETUP */
+/* ----------------------------------------------- */
+* {
+    margin : 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body{
+    background-color: lighten($pink,10%);
+    color : #fff;
+    font-family: 'Lato','Arial',sans-serif;
+    font-weight: 300;
+    font-size:20px;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+}
+
+.clearfix{ zoom:1; }
+.clearfix:after{
+    content : '.';
+    clear:both;
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+/* ----------------------------------------------- */
+/* REUSABLE COMPONENTS */
+/* ----------------------------------------------- */
+
+.row{
+    max-width: 1140px;
+    margin:0 auto;
+}
+section{
+    padding: 40px 0; 
+}
+
+.box{
+    padding: 1%;
+}
+
+
+/*----- HEADINGS ------*/
+
+h1,
+h2,
+h3{
+    font-weight: 300;
+    text-transform: uppercase; 
+} 
+h1{ 
+    margin-top:0;
+    margin-bottom: 20px;
+    color:#fff;
+    font-size:240%;
+    word-spacing: 4px;
+    letter-spacing: 1px;
+} 
+h2{
+    font-size: 180%;
+    word-spacing: 2px;
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 1px;  
+}
+
+h3{
+    font-size:110%;
+    margin-bottom: 15px;  
+    position: relative;
+    padding: 0 1em; 
+    background-color: transparent;  
+    vertical-align: middle;
+    &::before{
+        content: '';
+        display: block;
+        position: absolute; 
+        height: 70%;
+        border: 5px solid $pink; 
+        top: 0;
+        left: 0; 
+    }
+}   
+/* ----------------------------------------------- */
+/* HEADER */
+/* ----------------------------------------------- */
+
+header{ 
+    background-size: cover; 
+    background-position: center;
+    background-attachment: fixed;
+}
+header .main-header{ 
+    // background-image: linear-gradient(rgba(0, 0, 0, 0.7),rgba(0, 0, 0, 0.7)), url(img/bgfreemed.jpg);   
+    height: 100vh; 
+}
+
+.logo{
+    height: 100px;
+    width: auto;
+    float: left;
+    margin-top: 20px;
+}
+
+
+/* Main navi */
+.main-nav{
+    float: right;
+    list-style: none;
+    margin-top: 55px;
+
+    & li{
+        display: inline-block;
+        margin-left: 40px;
+
+        & a:link,
+        & a:visited{
+            padding: 8px 0;
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 90%;
+            border-bottom: 2px solid transparent;  
+            transform: border-bottom 0.2s;
+        }
+
+        & a:hover,
+        & a:active{
+            border-bottom: 2px solid $pink;
+        }
+        &:last-child{
+            margin-right: 20px;
+        }
+    }
+}
+ 
+
+
+/*----- BUTTONS ------*/
+.btn:link,
+.btn:visited,
+input[type=submit]{
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 30px;
+    font-weight: 300; 
+    border-radius: 200px;  
+    transition: background-color 0.2s,border 0.2s,color 0.2s;
+}
+
+
+.btn-full:link,
+.btn-full:visited,
+input[type=submit]{
+    background-color: #e67e22;
+    border: 1px solid #e67e22;
+    color:#fff;
+    margin-right: 20px; 
+}  
+.btn:hover,
+.btn:active,
+input[type=submit]:hover,
+input[type=submit]:active{
+    background-color: #cf6d17;
+}
+.btn-full:hover,
+.btn-full:active,
+input[type=submit]:hover,
+input[type=submit]:active{
+    border: 1px solid #e67e22;  
+} 
+
+.btn.history{
+    margin-top:10px;
+}
+/* ----------------------------------------------- */
+/* Receipt Section */
+/* ----------------------------------------------- */
+.main-receipt h2{
+    display: inline-block;
+}
+
+
+/* search */ 
+#patients .list{
+    list-style: none;
+    position: absolute;
+    width: 100%;
+    color:#000;
+    background-color: #fff;
+    z-index: 10;
+    & .user {
+        &:hover,
+        &:active{ 
+          border: 1px solid #e67e22;  
+        }
+        & > div {
+            display: inline-block;
+            padding: 2px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+    } 
+}
+.search {  
+    &__input {
+        width: 100%;
+        padding: 12px 24px;
+
+        background-color: transparent;
+        transition: transform 250ms ease-in-out;
+        font-size: 14px;
+        line-height: 18px;
+        
+        color: #575756;
+        background-color: transparent;
+        background-image: url(http://mihaeltomic.com/codepen/input-search/ic_search_black_24px.svg);
+        background-repeat: no-repeat;
+        background-size: 18px 18px;
+        background-position: 95% center;
+        border-radius: 50px;
+        border: 1px solid #575756;
+        transition: all 250ms ease-in-out;
+        backface-visibility: hidden;
+        transform-style: preserve-3d;
+        
+        &::placeholder {
+            color: color(#575756 a(0.8));
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        
+        &:hover,
+        &:focus {
+            padding: 12px 0;
+            outline: 0;
+            border: 1px solid transparent;
+            border-bottom: 1px solid #575756;
+            border-radius: 0;
+            background-position: 100% center;
+        }
+    }
+}
+
+
+
+/* ----------------------------------------------- */
+/* FORM */
+/* ----------------------------------------------- */
+.contact-form{
+    width: 60%;
+    margin:0 auto;
+}
+
+
+input[type=text],
+input[type=email],
+select,
+textarea{
+    display: inline-block;
+    color:#555;
+    width: 100%;
+    padding: 7px;
+    border-radius: 3px;
+    border:1px solid #ccc;
+}
+
+input[type=radio]{ 
+    margin: 0 10px;
+}
+
+textarea{ 
+    height: 100px;
+}
+
+input[type="checkbox"]{
+    margin:10px 5px 10px 10px;
+}
+*:focus{
+    outline: none;
+}
+.receipt-form{
+    border: 2px solid rgba(232, 232, 232, 0.88);
+    padding: 1%;
+    border-radius: 5px;
+    margin-bottom: 40px;
+    & p { 
+        display: inline-block;
+        margin-left: 80px;
+    }
+    & .form-remarks{
+        width: 90%;
+    }
+    & .bottom:after{ 
+        display: block;
+        height: 2px;
+        background-color: rgba(237, 237, 237, 0.85);
+        content: " ";
+        width: 100%;
+        margin: 0 auto;
+        margin-top: 30px;
+    }
+} 

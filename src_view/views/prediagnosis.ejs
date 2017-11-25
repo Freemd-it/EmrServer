@@ -1,0 +1,202 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Freemed-EMR</title>
+    <link href="/vscode.ico" rel="shortcut icon">
+    <link href="/dist/index.css" rel="stylesheet">
+    <script src="/dist/loader.bundle.js"></script>
+</head>
+
+<body>
+
+    <header> 
+        <% include ./parts/header.ejs %>
+    </header>
+
+<section class="ui container" style="margin-top:55px">
+    <div class="ui grid">
+        <div class="left floated six wide column" style="margin-left:.1%">
+            <h1>예진</h1>
+        </div>
+
+
+        <div>
+            <button id="waitingList" class="huge negative ui button">대기자 불러오기</button>
+        </div>
+    </div>
+
+    <div class="ui clearing divider"></div>
+
+    <div class="ui form container">
+        <button id="getPastCC" class="ui primary button" style="float: right;" disabled>과거 C.C 보기</button>
+        <h3 class="ui dividing header">V/S</h3>
+
+        <form id="chartForm" class="ui segment">
+            <div class="two fields">
+                <div class="field">
+                    <label>CHART ID</label>
+                    <input type="text" id="preChartId" style="border-color: #fc0a0e; background: #fcf4f1" disabled>
+                </div>
+
+                <div class="field">
+                    <label>NAME</label>
+                    <input type="text" id="preName" style="border-color: #fc0a0e; background: #fcf4f1" disabled>
+                </div>
+            </div>
+
+            <div class="two fields">
+                <div class="field">
+                    <label>HR <scan style="font-size : 10px;">(Heart Rate , 심박수)</scan></label>
+                    <input type="text" id="heartRate">
+                </div>
+
+                <div class="field">
+                    <label>PR <scan style="font-size : 10px;">(Pulse Rate , 맥박수)</scan></label>
+                    <input type="text" id="pulseRate">
+                </div>
+            </div>
+
+
+            <div class="two fields">
+                <div class="field">
+                    <label>BT <scan style="font-size : 10px;">(Body Temporature , 체온)</scan></label>
+                    <input type="text" id="bodyTemporature">
+                </div>
+
+                <div class="field">
+                    <label>BP <scan style="font-size : 10px;">(Blood Pressure , 혈압)</scan></label>
+                    <div class="two fields">
+                        <div class="field">
+                            <input type="number" placeholder="수축기" id="systoleBloodPressure">
+                        </div>
+
+                        <div class="field">
+                            <input type="number" placeholder="이완기" id="diastoleBloodPressure">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="two fields">
+                <div class="field">
+                    <label>Glucose <scan style="font-size : 10px;">(혈당)</scan></label>
+                    <input type="number" id="bloodGlucose">
+                </div>
+
+                <div class="field">
+                    <label>식후</label>
+                    <select id="mealTerm" name="gender" class="ui dropdown">
+                        <option value="2">2시간</option>
+                        <option value="3">3시간</option>
+                        <option value="4">4시간</option>
+                        <option value="5">5시간</option>
+                        <option value="6">6시간</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+
+        <div class="ui segment">
+            <button id="CCbutton" class="ui primary button" style="float: right;">C.C 항목 추가</button>
+            <h3 class="ui dividing header">C.C <scan style="font-size : 10px;">(Chief Complaint , 수혜자가 불편하신 곳)</scan></h3>
+
+            <form id="CCform">
+                <div id="firstCC" class="inner-div">
+                    <div class="sixteen wide column">
+                        <div class="ui fluid input focus">
+                            <input name="CC" type="text" placeholder="C.C">
+                        </div>
+
+                        <div class="ui form" style="margin-top: 1%">
+                            <div class="field">
+                                <textarea name="HistoryOfCC" rows="3" placeholder="History of C.C"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="CCsegment" class="CCsegment">
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="ui grid" style="margin-top: 1%">
+        <div class="left floated six wide column" style="margin-left:.1%"></div>
+
+        <div>
+            <button id="sendToDoctor" class="huge negative send ui button">본진으로 보내기</button>
+        </div>
+    </div>
+</section>
+
+<div class="ui longer modal">
+    <div class="header">대기 명단</div>
+    <div class="scrolling content">
+        <table class="ui selectable celled table">
+            <thead>
+                <tr>
+                    <th>차트 번호</th>
+                    <th>이름</th>
+                    <th>생년월일</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr>
+                    <td>First</td>
+                    <td>Cell</td>
+                    <td>Cell</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+
+
+<div class="ui past modal">
+    <i class="close icon"></i>
+    <div class="header">
+        과거 차트
+    </div>
+    <div class="content">
+        <table class="ui selectable celled table">
+            <thead>
+            <tr>
+                <th>차트 번호</th>
+                <th>날짜</th>
+            </tr>
+            </thead>
+            <tbody id="tablePastBody" class="tbody-content">
+            <tr>
+                <td>Cell</td>
+                <td>Cell</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<div class="ui selected cc modal">
+    <button id="copyButton" class="huge primary ui button" style="float: right; margin: auto">COPY</button>
+    <div class="header">
+        과거 차트 내용
+    </div>
+
+    <div id="modalPastCC" class="content">
+
+    </div>
+</div>
+
+<script src="/dist/index.bundle.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Freemed-EMR</title>
+  <link href="/vscode.ico" rel="shortcut icon">
+  <link href="/dist/index.css" rel="stylesheet">
+  <script src="/dist/loader.bundle.js"></script>
+  <style>
+    .h3-header-bottom-margin {
+      position: relative;
+      bottom: 15px;
+    }
+    .pharmacy-container {
+      padding: 1.5%;
+    }
+    .ui.table thead th {
+      padding: 0.8% 1.5% 0.8% 1.5%;
+
+    }
+    .ui.segment.pharmacy-segment {
+      height: 79%;
+    }
+    .header-tbody td{
+      border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+    }
+    .getPharmacyOCS {
+      float: right;
+    }
+  </style>
+</head>
+
+<body>
+  <header> 
+      <% include ./parts/header.ejs %>
+  </header>
+  <div class="pharmacy-container">
+    <div class="ui grid">
+        <div class="left floated six wide column" style="margin-left:.1%">
+            <h1>약국</h1>
+        </div>
+    </div>
+
+    <div class="ui clearing divider"></div>
+
+    <div class="ui internally celled grid">
+      <div class="row">
+        <div class="four wide column">
+          <div class="ui segment pharmacy-segment">
+            <h3 class="ui dividing header">
+              <span>OCS</span>
+              <span class="getPharmacyOCS"><i class="history link icon"></i></span>
+            </h3>
+            <table class="ui celled selectable table" style="text-align:center;">
+              <thead>
+                <tr>
+                  <th>이름</th>
+                  <th>현황</th>
+                </tr>
+              </thead>
+              <tbody id="PharmacyOCSTableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="twelve wide column">
+          <div class="ui segment pharmacy-segment">
+            <button id="pharmacopoeia" class="ui primary button" style="float: right;">약전</button>
+            <h2 class="ui dividing header"><span class="h3-header-bottom-margin">처방</span></h2>
+
+            <table class="ui celled table" style="text-align:center;">
+              <thead>
+                <tr>
+                  <th>약품명</th>
+                  <th>성분명 / 함량</th>
+                  <th width="8%">1회<br />투약량</th>
+                  <th width="10%">1일<br />복용횟수</th>
+                  <th width="10%">복용일수</th>
+                  <th>비고</th>
+                  <th width="10%">기타</th>
+                </tr>
+              </thead>
+              <!-- <tbody class="header-tbody">
+                <tr>
+                  <td colspan="2">Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>
+                    <i class="configure link icon"></i>
+                    <i class="trash link icon"></i>
+                  </td>
+                </tr>
+              </tbody> -->
+              <tbody>
+                <tr>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>
+                    <i class="configure link icon"></i>
+                    <i class="trash link icon"></i>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>
+                    <i class="configure link icon"></i>
+                    <i class="trash link icon"></i>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>Cell</td>
+                  <td>
+                    <i class="configure link icon"></i>
+                    <i class="trash link icon"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui longer modal">
+
+      <div class="ui two item stackable tabs menu">
+          <a class="item waitingTab" data-tab="waitings">대기 환자</a>
+          <a class="item completeTab" data-tab="complete">완료 환자</a>
+      </div>
+
+      <div class="scrolling content">
+          <table class="ui fixed selectable celled table">
+              <thead>
+                  <tr>
+                      <th>차트 번호</th>
+                      <th>이름</th>
+                      <th>생년월일</th>
+                  </tr>
+              </thead>
+              <tbody id="tableBody">
+                  <tr>
+                      <td>[Server Error - waitings table load fail]</td>
+                      <td>EMR 서버에 문제가 있습니다.</td>
+                      <td>IT본부 단원을 찾으세요</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+  <script src="/dist/index.bundle.js"></script>
+</body>
+
+</html>
