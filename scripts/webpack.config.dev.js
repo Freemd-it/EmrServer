@@ -1,16 +1,15 @@
 const webpack = require('webpack');
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const hotMiddlewareScript = 'webpack-hot-middleware/client';
 const paths = require('./paths');
 
 const config = {
     context: paths.appBuild,
- 
+
     entry: {
-        index: [paths.appIndexJs, hotMiddlewareScript],
-        login: [paths.appLoginJs, hotMiddlewareScript],
-        loader: [paths.appLoaderJs, hotMiddlewareScript]
+        index: [paths.appIndexJs, hotMiddlewareScript]
     },
 
     output: {
@@ -23,12 +22,13 @@ const config = {
         rules: [
             {
                 test: /\.js$/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
+                loaders: ['babel-loader?' + JSON.stringify(
+                    {
+                        cacheDirectory: true,
                         presets: ['es2015']
-                    }
-                }
+                    })],
+                exclude: /node_modules/
+
             },
             {
                 test: /\.scss|css$/,
@@ -63,6 +63,7 @@ const config = {
     },
     plugins: [
         new ExtractTextPlugin({ filename: '[name].css' }),
+        new webpack.HotModuleReplacementPlugin(),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"

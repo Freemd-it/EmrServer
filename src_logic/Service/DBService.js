@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-var config = require('../Common/Config.js');
+var config = require('../../Config');
 var util = require('util');
 
 var DBService = function(){};

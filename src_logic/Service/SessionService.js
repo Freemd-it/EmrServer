@@ -1,6 +1,6 @@
 var session = require('express-session');
 var redisStore = require('connect-redis')(session);
-var config = require('../Common/Config.js');
+var config = require('../../Config');
 var util = require('util');
 
 var SessionService = function () {};

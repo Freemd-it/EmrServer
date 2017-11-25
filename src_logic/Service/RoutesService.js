@@ -1,7 +1,7 @@
 var csurf = require('csurf');
 var util = require('util');
 
-var config = require('../Common/Config.js');
+var config = require('../../Config');
 var userController = require('../Controller/UserController.js');
 var authController = require('../Controller/AuthController.js');
 var receiptController = require('../Controller/ReceiptController.js');

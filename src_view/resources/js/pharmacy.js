@@ -10,8 +10,8 @@ $(document).ready(() => {
       dataType: 'json',
       cache: false,
   }).done(result => {
-
-      var convertStatus = '';
+  
+      var convertStatus = ''; 
 
       for (let i = 0; i < result.length; i++) {
 

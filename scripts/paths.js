@@ -11,10 +11,7 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 module.exports = { 
     appBuild: resolveApp('public/dist/'),
     appPublic: resolveApp('public'),
-    appIndexJs: resolveApp('src_view/index.js'),
-    appLoginJs: resolveApp('src_view/login.js'),
-    appLoaderJs: resolveApp('src_view/loader.js'),
-    
+    appIndexJs: resolveApp('src_view/index.js'), 
     appPackageJson: resolveApp('package.json'),
     appSrc: resolveApp('src_view'),
     appNodeModules: resolveApp('node_modules'),

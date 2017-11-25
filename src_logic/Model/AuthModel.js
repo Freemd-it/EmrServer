@@ -1,4 +1,4 @@
-var config = require('../Common/Config.js');
+var config = require('../../Config');
 
 var AuthModel = function (data) {
     this.data = data;

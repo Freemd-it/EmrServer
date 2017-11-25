@@ -1,5 +1,5 @@
 .idea
 node_modules/*
-dist/*
-Config/*
+dist/* 
 npm-debug.log
+Config/env/setting.js

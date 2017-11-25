@@ -16,14 +16,14 @@ $('#btn-name-send').on('click', () => {
     $('#birth').attr({
         disabled: false,
     });
-
+    
     $('.ui.dropdown').removeClass("disabled");
 
     if(!name) {
         alert("이름을 입력해주세요.");
         return;
     }
-
+  
     docs = {
         name,
     };
