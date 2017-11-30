@@ -1,19 +1,20 @@
 var Sequelize = require("sequelize");
 var config = require('../../Config');
+console.log(config);
 
 
 var sequelize = new Sequelize(
-  config.storeConfig.mysqlDatabase,
-  config.storeConfig.mysqlUser,
-  config.storeConfig.mysqlPassword,
+  config.store.mysqlDatabase,
+  config.store.mysqlUser,
+  config.store.mysqlPassword,
   {
-    host: config.storeConfig.mysqlHost,
-    dialect: config.storeConfig.storeDBMS,
-    port: config.storeConfig.mysqlPort,
+    host: config.store.mysqlHost,
+    dialect: config.store.storeDBMS,
+    port: config.store.mysqlPort,
     pool: {
-      max: config.storeConfig.ConnectionLimit,
-      min: config.storeConfig.ConnectionMinimum,
-      idle: config.storeConfig.ConnectionIdle,
+      max: config.store.ConnectionLimit,
+      min: config.store.ConnectionMinimum,
+      idle: config.store.ConnectionIdle,
       waitForConnections: false /* 사용 가능한 커넥션이 없을 경우 바로 ERROR를 return | true일 경우 대기 */
     },
     timezone: "+09:00"

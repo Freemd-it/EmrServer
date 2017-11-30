@@ -8,8 +8,8 @@ var PassportService = function(){};
 PassportService.Init = function(app){
 
     passport.use(new GoogleStrategy({
-          clientID : config.googleConfig.google_client_id,
-          clientSecret : config.googleConfig.google_client_password,
+          clientID : config.google.google_client_id,
+          clientSecret : config.google.google_client_password,
           callbackURL : "http://localhost:3000/auth/google/callback"
         },
         function(accessToken, refreshToken, profile, done) {

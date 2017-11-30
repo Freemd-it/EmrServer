@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "884d5e07af0f32255197"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "eb112af9eb93071ec133"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -14873,7 +14873,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     _jquery2.default.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/waitingList',
+        url: '/waitingList',
         data: docs,
         dataType: 'json',
         cache: false
@@ -14900,7 +14900,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     _jquery2.default.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/waitingList',
+        url: '/waitingList',
         data: docs,
         dataType: 'json',
         cache: false
@@ -14926,7 +14926,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     _jquery2.default.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/waitingList',
+        url: '/waitingList',
         data: docs,
         dataType: 'json',
         cache: false

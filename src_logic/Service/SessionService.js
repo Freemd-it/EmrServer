@@ -8,12 +8,12 @@ var SessionService = function () {};
 SessionService.Init = function(){
 
     var sessionSetting = {
-        cookie: { expires: new Date(Date.now() + config.serverConfig.session_expire), maxAge: config.serverConfig.session_expire },
+        cookie: { expires: new Date(Date.now() + config.server.session_expire), maxAge: config.server.session_expire },
         store: new redisStore({
-          port: config.redisConfig.redisPort,
-          host: config.redisConfig.redisHost
+          port: config.redis.redisPort,
+          host: config.redis.redisHost
         }),
-        secret: config.serverConfig.session_secret,
+        secret: config.server.session_secret,
         resave: false,
         saveUninitialized: true
     };

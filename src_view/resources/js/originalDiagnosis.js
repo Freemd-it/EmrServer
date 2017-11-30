@@ -11,7 +11,7 @@ $('.diagnosisWaitings').on('click', () => {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/waitingList',
+        url: '/waitingList',
         data: docs,
         dataType: 'json',
         cache: false,
@@ -45,7 +45,7 @@ $('.waitingTab').on('click', () => {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/waitingList',
+        url: '/waitingList',
         data: docs,
         dataType: 'json',
         cache: false,
@@ -79,7 +79,7 @@ $('.completeTab').on('click', () => {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/waitingList',
+        url: '/waitingList',
         data: docs,
         dataType: 'json',
         cache: false,

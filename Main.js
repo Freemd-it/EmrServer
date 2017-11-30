@@ -118,16 +118,16 @@ Cluster.Worker = function (workerId) {
 
 Cluster.ProcessRun = function (workerId) {
 
-    app.set('port', process.env.PORT || config.serverConfig.port);
+    app.set('port', process.env.PORT || config.server.port);
 
     app.use(compression());
     app.use(passportService.passport.initialize());
     app.use(passportService.passport.session());
-    app.use(cookieParser(config.serverConfig.cookie_secret));
+    app.use(cookieParser(config.server.cookie_secret));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(methodOverride());
-    app.set('trust proxy', config.serverConfig.trust_proxy_host);
+    app.set('trust proxy', config.server.trust_proxy_host);
 
 
     // Static files moddleware
@@ -170,7 +170,7 @@ Cluster.ProcessRun = function (workerId) {
     }
 
     http.createServer(app).listen(app.get('port'), function () {
-        console.log(util.format('## [processRun] [pid:%d] [childNo:%d] Server running at %d ##', process.pid, workerId, config.serverConfig.port));
+        console.log(util.format('## [processRun] [pid:%d] [childNo:%d] Server running at %d ##', process.pid, workerId, config.server.port));
     });
 }
 
