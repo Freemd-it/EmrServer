@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>Freemed-EMR</title>
   <link href="/vscode.ico" rel="shortcut icon">
-  <link href="/dist/index.css" rel="stylesheet"> 
+  <link href="/dist/index.css" rel="stylesheet">
   <style>
     .h3-header-bottom-margin {
       position: relative;
@@ -27,11 +27,20 @@
     .getPharmacyOCS {
       float: right;
     }
+    .pharmacySearchInput {
+      width: 60%;
+    }
+    .pharmacySearchButton {
+      width: 15%;
+    }
+    .categoryWidth {
+      width: 50%;
+    }
   </style>
 </head>
 
 <body>
-  <header> 
+  <header>
       <% include ./parts/header.ejs %>
   </header>
   <div class="pharmacy-container">
@@ -141,10 +150,32 @@
   <div class="ui longer modal">
 
       <div class="ui two item stackable tabs menu">
-          <a class="item waitingTab" data-tab="waitings">대기 환자</a>
+          <select class="ui dropdown categoryWidth">
+            <option value="">대분류</option>
+            <option value="1">약품명</option>
+            <option value="0">성분명</option>
+          </select>
+          <select class="ui dropdown categoryWidth">
+            <option value="">소분류</option>
+            <option value="1">약품명</option>
+            <option value="0">성분명</option>
+          </select>
       </div>
 
       <div class="scrolling content">
+          <div>
+            <select class="ui dropdown">
+              <option value="">검색 구분</option>
+              <option selected value="1">약품명</option>
+              <option value="0">성분명</option>
+            </select>
+            <div class="ui input focus pharmacySearchInput">
+              <input type="text" placeholder="성분 또는 약품명을 적어주세요.">
+            </div>
+            <button class="ui primary button pharmacySearchButton">
+              검색
+            </button>
+          </div>
           <table class="ui fixed selectable celled table">
               <thead>
                   <tr>

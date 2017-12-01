@@ -8,6 +8,7 @@ var permission = require('../Entity/Permission.js');
 var prescription = require('../Entity/Prescription.js');
 var user = require('../Entity/User.js');
 var waiting = require('../Entity/Waiting.js');
+var medicineCategory = require('../Entity/MedicineCategory.js');
 
 const sequelize = require('./SequelizeService.js');
 
@@ -57,6 +58,7 @@ EntityService.Init = function(){
 
     waiting.sync();
     medicine.sync();
+    medicineCategory.sync();
 }
 
 module.exports = EntityService;
