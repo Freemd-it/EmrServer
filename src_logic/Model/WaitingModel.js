@@ -14,7 +14,7 @@ WaitingModel.FindByStatus = function(status, callback) {
       attributes: ['chart_id', 'name', 'birth', 'status'],
     })
     .then(result => {
-      console.log(result);
+      // console.log(result);
       callback(result);
     })
     .catch(error => {
@@ -28,11 +28,11 @@ WaitingModel.FindAll = function(callback) {
       attributes: ['chart_id', 'name', 'birth', 'status'],
     })
     .then(result => {
-      console.log(result);
+      // console.log(result);
       callback(result);
     })
     .catch(error => {
-      console.log(result);
+      // console.log(result);
       callback(error);
     });
 }

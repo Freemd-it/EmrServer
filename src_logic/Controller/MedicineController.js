@@ -12,15 +12,13 @@ router.use(function log(req, res, next) {
 router.get('/category/main', (req, res) => {
 
   medicineCategoryModel.ListMain( result => {
-    console.log(result);
     res.send(result);
   });
 });
 
-router.get('/category/main', (req, res) => {
+router.get('/category/small', (req, res) => {
 
-  medicineCategoryModel.ListSmall( result => {
-    console.log(result);
+  medicineCategoryModel.ListSmall( req.query, result => {
     res.send(result);
   });
 });

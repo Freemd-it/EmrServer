@@ -9,7 +9,7 @@ var MedicineCategoryModel = function(data){
 MedicineCategoryModel.ListMain = function(callback){
 
     category.findAll({
-      distinct: 'primaryCategory'
+      attributes: [sequelize.fn('DISTINCT', sequelize.col('primaryCategory')) ,'primaryCategory']
     })
     .then(result => {
         callback(result);
@@ -22,6 +22,7 @@ MedicineCategoryModel.ListMain = function(callback){
 MedicineCategoryModel.ListSmall = function(data, callback){
 
     category.findAll({
+      attributes: ['secondaryCategory'],
       where: {
         primaryCategory: data.primaryCategory
       }

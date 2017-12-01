@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "642955ca9ab2785597f6"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3b53d71bf99295e6f3c2"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -14990,7 +14990,53 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 });
 
 (0, _jquery2.default)('#pharmacopoeia').on('click', function () {
+
+    if ((0, _jquery2.default)('.main-category-select > select').children().length) {
+        (0, _jquery2.default)('.main-category-select > select *').remove();
+        (0, _jquery2.default)('.main-category-select > select').append('<option value=\'\'>\uB300\uBD84\uB958</option>');
+    }
+
+    _jquery2.default.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/medicine/category/main',
+        dataType: 'json',
+        cache: false
+    }).done(function (result) {
+        for (var i = 0; i < result.length; i++) {
+            (0, _jquery2.default)('.main-category-select > select').append('<option value=\'' + result[i].primaryCategory + '\'> ' + result[i].primaryCategory + ' </option>');
+        }
+    });
     (0, _jquery2.default)('.ui.longer.modal').modal('show');
+});
+
+(0, _jquery2.default)('.main-category-select').change(function () {
+    var param = {
+        primaryCategory: (0, _jquery2.default)('.main-category-select option:selected').attr('value')
+    };
+
+    if ((0, _jquery2.default)('.small-category-select > select').children().length) {
+        (0, _jquery2.default)('.small-category-select > select *').remove();
+        (0, _jquery2.default)('.small-category-select > select').append('<option value=\'\'>\uC18C\uBD84\uB958</option>');
+    }
+
+    _jquery2.default.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/medicine/category/small',
+        data: param,
+        dataType: 'json',
+        cache: false
+    }).done(function (result) {
+        for (var i = 0; i < result.length; i++) {
+            if (i === 0) {
+
+                (0, _jquery2.default)('.small-category-select > select').nextAll('div.text').text('' + result[i].secondaryCategory);
+
+                (0, _jquery2.default)('.small-category-select > select').append('<option selected value=\'' + result[i].secondaryCategory + '\'> ' + result[i].secondaryCategory + ' </option>');
+            } else {
+                (0, _jquery2.default)('.small-category-select > select').append('<option value=\'' + result[i].secondaryCategory + '\'> ' + result[i].secondaryCategory + ' </option>');
+            }
+        }
+    });
 });
 
 function getStatus(status) {
