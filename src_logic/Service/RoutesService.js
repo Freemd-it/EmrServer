@@ -8,6 +8,7 @@ var receiptController = require('../Controller/ReceiptController.js');
 const waitingController = require('../Controller/WaitingController.js');
 const chartController = require('../Controller/ChartController.js');
 const viewsController = require('../Controller/ViewController.js');
+const medicineController = require('../Controller/MedicineController.js');
 
 var csrfProtection = new csurf({ cookie: true });
 
@@ -47,6 +48,7 @@ RoutesService.Init = function () {
     app.use('/waitingList', waitingController);
     app.use('/chart', chartController);
     app.use('/views', viewsController);
+    app.use('/medicine', medicineController);
 
     console.log("## setup routes ##");
 }

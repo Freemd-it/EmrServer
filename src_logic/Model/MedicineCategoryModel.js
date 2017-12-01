@@ -1,19 +1,15 @@
 var sequelize = require('sequelize');
 var dbService = require('../Service/SequelizeService.js');
-var user = require('../Entity/MedicineCategory.js');
+var category = require('../Entity/MedicineCategory.js');
 
-var medicineCategoryModel = function(data){
+var MedicineCategoryModel = function(data){
     this.data = data;
 }
 
-medicineCategoryModel.List = function(callback){
+MedicineCategoryModel.ListMain = function(callback){
 
-    user.findAll({
-        where : {
-          $and : [{ id : {$lt : 3}}, {account : {$like : "%test%"}}]
-        },
-        limit : 2,
-        raw : true
+    category.findAll({
+      distinct: 'primaryCategory'
     })
     .then(result => {
         callback(result);
@@ -23,4 +19,44 @@ medicineCategoryModel.List = function(callback){
     });
 }
 
-module.exports = medicineCategoryModel;
+MedicineCategoryModel.ListSmall = function(data, callback){
+
+    category.findAll({
+      where: {
+        primaryCategory: data.primaryCategory
+      }
+    })
+    .then(result => {
+        callback(result);
+    })
+    .catch(error => {
+        callback(error);
+    });
+}
+
+// MedicineCategoryModel.getPastChart = function (data, callback) {
+//     const chartDate = new Date().toISOString().slice(0,10).replace(/-/g,"");
+//
+//     chart.find({
+//         where : {
+//             chartNumber : data.chartId,
+//         },
+//     }).then(result => {
+//         console.log(result.dataValues.patient_id);
+//
+//         chart.findAll({
+//             where : {
+//                 patient_id : result.dataValues.patient_id,
+//                 $and: { chartNumber : {
+//                     $lt : chartDate + '00',
+//                 }}
+//             },
+//             limit : 10,
+//             order : [['chartNumber', 'DESC']],
+//         }).then(result => {
+//             callback(result);
+//         });
+//     });
+// }
+
+module.exports = MedicineCategoryModel;
