@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "5812ab66c8206566814b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6096b06ec795d84ce59a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -15149,14 +15149,6 @@ var tableRenderMedicine = [];
 
 (0, _jquery2.default)(document).on('click', '.deleteTargetByIcon', function (e) {
     (0, _jquery2.default)(e.target).parent().parent().remove();
-});
-
-(0, _jquery2.default)('.delete-icon-size').on('click', function () {
-    console.log('뭐여');
-});
-
-(0, _jquery2.default)('.deletePrescriptionRow').on('click', function () {
-    console.log((0, _jquery2.default)(undefined));
 });
 
 function getStatus(status) {

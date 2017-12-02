@@ -250,14 +250,6 @@ $(document).on('click', '.deleteTargetByIcon', (e) => {
   $(e.target).parent().parent().remove();
 })
 
-$('.delete-icon-size').on('click', function () {
-  console.log('뭐여');
-})
-
-$('.deletePrescriptionRow').on('click', () => {
-  console.log($(this));
-})
-
 function getStatus (status) {
 
     switch (status) {
