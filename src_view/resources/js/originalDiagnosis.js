@@ -29,7 +29,7 @@ $('.diagnosisWaitings').on('click', () => {
             )}
     });
 
-    $('.ui.longer.modal').modal('show');
+    $('.ui.longer.modal.waitingPatientList').modal('show');
     $(".completeTab").removeClass("active");
     $(".waitingTab").addClass("active");
 });
@@ -101,3 +101,8 @@ $('.completeTab').on('click', () => {
     $(".waitingTab").removeClass("active");
     $(".completeTab").addClass("active");
 });
+
+$('.pharmacopoeia-hover').on('click', (e) => {
+  console.log('음?');
+  console.log(e.target);
+})

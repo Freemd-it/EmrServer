@@ -14,9 +14,12 @@
     .pharmacy-container {
       padding: 1.5%;
     }
-    .ui.table thead th {
+    .ui.table.pharmacopoeia-table thead th {
       padding: 0.8% 1.5% 0.8% 1.5%;
-
+      text-align: center;
+    }
+    .ui.table.pharmacopoeia-table tbody td {
+      text-align: center;
     }
     .ui.segment.pharmacy-segment {
       height: 79%;
@@ -31,7 +34,7 @@
       width: 60%;
     }
     .pharmacySearchButton {
-      width: 15%;
+      width: 14%;
     }
     .categoryWidth {
       width: 50%;
@@ -147,47 +150,41 @@
     </div>
   </div>
 
-  <div class="ui longer modal">
-
+  <div class="ui longer modal pharmacopoeia">
       <div class="ui two item stackable tabs menu">
           <select class="ui dropdown categoryWidth main-category-select">
-            <option value="">대분류</option>
+            <option class="default" value="">대분류</option>
           </select>
           <select class="ui dropdown categoryWidth small-category-select">
-            <option value="">소분류</option>
+            <option class="default" value="">소분류</option>
           </select>
       </div>
 
       <div class="scrolling content">
           <div>
-            <select class="ui dropdown">
+            <select class="ui dropdown medicineSearchSelect">
               <option value="">검색 구분</option>
               <option selected value="1">약품명</option>
-              <option value="0">성분명</option>
+              <option value="2">성분명</option>
             </select>
             <div class="ui input focus pharmacySearchInput">
-              <input type="text" placeholder="성분 또는 약품명을 적어주세요.">
+              <input name="medicineSearchText" type="text" placeholder="성분 또는 약품명을 적어주세요.">
             </div>
             <button class="ui primary button pharmacySearchButton">
               검색
             </button>
           </div>
-          <table class="ui fixed selectable celled table">
+          <table class="ui fixed selectable celled table pharmacopoeia-table">
               <thead>
                   <tr>
-                      <th>약품명</th>
-                      <th>성분명 및 함량</th>
-                      <th>용량/용법</th>
+                      <th width="13%">약품명</th>
+                      <th width="22%">성분명 및 함량</th>
+                      <th width="30%">용량/용법</th>
                       <th>약효</th>
                   </tr>
               </thead>
-              <tbody id="tableBody">
-                  <tr>
-                      <td>비아그라</td>
-                      <td>Power 5mg</td>
-                      <td>식후 30분</td>
-                      <td>Super Power</td>
-                  </tr>
+              <tbody id="medicineTableBody">
+
               </tbody>
           </table>
       </div>

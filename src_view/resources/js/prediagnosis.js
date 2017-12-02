@@ -59,6 +59,7 @@ $(document).on('click', '.table-content', (e) => {
         $('#getPastCC').attr('disabled', false);
         $('#pastDiagnosisRecord').attr('disabled', false);
         $('#vitalSign').attr('disabled', false);
+        $('#pharmacopoeia').attr('disabled', false);
     })
 
 

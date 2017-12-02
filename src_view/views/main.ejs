@@ -5,12 +5,42 @@
     <meta charset="utf-8">
     <title>Freemed-EMR</title>
     <link href="/vscode.ico" rel="shortcut icon">
-    <link href="/dist/index.css" rel="stylesheet"> 
+    <link href="/dist/index.css" rel="stylesheet">
+    <style>
+      .pharmacy-container {
+        padding: 1.5%;
+      }
+      .ui.table.pharmacopoeia-table thead th {
+        padding: 0.8% 1.5% 0.8% 1.5%;
+        text-align: center;
+      }
+      .ui.table.pharmacopoeia-table tbody td {
+        text-align: center;
+      }
+      .ui.segment.pharmacy-segment {
+        height: 79%;
+      }
+      .getPharmacyOCS {
+        float: right;
+      }
+      .pharmacySearchInput {
+        width: 60%;
+      }
+      .pharmacySearchButton {
+        width: 14%;
+      }
+      .categoryWidth {
+        width: 50%;
+      }
+      .pharmacopoeia-hover {
+        cursor: pointer;
+      }
+    </style>
 </head>
 
 <body>
 
-    <header> 
+    <header>
         <% include ./parts/header.ejs %>
     </header>
 
@@ -57,7 +87,7 @@
         </form>
 
         <div class="ui segment">
-            <button id="pharmacopoeia" class="ui primary button" style="float: right;">약전</button>
+            <button id="pharmacopoeia" class="ui primary button" style="float: right;" disabled>약전</button>
             <h3 class="ui dividing header">처방</scan></h3>
 
             <table class="ui celled table" style="text-align:center;">
@@ -70,28 +100,13 @@
                     <th width="10%">1일 복용횟수</th>
                     <th width="10%">복용일수</th>
                     <th>비고</th>
-                    <th width="7%">기타</th>
                   </tr>
-                  <!-- <tr>
-                    <th colspan="2">
-                      <div class="inline fields">
-                      <select style="width:20%; height:38px;">
-                          <option>성분명</option>
-                          <option>약품명</option>
-                      </select>
-                      <input style="margin : 0 1% 0 1%" />
-                      <button style="width:15%; height:38px;">검색</button>
-                      <span>
-                    </th>
-                    <th>1회 투약량</th>
-                    <th>1일 복용횟수</th>
-                    <th>복용일수</th>
-                    <th>비고</th>
-                    <th>기타</th>
-                  </tr> -->
               </thead>
                 <tbody>
                   <tr>
+                    <td style="text-align:center;" colspan="6">약전 탭에서 처방하실 약을 추가해주세요.</td>
+                  </tr>
+                  <!-- <tr>
                     <td>Cell</td>
                     <td>Cell</td>
                     <td>Cell</td>
@@ -102,31 +117,7 @@
                       <i class="configure icon"></i>
                       <i class="trash icon"></i>
                     </td>
-                  </tr>
-                  <tr>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>
-                      <i class="configure icon"></i>
-                      <i class="trash icon"></i>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>
-                      <i class="configure icon"></i>
-                      <i class="trash icon"></i>
-                    </td>
-                  </tr>
+                  </tr> -->
                 </tbody>
             </table>
         </div>
@@ -151,7 +142,7 @@
 
 </section>
 
-<div class="ui longer modal">
+<div class="ui longer modal waitingPatientList">
 
     <div class="ui two item stackable tabs menu">
         <a class="item waitingTab" data-tab="waitings">대기 환자</a>
@@ -173,6 +164,46 @@
                     <td>EMR 서버에 문제가 있습니다.</td>
                     <td>IT본부 단원을 찾으세요</td>
                 </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="ui longer modal pharmacopoeia">
+    <div class="ui two item stackable tabs menu">
+        <select class="ui dropdown categoryWidth main-category-select">
+          <option class="default" value="">대분류</option>
+        </select>
+        <select class="ui dropdown categoryWidth small-category-select">
+          <option class="default" value="">소분류</option>
+        </select>
+    </div>
+
+    <div class="scrolling content">
+        <div>
+          <select class="ui dropdown medicineSearchSelect">
+            <option value="">검색 구분</option>
+            <option selected value="1">약품명</option>
+            <option value="2">성분명</option>
+          </select>
+          <div class="ui input focus pharmacySearchInput">
+            <input name="medicineSearchText" type="text" placeholder="성분 또는 약품명을 적어주세요.">
+          </div>
+          <button class="ui primary button pharmacySearchButton">
+            검색
+          </button>
+        </div>
+        <table class="ui fixed selectable celled table pharmacopoeia-table">
+            <thead>
+                <tr>
+                    <th width="13%">약품명</th>
+                    <th width="22%">성분명 및 함량</th>
+                    <th width="30%">용량/용법</th>
+                    <th>약효</th>
+                </tr>
+            </thead>
+            <tbody id="medicineTableBody">
+
             </tbody>
         </table>
     </div>

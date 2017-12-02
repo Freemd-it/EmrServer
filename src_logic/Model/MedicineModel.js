@@ -1,20 +1,18 @@
 var sequelize = require('sequelize');
 var dbService = require('../Service/SequelizeService.js');
-var user = require('../Entity/Medicine.js');
+var medicine = require('../Entity/Medicine.js');
 
 var MedicineModel = function(data){
     this.data = data;
 }
 
 /* Read */
-MedicineModel.List = function(callback){
+MedicineModel.List = function(data, callback){
 
-    user.findAll({
-        where : {
-          $and : [{ id : {$lt : 3}}, {account : {$like : "%test%"}}]
-        },
-        limit : 2,
-        raw : true
+    medicine.findAll({
+      attributes: [
+        'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient'
+      ]
     })
     .then(result => {
         callback(result);
@@ -22,6 +20,41 @@ MedicineModel.List = function(callback){
     .catch(error => {
         callback(error);
     });
+}
+
+MedicineModel.Search = function(data, callback){
+
+    if (data.option === '1') {
+      medicine.findAll({
+        attributes: [
+          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient'
+        ],
+        where: {
+          name: { like: '%'+data.searchText+'%' }
+        }
+      })
+      .then(result => {
+        callback(result);
+      })
+      .catch(error => {
+        callback(error);
+      });
+    } else {
+      medicine.findAll({
+        attributes: [
+          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient'
+        ],
+        where: {
+          ingredient: { like: '%'+data.searchText+'%' }
+        }
+      })
+      .then(result => {
+        callback(result);
+      })
+      .catch(error => {
+        callback(error);
+      });
+    }
 }
 
 

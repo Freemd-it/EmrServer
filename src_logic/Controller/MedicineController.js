@@ -23,4 +23,34 @@ router.get('/category/small', (req, res) => {
   });
 });
 
+router.get('/list', (req, res) => {
+
+  var param = req.query;
+
+  medicineModel.List( param, result => {
+    res.send(result);
+  })
+})
+
+router.get('/search', (req, res) => {
+
+  var param = req.query;
+
+  medicineModel.Search( param, result => {
+    res.send(result);
+  })
+})
+
+router.get('/dummy', (req, res) => {
+
+  var response = [
+    {
+      medicine: '부루펜정',
+      ingredient: 'Ibuprofen 200mg',
+      medication: '1회 300 mg을 1일 2 ~ 4회 경구투여한다.(1일 최대 1.2g)',
+      property: ''
+    }
+  ]
+});
+
 module.exports = router;
