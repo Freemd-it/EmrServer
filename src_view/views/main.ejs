@@ -15,6 +15,7 @@
         text-align: center;
       }
       .ui.table.pharmacopoeia-table tbody td {
+        vertical-align: middle;
         text-align: center;
       }
       .ui.segment.pharmacy-segment {
@@ -33,6 +34,15 @@
         width: 50%;
       }
       .pharmacopoeia-hover {
+        cursor: pointer;
+      }
+      .deletePrescriptionTD:hover {
+        background-color: #fcf4f1;
+      }
+      .delete-icon-size:before {
+        font-size: 1.5rem;
+      }
+      .delete-icon-size:hover {
         cursor: pointer;
       }
     </style>
@@ -94,30 +104,19 @@
 
                 <thead>
                   <tr>
-                    <th>약품명</th>
-                    <th>성분명 / 함량</th>
+                    <th width="20%">약품명</th>
+                    <th width="23%">성분명 / 함량</th>
                     <th width="10%">1회 투약량</th>
                     <th width="10%">1일 복용횟수</th>
                     <th width="10%">복용일수</th>
                     <th>비고</th>
+                    <th width="6%">삭제</th>
                   </tr>
               </thead>
-                <tbody>
+                <tbody id="prescriptionTableBody">
                   <tr>
-                    <td style="text-align:center;" colspan="6">약전 탭에서 처방하실 약을 추가해주세요.</td>
+                    <td class="defaultPrescriptionTableBody" style="text-align:center;" colspan="6">약전 탭에서 처방하실 약을 추가해주세요.</td>
                   </tr>
-                  <!-- <tr>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>Cell</td>
-                    <td>
-                      <i class="configure icon"></i>
-                      <i class="trash icon"></i>
-                    </td>
-                  </tr> -->
                 </tbody>
             </table>
         </div>
@@ -137,8 +136,6 @@
             <button id="doctorSignedComplete" class="huge negative ui button"> 처방하기 </button>
         </div>
     </div>
-
-
 
 </section>
 
@@ -169,7 +166,7 @@
     </div>
 </div>
 
-<div class="ui longer modal pharmacopoeia">
+<div class="ui longer modal pharmacopoeia main-page">
     <div class="ui two item stackable tabs menu">
         <select class="ui dropdown categoryWidth main-category-select">
           <option class="default" value="">대분류</option>
@@ -203,7 +200,6 @@
                 </tr>
             </thead>
             <tbody id="medicineTableBody">
-
             </tbody>
         </table>
     </div>

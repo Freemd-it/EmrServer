@@ -9,10 +9,6 @@ $('#waitingList').on('click', () => {
         status : '1',
     };
 
-    console.log("waitList Callback");
-    console.log("waitList Callback");
-    console.log("waitList Callback");
-
     $.ajax({
         type: 'GET',
         url: 'http://localhost:3000/waitingList',
@@ -21,7 +17,6 @@ $('#waitingList').on('click', () => {
         cache: false,
     }).done(result => {
 
-        console.log(result);
         for(let i = 0; i < result.length; i++) {
             $('#tableBody').append(
                 `<tr id=${result[i].chart_id} class="table-content">
@@ -40,7 +35,7 @@ $('#waitingList').on('click', () => {
 
 $(document).on('click', '.table-content', (e) => {
 
-    console.log(e.target);
+    // console.log(e.target);
     const docs = {
         chartNumber: e.target.id,
     };
@@ -152,7 +147,7 @@ $('#getPastCC').on('click', () => {
         dataType: 'json',
         cache: false,
     }).done(result => {
-        console.log(result);
+      
         for(let i = 0; i < result.length; i++) {
             $('#tablePastBody').append(
                 `<tr id=${result[i].chartNumber} class="tablecontent">

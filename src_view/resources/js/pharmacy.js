@@ -213,6 +213,51 @@ $('.pharmacySearchButton').on('click', () => {
   });
 })
 
+$(document).on('click', '.pharmacopoeia-hover', (e) => {
+
+  if($('#prescriptionTableBody .defaultPrescriptionTableBody').length)
+      $('#prescriptionTableBody .defaultPrescriptionTableBody').remove();
+
+  JSON.parse(window.localStorage.getItem('medicine')).find(function (x) {
+    if (x.id === Number(e.currentTarget.id)) {
+      $('#prescriptionTableBody').append(
+        `<tr id=${x.id}'>
+               <td>${x.name}</td>
+               <td>${x.ingredient}</td>
+               <td><input /></td>
+               <td><input /></td>
+               <td><input /></td>
+               <td><input /></td>
+               <td class="deletePrescriptionTD">
+                <i class="sign out icon delete-icon-size deleteTargetByIcon"></i>
+               </td>
+         </tr>`
+      )
+      $.uiAlert({
+        textHead: 'INFO', // header
+        text: '처방전에 '+x.name+'이(가) 추가되었습니다.', // Text
+        bgcolor: '#55a9ee', // background-color
+        textcolor: '#fff', // color
+        position: 'top-left',// position . top And bottom ||  left / center / right
+        time: 2, // time
+      })
+      // console.log(x);
+    }
+  })
+})
+
+$(document).on('click', '.deleteTargetByIcon', (e) => {
+  $(e.target).parent().parent().remove();
+})
+
+$('.delete-icon-size').on('click', function () {
+  console.log('뭐여');
+})
+
+$('.deletePrescriptionRow').on('click', () => {
+  console.log($(this));
+})
+
 function getStatus (status) {
 
     switch (status) {

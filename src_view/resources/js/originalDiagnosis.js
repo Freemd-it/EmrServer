@@ -51,7 +51,6 @@ $('.waitingTab').on('click', () => {
         cache: false,
     }).done(result => {
 
-        console.log(result);
         for(let i = 0; i < result.length; i++) {
             $('#tableBody').append(
                 `<tr id=${result[i].chart_id} class="table-content">
@@ -85,7 +84,6 @@ $('.completeTab').on('click', () => {
         cache: false,
     }).done(result => {
 
-        console.log(result);
         for(let i = 0; i < result.length; i++) {
             $('#tableBody').append(
                 `<tr id=${result[i].chart_id} class="table-content">
@@ -101,8 +99,3 @@ $('.completeTab').on('click', () => {
     $(".waitingTab").removeClass("active");
     $(".completeTab").addClass("active");
 });
-
-$('.pharmacopoeia-hover').on('click', (e) => {
-  console.log('음?');
-  console.log(e.target);
-})

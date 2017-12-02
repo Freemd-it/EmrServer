@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "35c37028ed9cfd9ba3e3"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "5812ab66c8206566814b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -11202,9 +11202,15 @@ __webpack_require__(5);
 
 __webpack_require__(6);
 
+__webpack_require__(36);
+
 __webpack_require__(7);
 
 __webpack_require__(8);
+
+__webpack_require__(37);
+
+__webpack_require__(9);
 
 __webpack_require__(10);
 
@@ -14156,7 +14162,12 @@ onRefresh:function onRefresh(){},metadata:{src:'src'},className:{fixed:'fixed',p
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 9 */,
+/* 9 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14672,10 +14683,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         status: '1'
     };
 
-    console.log("waitList Callback");
-    console.log("waitList Callback");
-    console.log("waitList Callback");
-
     _jquery2.default.ajax({
         type: 'GET',
         url: 'http://localhost:3000/waitingList',
@@ -14684,7 +14691,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         cache: false
     }).done(function (result) {
 
-        console.log(result);
         for (var i = 0; i < result.length; i++) {
             (0, _jquery2.default)('#tableBody').append('<tr id=' + result[i].chart_id + ' class="table-content">\n                       <td id=' + result[i].chart_id + '>' + result[i].chart_id + '</td>\n                       <td id=' + result[i].chart_id + '>' + result[i].name + '</td>\n                       <td id=' + result[i].chart_id + '>' + result[i].birth + '</td>\n                </tr>');
         }
@@ -14695,7 +14701,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (0, _jquery2.default)(document).on('click', '.table-content', function (e) {
 
-    console.log(e.target);
+    // console.log(e.target);
     var docs = {
         chartNumber: e.target.id
     };
@@ -14787,7 +14793,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         dataType: 'json',
         cache: false
     }).done(function (result) {
-        console.log(result);
+
         for (var i = 0; i < result.length; i++) {
             (0, _jquery2.default)('#tablePastBody').append('<tr id=' + result[i].chartNumber + ' class="tablecontent">\n                        <td id=' + result[i].chartNumber + '>' + result[i].chartNumber + '</td>\n                        <td id=' + result[i].chartNumber + '>' + result[i].createdAt + '</td>\n                 </tr>');
         }
@@ -14900,7 +14906,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         cache: false
     }).done(function (result) {
 
-        console.log(result);
         for (var i = 0; i < result.length; i++) {
             (0, _jquery2.default)('#tableBody').append('<tr id=' + result[i].chart_id + ' class="table-content">\n                       <td id=' + result[i].chart_id + '>' + result[i].chart_id + '</td>\n                       <td id=' + result[i].chart_id + '>' + result[i].name + '</td>\n                       <td id=' + result[i].chart_id + '>' + result[i].birth + '</td>\n                </tr>');
         }
@@ -14926,7 +14931,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         cache: false
     }).done(function (result) {
 
-        console.log(result);
         for (var i = 0; i < result.length; i++) {
             (0, _jquery2.default)('#tableBody').append('<tr id=' + result[i].chart_id + ' class="table-content">\n                       <td id=' + result[i].chart_id + '>' + result[i].chart_id + '</td>\n                       <td id=' + result[i].chart_id + '>' + result[i].name + '</td>\n                       <td id=' + result[i].chart_id + '>' + result[i].birth + '</td>\n                </tr>');
         }
@@ -14934,11 +14938,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     (0, _jquery2.default)(".waitingTab").removeClass("active");
     (0, _jquery2.default)(".completeTab").addClass("active");
-});
-
-(0, _jquery2.default)('.pharmacopoeia-hover').on('click', function (e) {
-    console.log('음?');
-    console.log(e.target);
 });
 
 /***/ }),
@@ -15126,6 +15125,38 @@ var tableRenderMedicine = [];
             (0, _jquery2.default)('#medicineTableBody').append('<tr id=' + result[i].id + ' class=\'pharmacopoeia-hover\'>\n                 <td>' + result[i].name + '</td>\n                 <td>' + result[i].ingredient + '</td>\n                 <td>' + result[i].medication + '</td>\n                 <td>' + result[i].property + '</td>\n          </tr>');
         }
     });
+});
+
+(0, _jquery2.default)(document).on('click', '.pharmacopoeia-hover', function (e) {
+
+    if ((0, _jquery2.default)('#prescriptionTableBody .defaultPrescriptionTableBody').length) (0, _jquery2.default)('#prescriptionTableBody .defaultPrescriptionTableBody').remove();
+
+    JSON.parse(window.localStorage.getItem('medicine')).find(function (x) {
+        if (x.id === Number(e.currentTarget.id)) {
+            (0, _jquery2.default)('#prescriptionTableBody').append('<tr id=' + x.id + '\'>\n               <td>' + x.name + '</td>\n               <td>' + x.ingredient + '</td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td class="deletePrescriptionTD">\n                <i class="sign out icon delete-icon-size deleteTargetByIcon"></i>\n               </td>\n         </tr>');
+            _jquery2.default.uiAlert({
+                textHead: 'INFO', // header
+                text: '처방전에 ' + x.name + '이(가) 추가되었습니다.', // Text
+                bgcolor: '#55a9ee', // background-color
+                textcolor: '#fff', // color
+                position: 'top-left', // position . top And bottom ||  left / center / right
+                time: 2 // time
+            });
+            // console.log(x);
+        }
+    });
+});
+
+(0, _jquery2.default)(document).on('click', '.deleteTargetByIcon', function (e) {
+    (0, _jquery2.default)(e.target).parent().parent().remove();
+});
+
+(0, _jquery2.default)('.delete-icon-size').on('click', function () {
+    console.log('뭐여');
+});
+
+(0, _jquery2.default)('.deletePrescriptionRow').on('click', function () {
+    console.log((0, _jquery2.default)(undefined));
 });
 
 function getStatus(status) {
@@ -16220,6 +16251,80 @@ module.exports = function(hash, moduleMap, options) {
   }
 };
 
+
+/***/ }),
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+$.uiAlert = function (options) {
+  var setUI = $.extend({
+    textHead: 'Your user registration was successful.',
+    text: 'You may now log-in with the username you have chosen',
+    textcolor: '#19c3aa',
+    bgcolors: '#fff',
+    position: 'top-right',
+    icon: '',
+    time: 5,
+    permanent: false
+  }, options);
+
+  var ui_alert = 'ui-alert-content';
+  ui_alert += '-' + setUI.position;
+  setUI.bgcolors = 'style="background-color: ' + setUI.bgcolor + ';   box-shadow: 0 0 0 1px rgba(255,255,255,.5) inset,0 0 0 0 transparent;"';
+  if (setUI.bgcolors === '') setUI.bgcolors = 'style="background-color: ; box-shadow: 0 0 0 1px rgba(255,255,255,.5) inset,0 0 0 0 transparent;"';
+  if (!$('body > .' + ui_alert).length) {
+    $('body').append('<div class="ui-alert-content ' + ui_alert + '" style="width: inherit;"></div>');
+  }
+  var message = $('<div id="messages" class="ui icon message" ' + setUI.bgcolors + '><i class="' + setUI.icon + ' icon" style="color: ' + setUI.textcolor + ';"></i><i class="close icon" style="color: ' + setUI.textcolor + ';" id="messageclose"></i><div style="color: ' + setUI.textcolor + '; margin-right: 10px;">   <div class="header">' + setUI.textHead + '</div>  <p> ' + setUI.text + '</p></div>  </div>');
+  $('.' + ui_alert).prepend(message);
+  message.animate({
+    opacity: '1'
+  }, 300);
+  if (setUI.permanent === false) {
+    var timer = 0;
+    $(message).mouseenter(function () {
+      clearTimeout(timer);
+    }).mouseleave(function () {
+      uiAlertHide();
+    });
+    uiAlertHide();
+  }
+  function uiAlertHide() {
+    timer = setTimeout(function () {
+      message.animate({
+        opacity: '0'
+      }, 300, function () {
+        message.remove();
+      });
+    }, setUI.time * 1000);
+  }
+
+  $('#messageclose').on('click', function () {
+    $(this).closest('#messages').transition('fade');
+  });
+};
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
 /******/ ]);
