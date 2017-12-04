@@ -99,3 +99,42 @@ $('.completeTab').on('click', () => {
     $(".waitingTab").removeClass("active");
     $(".completeTab").addClass("active");
 });
+
+$('#doctorSignedComplete').on('click', function () {
+
+  var prescriptionLength = $('#prescriptionTableBody').children().length - 1;
+  var prescription = [];
+  var medicine = {};
+
+  for (var i = 1; i <= prescriptionLength; i++) {
+    medicine = {};
+    medicine.medicineId = $('#prescriptionTableBody').children().eq(i).attr('id');
+    medicine.medicineName = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(0).text());
+    medicine.ingredient = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(1).text());
+    medicine.doses = $('#prescriptionTableBody').children().eq(i).children().eq(2).children().val();
+    medicine.dosesCountByDay = $('#prescriptionTableBody').children().eq(i).children().eq(3).children().val();
+    medicine.dosesDay = $('#prescriptionTableBody').children().eq(i).children().eq(4).children().val();
+    medicine.remarks = $('#prescriptionTableBody').children().eq(i).children().eq(5).children().val();
+    prescription.push(medicine);
+  }
+
+  var param = {
+    chartNumber: $('#preChartId').val(),
+    impression: $('.impression').val().replace(/\n/g, "<br>"),
+    presentIllness: $('.presentIllness').val().replace(/\n/g, "<br>"),
+    treatmentNote: $('.treatmentNote').val().replace(/\n/g, "<br>"),
+    updateStatus: 3,
+    prescription: JSON.stringify(prescription)
+  }
+
+  $.ajax({
+      type: 'POST',
+      url: 'http://localhost:3000/chart/update',
+      data: param,
+      dataType: 'json',
+      cache: false,
+  }).done(result => {
+      console.log(result);
+  })
+
+})

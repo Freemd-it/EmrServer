@@ -16,14 +16,14 @@ $('#btn-name-send').on('click', () => {
     $('#birth').attr({
         disabled: false,
     });
-    
+
     $('.ui.dropdown').removeClass("disabled");
 
     if(!name) {
         alert("이름을 입력해주세요.");
         return;
     }
-  
+
     docs = {
         name,
     };
@@ -424,6 +424,14 @@ $('#sendToPart2').on('click', () => {
         });
 
         console.log(result);
+        $.uiAlert({
+          textHead: 'COMPLETE',
+          text: name+'님의 접수가 완료되었습니다.',
+          bgcolor: '#19c3aa',
+          textcolor: '#fff',
+          position: 'top-left',
+          time: 2,
+        })
         //todo 정상적으로 등록되었는지 어럴트, 정상적 등록시 적힌데이터 지우기
     });
 

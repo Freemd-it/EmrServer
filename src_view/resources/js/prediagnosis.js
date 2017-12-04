@@ -81,7 +81,8 @@ $(document).on('click', '.negative.send.ui.button', () => {
         bloodGlucose,
         mealTerm,
         chartNumber,
-        ccArray : JSON.stringify(ccData),
+        ccArray: JSON.stringify(ccData),
+        updateStatus: 2
     };
 
     $.ajax({
@@ -100,11 +101,19 @@ $(document).on('click', '.negative.send.ui.button', () => {
                 $('#CCsegment *').remove();
             }
 
-
             $('#getPastCC').attr('disabled', true);
+
+            $.uiAlert({
+              textHead: 'COMPLETE',
+              text: '차트번호 '+chartNumber+' 예진 완료되었습니다.',
+              bgcolor: '#19c3aa',
+              textcolor: '#fff',
+              position: 'top-left',
+              time: 2,
+            })
+
             return 0;
         }
-
     })
 
 });
@@ -147,7 +156,7 @@ $('#getPastCC').on('click', () => {
         dataType: 'json',
         cache: false,
     }).done(result => {
-      
+
         for(let i = 0; i < result.length; i++) {
             $('#tablePastBody').append(
                 `<tr id=${result[i].chartNumber} class="tablecontent">

@@ -221,7 +221,7 @@ $(document).on('click', '.pharmacopoeia-hover', (e) => {
   JSON.parse(window.localStorage.getItem('medicine')).find(function (x) {
     if (x.id === Number(e.currentTarget.id)) {
       $('#prescriptionTableBody').append(
-        `<tr id=${x.id}'>
+        `<tr id=${x.id}>
                <td>${x.name}</td>
                <td>${x.ingredient}</td>
                <td><input /></td>
@@ -234,14 +234,13 @@ $(document).on('click', '.pharmacopoeia-hover', (e) => {
          </tr>`
       )
       $.uiAlert({
-        textHead: 'INFO', // header
-        text: '처방전에 '+x.name+'이(가) 추가되었습니다.', // Text
-        bgcolor: '#55a9ee', // background-color
-        textcolor: '#fff', // color
-        position: 'top-left',// position . top And bottom ||  left / center / right
-        time: 2, // time
+        textHead: 'INFO',
+        text: '처방전에 '+x.name+'이(가) 추가되었습니다.',
+        bgcolor: '#55a9ee',
+        textcolor: '#fff',
+        position: 'top-left',
+        time: 2,
       })
-      // console.log(x);
     }
   })
 })

@@ -3,6 +3,7 @@ const patient = require('../Entity/Patient.js');
 const complaintEntity = require('../Entity/Complaint.js');
 
 const complaint = require('./ComplaintModel');
+const prescription = require('./PrescriptionModel');
 
 var ChartModel = function (data) {
     this.data = data;
@@ -46,23 +47,42 @@ ChartModel.getChartByChartNumber = function (data, callback) {
 
 ChartModel.updateChartByChartNumber = function (data, callback) {
 
-    chart.update({
-        heartRate : data.heartRate ? data.heartRate : 0,
-        heartRate : data.heartRate ? data.heartRate : 0,
-        pulseRate : data.pulseRate ? data.pulseRate : 0,
-        bodyTemporature : data.bodyTemporature ? data.bodyTemporature : 0,
-        systoleBloodPressure : data.systoleBloodPressure ? data.systoleBloodPressure : 0,
-        diastoleBloodPressure : data.diastoleBloodPressure ? data.diastoleBloodPressure : 0,
-        bloodGlucose : data.bloodGlucose ? data.bloodGlucose : 0,
-        mealTerm: data.mealTerm ? data.mealTerm : 0,
-    }, {
-        where : {
-                chartNumber : data.chartNumber
-        }
-    }).then(results => {
+    if (data.updateStatus === '2') {
+      chart.update({
+          status : 2,
+          heartRate : data.heartRate ? data.heartRate : 0,
+          heartRate : data.heartRate ? data.heartRate : 0,
+          pulseRate : data.pulseRate ? data.pulseRate : 0,
+          bodyTemporature : data.bodyTemporature ? data.bodyTemporature : 0,
+          systoleBloodPressure : data.systoleBloodPressure ? data.systoleBloodPressure : 0,
+          diastoleBloodPressure : data.diastoleBloodPressure ? data.diastoleBloodPressure : 0,
+          bloodGlucose : data.bloodGlucose ? data.bloodGlucose : 0,
+          mealTerm: data.mealTerm ? data.mealTerm : 0,
+      }, {
+          where : {
+                  chartNumber : data.chartNumber
+          }
+      }).then(results => {
 
-        complaint.Insert(data, callback)
-    })
+          complaint.Insert(data, callback)
+      })
+    }
+    else if (data.updateStatus === '3') {
+      let medicines = JSON.parse(data.prescription);
+      chart.update({
+        status : 3,
+        impression : data.impression,
+        presentIllness : data.presentIllness,
+        treatmentNote : data.treatmentNote,
+      }, {
+        where : {
+          chartNumber : data.chartNumber
+        }
+      }).then(result => {
+        console.log(result);
+      })
+      // TODO 본진 차트 업데이트 & 처방 테이블 Insert 필요
+    }
 }
 
 ChartModel.getPastChart = function (data, callback) {

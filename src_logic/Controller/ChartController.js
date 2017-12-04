@@ -22,7 +22,7 @@ router.get('/', function (req, res){
 router.post('/update', function (req, res) {
 
     const data = {
-        status : 2,
+        status : req.body.updateStatus,
         chart_id : req.body.chartNumber,
     };
 

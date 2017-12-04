@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "6096b06ec795d84ce59a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f17607164247c0f006fc"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -14658,6 +14658,14 @@ var getAllergyHistory = function getAllergyHistory() {
         });
 
         console.log(result);
+        _jquery2.default.uiAlert({
+            textHead: 'COMPLETE',
+            text: name + '님의 접수가 완료되었습니다.',
+            bgcolor: '#19c3aa',
+            textcolor: '#fff',
+            position: 'top-left',
+            time: 2
+        });
         //todo 정상적으로 등록되었는지 어럴트, 정상적 등록시 적힌데이터 지우기
     });
 });
@@ -14746,7 +14754,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         bloodGlucose: bloodGlucose,
         mealTerm: mealTerm,
         chartNumber: chartNumber,
-        ccArray: JSON.stringify(ccData)
+        ccArray: JSON.stringify(ccData),
+        updateStatus: 2
     };
 
     _jquery2.default.ajax({
@@ -14766,6 +14775,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             }
 
             (0, _jquery2.default)('#getPastCC').attr('disabled', true);
+
+            _jquery2.default.uiAlert({
+                textHead: 'COMPLETE',
+                text: '차트번호 ' + chartNumber + ' 예진 완료되었습니다.',
+                bgcolor: '#19c3aa',
+                textcolor: '#fff',
+                position: 'top-left',
+                time: 2
+            });
+
             return 0;
         }
     });
@@ -14938,6 +14957,44 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     (0, _jquery2.default)(".waitingTab").removeClass("active");
     (0, _jquery2.default)(".completeTab").addClass("active");
+});
+
+(0, _jquery2.default)('#doctorSignedComplete').on('click', function () {
+
+    var prescriptionLength = (0, _jquery2.default)('#prescriptionTableBody').children().length - 1;
+    var prescription = [];
+    var medicine = {};
+
+    for (var i = 1; i <= prescriptionLength; i++) {
+        medicine = {};
+        medicine.medicineId = (0, _jquery2.default)('#prescriptionTableBody').children().eq(i).attr('id');
+        medicine.medicineName = _jquery2.default.trim((0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(0).text());
+        medicine.ingredient = _jquery2.default.trim((0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(1).text());
+        medicine.doses = (0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(2).children().val();
+        medicine.dosesCountByDay = (0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(3).children().val();
+        medicine.dosesDay = (0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(4).children().val();
+        medicine.remarks = (0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(5).children().val();
+        prescription.push(medicine);
+    }
+
+    var param = {
+        chartNumber: (0, _jquery2.default)('#preChartId').val(),
+        impression: (0, _jquery2.default)('.impression').val().replace(/\n/g, "<br>"),
+        presentIllness: (0, _jquery2.default)('.presentIllness').val().replace(/\n/g, "<br>"),
+        treatmentNote: (0, _jquery2.default)('.treatmentNote').val().replace(/\n/g, "<br>"),
+        updateStatus: 3,
+        prescription: JSON.stringify(prescription)
+    };
+
+    _jquery2.default.ajax({
+        type: 'POST',
+        url: 'http://localhost:3000/chart/update',
+        data: param,
+        dataType: 'json',
+        cache: false
+    }).done(function (result) {
+        console.log(result);
+    });
 });
 
 /***/ }),
@@ -15133,16 +15190,15 @@ var tableRenderMedicine = [];
 
     JSON.parse(window.localStorage.getItem('medicine')).find(function (x) {
         if (x.id === Number(e.currentTarget.id)) {
-            (0, _jquery2.default)('#prescriptionTableBody').append('<tr id=' + x.id + '\'>\n               <td>' + x.name + '</td>\n               <td>' + x.ingredient + '</td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td class="deletePrescriptionTD">\n                <i class="sign out icon delete-icon-size deleteTargetByIcon"></i>\n               </td>\n         </tr>');
+            (0, _jquery2.default)('#prescriptionTableBody').append('<tr id=' + x.id + '>\n               <td>' + x.name + '</td>\n               <td>' + x.ingredient + '</td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td class="deletePrescriptionTD">\n                <i class="sign out icon delete-icon-size deleteTargetByIcon"></i>\n               </td>\n         </tr>');
             _jquery2.default.uiAlert({
-                textHead: 'INFO', // header
-                text: '처방전에 ' + x.name + '이(가) 추가되었습니다.', // Text
-                bgcolor: '#55a9ee', // background-color
-                textcolor: '#fff', // color
-                position: 'top-left', // position . top And bottom ||  left / center / right
-                time: 2 // time
+                textHead: 'INFO',
+                text: '처방전에 ' + x.name + '이(가) 추가되었습니다.',
+                bgcolor: '#55a9ee',
+                textcolor: '#fff',
+                position: 'top-left',
+                time: 2
             });
-            // console.log(x);
         }
     });
 });

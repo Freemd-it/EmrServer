@@ -32,13 +32,14 @@ EntityService.Init = function(){
 
     chart.hasMany( complaint, { foreignKey : 'chart_id', onUpdate : 'CASCADE' });
     chart.hasMany( ocs, { foreignKey : 'chart_id', onUpdate : 'CASCADE' });
-    chart.hasOne( prescription, { foreignKey : 'chart_id', onUpdate : 'CASCADE' });
     chart.belongsTo(patient, { foreignKey : 'patient_id'});
     /*
       차트 : CC = 1 : N
       차트 : OCS = 1 : N
       차트 : 처방 = 1 : 1
     */
+
+    medicine.hasMany( prescription, { foreignKey : 'medicine_id', onUpdate : 'CASCADE'});
 
     permission.sync().then(() => {
 
@@ -51,14 +52,13 @@ EntityService.Init = function(){
         chart.sync().then(() => {
 
             complaint.sync();
-            prescription.sync();
             ocs.sync();
         });
     });
 
-    waiting.sync();
-    medicine.sync();
     medicineCategory.sync();
+
+    waiting.sync();
 }
 
 module.exports = EntityService;

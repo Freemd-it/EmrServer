@@ -11,6 +11,7 @@ var ComplaintModel = function(data){
 ComplaintModel.Insert = function(data, callback){
     let CCmodels = [];
     const ccArray = JSON.parse(data.ccArray);
+    console.log(ccArray);
 
     ccArray.forEach(objectData => {
        if( _.startsWith(objectData.name, 'CC')) {
