@@ -425,7 +425,7 @@ $('#sendToPart2').on('click', () => {
 
         console.log(result);
         $.uiAlert({
-          textHead: 'COMPLETE',
+          textHead: '[알림]',
           text: name+'님의 접수가 완료되었습니다.',
           bgcolor: '#19c3aa',
           textcolor: '#fff',

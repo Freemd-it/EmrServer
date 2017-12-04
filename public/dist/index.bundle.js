@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "fcd93e4aa9b29012e914"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "84acd93df020a7461663"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -14659,7 +14659,7 @@ var getAllergyHistory = function getAllergyHistory() {
 
         console.log(result);
         _jquery2.default.uiAlert({
-            textHead: 'COMPLETE',
+            textHead: '[알림]',
             text: name + '님의 접수가 완료되었습니다.',
             bgcolor: '#19c3aa',
             textcolor: '#fff',
