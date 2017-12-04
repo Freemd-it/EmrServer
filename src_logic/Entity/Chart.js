@@ -12,9 +12,9 @@ const Chart = dbService.define('chart', {
     diastoleBloodPressure : { type :	sequelize.INTEGER(3), allowNull : true },
     bloodGlucose : { type :	sequelize.INTEGER(3), allowNull : true },
     mealTerm : { type :	sequelize.INTEGER(3), allowNull : true },
-    impression : { type :	sequelize.INTEGER(11), allowNull : true },
-    presentIllness : { type :	sequelize.INTEGER(11), allowNull : true },
-    treatmentNote : { type :	sequelize.INTEGER(11), allowNull : true }
+    impression : { type :	sequelize.STRING(300), allowNull : true },
+    presentIllness : { type :	sequelize.STRING(300), allowNull : true },
+    treatmentNote : { type :	sequelize.STRING(300), allowNull : true }
 });
 
 module.exports = Chart;

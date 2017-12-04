@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "f17607164247c0f006fc"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "fcd93e4aa9b29012e914"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -14777,7 +14777,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             (0, _jquery2.default)('#getPastCC').attr('disabled', true);
 
             _jquery2.default.uiAlert({
-                textHead: 'COMPLETE',
+                textHead: '[알림]',
                 text: '차트번호 ' + chartNumber + ' 예진 완료되었습니다.',
                 bgcolor: '#19c3aa',
                 textcolor: '#fff',
@@ -14967,9 +14967,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     for (var i = 1; i <= prescriptionLength; i++) {
         medicine = {};
-        medicine.medicineId = (0, _jquery2.default)('#prescriptionTableBody').children().eq(i).attr('id');
+        medicine.medicine_id = (0, _jquery2.default)('#prescriptionTableBody').children().eq(i).attr('id');
+        medicine.chartNumber = (0, _jquery2.default)('#preChartId').val();
         medicine.medicineName = _jquery2.default.trim((0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(0).text());
-        medicine.ingredient = _jquery2.default.trim((0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(1).text());
+        medicine.medicineIngredient = _jquery2.default.trim((0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(1).text());
         medicine.doses = (0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(2).children().val();
         medicine.dosesCountByDay = (0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(3).children().val();
         medicine.dosesDay = (0, _jquery2.default)('#prescriptionTableBody').children().eq(i).children().eq(4).children().val();
@@ -14993,7 +14994,33 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         dataType: 'json',
         cache: false
     }).done(function (result) {
-        console.log(result);
+        if (result[0] === 1) {
+
+            (0, _jquery2.default)('#preChartId').val('');
+            (0, _jquery2.default)('#preName').val('');
+            (0, _jquery2.default)('.impression').val('');
+            (0, _jquery2.default)('.presentIllness').val('');
+            (0, _jquery2.default)('.treatmentNote').val('');
+
+            if ((0, _jquery2.default)('#prescriptionTableBody').children().length > 0) {
+                (0, _jquery2.default)('#prescriptionTableBody *').remove();
+            }
+
+            (0, _jquery2.default)('#pastDiagnosisRecord').attr('disabled', true);
+            (0, _jquery2.default)('#vitalSign').attr('disabled', true);
+            (0, _jquery2.default)('#pharmacopoeia').attr('disabled', true);
+
+            _jquery2.default.uiAlert({
+                textHead: '[알림]',
+                text: '차트번호 ' + param.chartNumber + ' 본진 서명 완료되었습니다.',
+                bgcolor: '#19c3aa',
+                textcolor: '#fff',
+                position: 'top-left',
+                time: 2
+            });
+        } else {
+            alert('[System Error]\n IT 본부 단원에게 문의해주세요.');
+        }
     });
 });
 
@@ -15156,6 +15183,8 @@ var tableRenderMedicine = [];
 
 (0, _jquery2.default)('.pharmacySearchButton').on('click', function () {
 
+    // 공백일 경우 검색할 약품명 또는 성분명을 입력해주세요 alert 출력
+
     (0, _jquery2.default)('.main-category-select > select > .default').attr('selected', 'selected');
     (0, _jquery2.default)('.small-category-select > select > .default').attr('selected', 'selected');
     (0, _jquery2.default)('.main-category-select > select').nextAll('div.text').text('대분류');
@@ -15192,7 +15221,7 @@ var tableRenderMedicine = [];
         if (x.id === Number(e.currentTarget.id)) {
             (0, _jquery2.default)('#prescriptionTableBody').append('<tr id=' + x.id + '>\n               <td>' + x.name + '</td>\n               <td>' + x.ingredient + '</td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td class="deletePrescriptionTD">\n                <i class="sign out icon delete-icon-size deleteTargetByIcon"></i>\n               </td>\n         </tr>');
             _jquery2.default.uiAlert({
-                textHead: 'INFO',
+                textHead: '[알림]',
                 text: '처방전에 ' + x.name + '이(가) 추가되었습니다.',
                 bgcolor: '#55a9ee',
                 textcolor: '#fff',

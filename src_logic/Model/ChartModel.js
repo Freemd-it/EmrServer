@@ -79,9 +79,9 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
           chartNumber : data.chartNumber
         }
       }).then(result => {
-        console.log(result);
+
+          prescription.createAll(data, callback);
       })
-      // TODO 본진 차트 업데이트 & 처방 테이블 Insert 필요
     }
 }
 

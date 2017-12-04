@@ -178,6 +178,8 @@ $('.small-category-select').change( () => {
 
 $('.pharmacySearchButton').on('click', () => {
 
+  // 공백일 경우 검색할 약품명 또는 성분명을 입력해주세요 alert 출력
+
   $('.main-category-select > select > .default').attr('selected', 'selected');
   $('.small-category-select > select > .default').attr('selected', 'selected');
   $('.main-category-select > select').nextAll('div.text').text('대분류');
@@ -234,7 +236,7 @@ $(document).on('click', '.pharmacopoeia-hover', (e) => {
          </tr>`
       )
       $.uiAlert({
-        textHead: 'INFO',
+        textHead: '[알림]',
         text: '처방전에 '+x.name+'이(가) 추가되었습니다.',
         bgcolor: '#55a9ee',
         textcolor: '#fff',

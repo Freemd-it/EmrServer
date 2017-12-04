@@ -56,8 +56,12 @@ EntityService.Init = function(){
         });
     });
 
-    medicineCategory.sync();
+    medicine.sync().then(() => {
 
+      prescription.sync();
+    });
+
+    medicineCategory.sync();
     waiting.sync();
 }
 

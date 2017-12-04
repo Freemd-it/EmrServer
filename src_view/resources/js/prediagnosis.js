@@ -104,7 +104,7 @@ $(document).on('click', '.negative.send.ui.button', () => {
             $('#getPastCC').attr('disabled', true);
 
             $.uiAlert({
-              textHead: 'COMPLETE',
+              textHead: '[알림]',
               text: '차트번호 '+chartNumber+' 예진 완료되었습니다.',
               bgcolor: '#19c3aa',
               textcolor: '#fff',

@@ -108,9 +108,10 @@ $('#doctorSignedComplete').on('click', function () {
 
   for (var i = 1; i <= prescriptionLength; i++) {
     medicine = {};
-    medicine.medicineId = $('#prescriptionTableBody').children().eq(i).attr('id');
+    medicine.medicine_id = $('#prescriptionTableBody').children().eq(i).attr('id');
+    medicine.chartNumber = $('#preChartId').val();
     medicine.medicineName = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(0).text());
-    medicine.ingredient = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(1).text());
+    medicine.medicineIngredient = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(1).text());
     medicine.doses = $('#prescriptionTableBody').children().eq(i).children().eq(2).children().val();
     medicine.dosesCountByDay = $('#prescriptionTableBody').children().eq(i).children().eq(3).children().val();
     medicine.dosesDay = $('#prescriptionTableBody').children().eq(i).children().eq(4).children().val();
@@ -134,7 +135,33 @@ $('#doctorSignedComplete').on('click', function () {
       dataType: 'json',
       cache: false,
   }).done(result => {
-      console.log(result);
+      if(result[0] === 1) {
+
+        $('#preChartId').val('');
+        $('#preName').val('');
+        $('.impression').val('');
+        $('.presentIllness').val('');
+        $('.treatmentNote').val('');
+
+        if($('#prescriptionTableBody').children().length > 0) {
+            $('#prescriptionTableBody *').remove();
+        }
+
+        $('#pastDiagnosisRecord').attr('disabled', true);
+        $('#vitalSign').attr('disabled', true);
+        $('#pharmacopoeia').attr('disabled', true);
+
+        $.uiAlert({
+          textHead: '[알림]',
+          text: '차트번호 '+param.chartNumber+' 본진 서명 완료되었습니다.',
+          bgcolor: '#19c3aa',
+          textcolor: '#fff',
+          position: 'top-left',
+          time: 2,
+        })
+      } else {
+        alert('[System Error]\n IT 본부 단원에게 문의해주세요.');
+      }
   })
 
 })

@@ -10,6 +10,7 @@ const Prescription = dbService.define('prescription', {
   doses : { type : sequelize.INTEGER(5), allowNull : true },
   dosesCountByDay : { type : sequelize.INTEGER(5), allowNull : true },
   dosesDay : { type : sequelize.INTEGER(5), allowNull : true },
+  remarks : { type : sequelize.STRING(100), allowNull : true }
 });
 
 module.exports = Prescription;
