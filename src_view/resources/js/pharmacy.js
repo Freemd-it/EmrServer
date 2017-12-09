@@ -3,6 +3,10 @@ import $ from 'jquery';
 var tableRenderMedicine = [];
 
 $(document).ready(() => {
+
+  $('.ui.dropdown')
+  .dropdown();
+
   if($('#PharmacyOCSTableBody').children().length)
       $('#PharmacyOCSTableBody *').remove();
 
@@ -34,7 +38,34 @@ $(document).ready(() => {
   }).done(result => {
 
       window.localStorage.setItem('medicine', JSON.stringify(result));
+
+      var getAutoCompleteNameObject = [];
+      var getAutoCompleteIngredientObject = [];
+      result.find((x) => {
+        getAutoCompleteNameObject.push({'title': x.name});
+        getAutoCompleteIngredientObject.push({'title': x.ingredient.replace(/<br>/g, " ")});
+      });
+
+      window.localStorage.setItem('medicineName', JSON.stringify(getAutoCompleteNameObject));
+      window.localStorage.setItem('medicineIngredient', JSON.stringify(getAutoCompleteIngredientObject));
+
+      $('.search.ui')
+        .search({
+          source: JSON.parse(window.localStorage.getItem('medicineName'))
+        });
   });
+});
+
+$('.medicineSearchSelect').change( () => {
+
+  var sourceTarget;
+
+  if ($('.medicineSearchSelect option:selected').val() === '1') {
+    sourceTarget = JSON.parse(window.localStorage.getItem('medicineName'));
+  } else {
+    sourceTarget = JSON.parse(window.localStorage.getItem('medicineIngredient'));
+  }
+  $('.search.ui').search({ source: sourceTarget })
 });
 
 $('.getPharmacyOCS').on('click', () => {
@@ -90,6 +121,9 @@ $('#pharmacopoeia').on('click', () => {
           )}
   });
   $('.ui.longer.modal.pharmacopoeia').modal('show');
+  $(".main-category-select option[value='심혈관계질환']").attr("selected", "selected");
+  // console.log($('.main-category-select option').attr('value'));
+  // $('.main-category-select > select > option').val();
 });
 
 $('.main-category-select').change( () => {
@@ -192,6 +226,11 @@ $('.pharmacySearchButton').on('click', () => {
     option: option
   }
 
+  if (searchText === '') {
+    alert('검색할 약품명 또는 성분명을 입력해주세요.');
+    return;
+  }
+
   $.ajax({
       type: 'GET',
       url: 'http://localhost:3000/medicine/search',
@@ -254,11 +293,10 @@ $(document).on('click', '.deleteTargetByIcon', (e) => {
 function getStatus (status) {
 
     switch (status) {
-      case 1 : return '접수'; break;
-      case 2 : return '예진'; break;
-      case 3 : return '본진'; break;
-      case 4 : return '대기'; break;
+      case 1 : return '접수 완료'; break;
+      case 2 : return '예진 완료'; break;
+      case 3 : return '처방 대기'; break;
+      case 4 : return '약 조제중'; break;
       case 5 : return '조제'; break;
-      case 6 : return '완료'; break;
     }
 }

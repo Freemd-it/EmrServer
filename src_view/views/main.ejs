@@ -26,6 +26,16 @@
       }
       .pharmacySearchInput {
         width: 60%;
+        display: inline-block;
+      }
+      .pharmacySearchInput .ui.search {
+        width: 100%;
+      }
+      .pharmacySearchInput .ui.search .prompt {
+        width: 100%;
+      }
+      .ui.search .results {
+        width: 100%;
       }
       .pharmacySearchButton {
         width: 14%;
@@ -44,6 +54,19 @@
       }
       .delete-icon-size:hover {
         cursor: pointer;
+      }
+      /* 약전용 css */
+      #autoCompleteMedicine {
+        display: inline;
+      }
+      .results {
+        display: inline;
+      }
+      .ui.search .prompt {
+        border-radius: 5px;
+      }
+      .pharmacyModal {
+        min-height: 100%;
       }
     </style>
 </head>
@@ -176,16 +199,21 @@
         </select>
     </div>
 
-    <div class="scrolling content">
+    <div class="scrolling content pharmacyModal">
         <div>
           <select class="ui dropdown medicineSearchSelect">
             <option value="">검색 구분</option>
             <option selected value="1">약품명</option>
             <option value="2">성분명</option>
           </select>
-          <div class="ui input focus pharmacySearchInput">
-            <input name="medicineSearchText" type="text" placeholder="성분 또는 약품명을 적어주세요.">
+
+          <div id="autoCompleteMedicine" class="ui search">
+              <div class="ui icon input pharmacySearchInput">
+                <input class="prompt" name="medicineSearchText" type="text" placeholder="성분 또는 약품명을 적어주세요.">
+              </div>
+              <div class="results"></div>
           </div>
+
           <button class="ui primary button pharmacySearchButton">
             검색
           </button>

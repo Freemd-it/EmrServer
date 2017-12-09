@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "84acd93df020a7461663"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "5e7e888f4be644ef50e5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -11186,7 +11186,7 @@ module.exports = Html5Entities;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(3);
-module.exports = __webpack_require__(14);
+module.exports = __webpack_require__(17);
 
 
 /***/ }),
@@ -11202,23 +11202,23 @@ __webpack_require__(5);
 
 __webpack_require__(6);
 
-__webpack_require__(36);
-
 __webpack_require__(7);
 
 __webpack_require__(8);
-
-__webpack_require__(37);
 
 __webpack_require__(9);
 
 __webpack_require__(10);
 
-__webpack_require__(11);
-
 __webpack_require__(12);
 
 __webpack_require__(13);
+
+__webpack_require__(14);
+
+__webpack_require__(15);
+
+__webpack_require__(16);
 
 /***/ }),
 /* 4 */
@@ -11240,6 +11240,12 @@ __webpack_require__(13);
 
 /***/ }),
 /* 7 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13420,7 +13426,7 @@ if (typeof jQuery === 'undefined') {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13840,7 +13846,7 @@ action:'action',// "view more" object name
 actionText:'text',// "view more" text
 actionURL:'url'// "view more" url
 },selector:{prompt:'.prompt',searchButton:'.search.button',results:'.results',message:'.results > .message',category:'.category',result:'.result',title:'.title, .name'},templates:{escape:function escape(string){var badChars=/[&<>"'`]/g,shouldEscape=/[&<>"'`]/,escape={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","`":"&#x60;"},escapedChar=function escapedChar(chr){return escape[chr];};if(shouldEscape.test(string)){return string.replace(badChars,escapedChar);}return string;},message:function message(_message3,type){var html='';if(_message3!==undefined&&type!==undefined){html+=''+'<div class="message '+type+'">';// message type
-if(type=='empty'){html+=''+'<div class="header">No Results</div class="header">'+'<div class="description">'+_message3+'</div class="description">';}else{html+=' <div class="description">'+_message3+'</div>';}html+='</div>';}return html;},category:function category(response,fields){var html='',escape=$.fn.search.settings.templates.escape;if(response[fields.categoryResults]!==undefined){// each category
+if(type=='empty'){html+=''+'<div class="header">검색 결과 없음</div class="header">'+'<div class="description">이 창이 계속 보이신다면 백 스페이스 키를 눌러주세요.</div class="description">';}else{html+=' <div class="description">'+_message3+'</div>';}html+='</div>';}return html;},category:function category(response,fields){var html='',escape=$.fn.search.settings.templates.escape;if(response[fields.categoryResults]!==undefined){// each category
 $.each(response[fields.categoryResults],function(index,category){if(category[fields.results]!==undefined&&category.results.length>0){html+='<div class="category">';if(category[fields.categoryName]!==undefined){html+='<div class="name">'+category[fields.categoryName]+'</div>';}// each item inside category
 $.each(category.results,function(index,result){if(result[fields.url]){html+='<a class="result" href="'+result[fields.url]+'">';}else{html+='<a class="result">';}if(result[fields.image]!==undefined){html+=''+'<div class="image">'+' <img src="'+result[fields.image]+'">'+'</div>';}html+='<div class="content">';if(result[fields.price]!==undefined){html+='<div class="price">'+result[fields.price]+'</div>';}if(result[fields.title]!==undefined){html+='<div class="title">'+result[fields.title]+'</div>';}if(result[fields.description]!==undefined){html+='<div class="description">'+result[fields.description]+'</div>';}html+=''+'</div>';html+='</a>';});html+=''+'</div>';}});if(response[fields.action]){html+=''+'<a href="'+response[fields.action][fields.actionURL]+'" class="action">'+response[fields.action][fields.actionText]+'</a>';}return html;}return false;},standard:function standard(response,fields){var html='';if(response[fields.results]!==undefined){// each result
 $.each(response[fields.results],function(index,result){if(result[fields.url]){html+='<a class="result" href="'+result[fields.url]+'">';}else{html+='<a class="result">';}if(result[fields.image]!==undefined){html+=''+'<div class="image">'+' <img src="'+result[fields.image]+'">'+'</div>';}html+='<div class="content">';if(result[fields.price]!==undefined){html+='<div class="price">'+result[fields.price]+'</div>';}if(result[fields.title]!==undefined){html+='<div class="title">'+result[fields.title]+'</div>';}if(result[fields.description]!==undefined){html+='<div class="description">'+result[fields.description]+'</div>';}html+=''+'</div>';html+='</a>';});if(response[fields.action]){html+=''+'<a href="'+response[fields.action][fields.actionURL]+'" class="action">'+response[fields.action][fields.actionText]+'</a>';}return html;}return false;}}};})(jQuery,window,document);/*!
@@ -14162,13 +14168,70 @@ onRefresh:function onRefresh(){},metadata:{src:'src'},className:{fixed:'fixed',p
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 9 */
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+$.uiAlert = function (options) {
+  var setUI = $.extend({
+    textHead: 'Your user registration was successful.',
+    text: 'You may now log-in with the username you have chosen',
+    textcolor: '#19c3aa',
+    bgcolors: '#fff',
+    position: 'top-right',
+    icon: '',
+    time: 5,
+    permanent: false
+  }, options);
+
+  var ui_alert = 'ui-alert-content';
+  ui_alert += '-' + setUI.position;
+  setUI.bgcolors = 'style="background-color: ' + setUI.bgcolor + ';   box-shadow: 0 0 0 1px rgba(255,255,255,.5) inset,0 0 0 0 transparent;"';
+  if (setUI.bgcolors === '') setUI.bgcolors = 'style="background-color: ; box-shadow: 0 0 0 1px rgba(255,255,255,.5) inset,0 0 0 0 transparent;"';
+  if (!$('body > .' + ui_alert).length) {
+    $('body').append('<div class="ui-alert-content ' + ui_alert + '" style="width: inherit;"></div>');
+  }
+  var message = $('<div id="messages" class="ui icon message" ' + setUI.bgcolors + '><i class="' + setUI.icon + ' icon" style="color: ' + setUI.textcolor + ';"></i><i class="close icon" style="color: ' + setUI.textcolor + ';" id="messageclose"></i><div style="color: ' + setUI.textcolor + '; margin-right: 10px;">   <div class="header">' + setUI.textHead + '</div>  <p> ' + setUI.text + '</p></div>  </div>');
+  $('.' + ui_alert).prepend(message);
+  message.animate({
+    opacity: '1'
+  }, 300);
+  if (setUI.permanent === false) {
+    var timer = 0;
+    $(message).mouseenter(function () {
+      clearTimeout(timer);
+    }).mouseleave(function () {
+      uiAlertHide();
+    });
+    uiAlertHide();
+  }
+  function uiAlertHide() {
+    timer = setTimeout(function () {
+      message.animate({
+        opacity: '0'
+      }, 300, function () {
+        message.remove();
+      });
+    }, setUI.time * 1000);
+  }
+
+  $('#messageclose').on('click', function () {
+    $(this).closest('#messages').transition('fade');
+  });
+};
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 11 */,
+/* 12 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 10 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14671,7 +14734,7 @@ var getAllergyHistory = function getAllergyHistory() {
 });
 
 /***/ }),
-/* 11 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14870,7 +14933,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 });
 
 /***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15025,7 +15088,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 });
 
 /***/ }),
-/* 13 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15040,222 +15103,257 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tableRenderMedicine = [];
 
 (0, _jquery2.default)(document).ready(function () {
-    if ((0, _jquery2.default)('#PharmacyOCSTableBody').children().length) (0, _jquery2.default)('#PharmacyOCSTableBody *').remove();
 
-    _jquery2.default.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/waitingList',
-        dataType: 'json',
-        cache: false
-    }).done(function (result) {
+  (0, _jquery2.default)('.ui.dropdown').dropdown();
 
-        var convertStatus = '';
+  if ((0, _jquery2.default)('#PharmacyOCSTableBody').children().length) (0, _jquery2.default)('#PharmacyOCSTableBody *').remove();
 
-        for (var i = 0; i < result.length; i++) {
+  _jquery2.default.ajax({
+    type: 'GET',
+    url: 'http://localhost:3000/waitingList',
+    dataType: 'json',
+    cache: false
+  }).done(function (result) {
 
-            convertStatus = getStatus(result[i].status);
-            (0, _jquery2.default)('#PharmacyOCSTableBody').append('<tr id=' + result[i].chart_id + ' class="table-content">\n                   <td>' + result[i].name + '</td>\n                   <td>' + convertStatus + '</td>\n            </tr>');
-        }
+    var convertStatus = '';
+
+    for (var i = 0; i < result.length; i++) {
+
+      convertStatus = getStatus(result[i].status);
+      (0, _jquery2.default)('#PharmacyOCSTableBody').append('<tr id=' + result[i].chart_id + ' class="table-content">\n                   <td>' + result[i].name + '</td>\n                   <td>' + convertStatus + '</td>\n            </tr>');
+    }
+  });
+
+  _jquery2.default.ajax({
+    type: 'GET',
+    url: 'http://localhost:3000/medicine/list',
+    dataType: 'json',
+    cache: false
+  }).done(function (result) {
+
+    window.localStorage.setItem('medicine', JSON.stringify(result));
+
+    var getAutoCompleteNameObject = [];
+    var getAutoCompleteIngredientObject = [];
+    result.find(function (x) {
+      getAutoCompleteNameObject.push({ 'title': x.name });
+      getAutoCompleteIngredientObject.push({ 'title': x.ingredient.replace(/<br>/g, " ") });
     });
 
-    _jquery2.default.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/medicine/list',
-        dataType: 'json',
-        cache: false
-    }).done(function (result) {
+    window.localStorage.setItem('medicineName', JSON.stringify(getAutoCompleteNameObject));
+    window.localStorage.setItem('medicineIngredient', JSON.stringify(getAutoCompleteIngredientObject));
 
-        window.localStorage.setItem('medicine', JSON.stringify(result));
+    (0, _jquery2.default)('.search.ui').search({
+      source: JSON.parse(window.localStorage.getItem('medicineName'))
     });
+  });
+});
+
+(0, _jquery2.default)('.medicineSearchSelect').change(function () {
+
+  var sourceTarget;
+
+  if ((0, _jquery2.default)('.medicineSearchSelect option:selected').val() === '1') {
+    sourceTarget = JSON.parse(window.localStorage.getItem('medicineName'));
+  } else {
+    sourceTarget = JSON.parse(window.localStorage.getItem('medicineIngredient'));
+  }
+  (0, _jquery2.default)('.search.ui').search({ source: sourceTarget });
 });
 
 (0, _jquery2.default)('.getPharmacyOCS').on('click', function () {
 
-    if ((0, _jquery2.default)('#PharmacyOCSTableBody').children().length) (0, _jquery2.default)('#PharmacyOCSTableBody *').remove();
+  if ((0, _jquery2.default)('#PharmacyOCSTableBody').children().length) (0, _jquery2.default)('#PharmacyOCSTableBody *').remove();
 
-    _jquery2.default.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/waitingList',
-        dataType: 'json',
-        cache: false
-    }).done(function (result) {
+  _jquery2.default.ajax({
+    type: 'GET',
+    url: 'http://localhost:3000/waitingList',
+    dataType: 'json',
+    cache: false
+  }).done(function (result) {
 
-        var convertStatus = '';
+    var convertStatus = '';
 
-        for (var i = 0; i < result.length; i++) {
+    for (var i = 0; i < result.length; i++) {
 
-            convertStatus = getStatus(result[i].status);
-            (0, _jquery2.default)('#PharmacyOCSTableBody').append('<tr id=' + result[i].chart_id + ' class="table-content">\n                   <td>' + result[i].name + '</td>\n                   <td>' + convertStatus + '</td>\n            </tr>');
-        }
-    });
+      convertStatus = getStatus(result[i].status);
+      (0, _jquery2.default)('#PharmacyOCSTableBody').append('<tr id=' + result[i].chart_id + ' class="table-content">\n                   <td>' + result[i].name + '</td>\n                   <td>' + convertStatus + '</td>\n            </tr>');
+    }
+  });
 });
 
 (0, _jquery2.default)('#pharmacopoeia').on('click', function () {
 
-    if ((0, _jquery2.default)('.main-category-select > select').children().length) {
-        (0, _jquery2.default)('.main-category-select > select *').remove();
-        (0, _jquery2.default)('.main-category-select > select').append('<option class=\'default\' value=\'\'>\uB300\uBD84\uB958</option>');
+  if ((0, _jquery2.default)('.main-category-select > select').children().length) {
+    (0, _jquery2.default)('.main-category-select > select *').remove();
+    (0, _jquery2.default)('.main-category-select > select').append('<option class=\'default\' value=\'\'>\uB300\uBD84\uB958</option>');
+  }
+
+  if ((0, _jquery2.default)('.small-category-select > select').children().length) {
+    (0, _jquery2.default)('.small-category-select > select *').remove();
+    (0, _jquery2.default)('.small-category-select > select').append('<option class=\'default\' value=\'\'>\uC18C\uBD84\uB958</option>');
+  }
+
+  _jquery2.default.ajax({
+    type: 'GET',
+    url: 'http://localhost:3000/medicine/category/main',
+    dataType: 'json',
+    cache: false
+  }).done(function (result) {
+    for (var i = 0; i < result.length; i++) {
+
+      (0, _jquery2.default)('.main-category-select > select').append('<option value=\'' + result[i].primaryCategory + '\'> ' + result[i].primaryCategory + ' </option>');
     }
-
-    if ((0, _jquery2.default)('.small-category-select > select').children().length) {
-        (0, _jquery2.default)('.small-category-select > select *').remove();
-        (0, _jquery2.default)('.small-category-select > select').append('<option class=\'default\' value=\'\'>\uC18C\uBD84\uB958</option>');
-    }
-
-    _jquery2.default.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/medicine/category/main',
-        dataType: 'json',
-        cache: false
-    }).done(function (result) {
-        for (var i = 0; i < result.length; i++) {
-
-            (0, _jquery2.default)('.main-category-select > select').append('<option value=\'' + result[i].primaryCategory + '\'> ' + result[i].primaryCategory + ' </option>');
-        }
-    });
-    (0, _jquery2.default)('.ui.longer.modal.pharmacopoeia').modal('show');
+  });
+  (0, _jquery2.default)('.ui.longer.modal.pharmacopoeia').modal('show');
+  (0, _jquery2.default)(".main-category-select option[value='심혈관계질환']").attr("selected", "selected");
+  // console.log($('.main-category-select option').attr('value'));
+  // $('.main-category-select > select > option').val();
 });
 
 (0, _jquery2.default)('.main-category-select').change(function () {
-    var param = {
-        primaryCategory: (0, _jquery2.default)('.main-category-select option:selected').attr('value')
-    };
+  var param = {
+    primaryCategory: (0, _jquery2.default)('.main-category-select option:selected').attr('value')
+  };
 
-    if ((0, _jquery2.default)('.small-category-select > select').children().length) {
-        (0, _jquery2.default)('.small-category-select > select *').remove();
-        (0, _jquery2.default)('.small-category-select > select').append('<option class=\'default\' value=\'\'>\uC18C\uBD84\uB958</option>');
-    }
+  if ((0, _jquery2.default)('.small-category-select > select').children().length) {
+    (0, _jquery2.default)('.small-category-select > select *').remove();
+    (0, _jquery2.default)('.small-category-select > select').append('<option class=\'default\' value=\'\'>\uC18C\uBD84\uB958</option>');
+  }
 
-    _jquery2.default.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/medicine/category/small',
-        data: param,
-        dataType: 'json',
-        cache: false
-    }).done(function (result) {
-        for (i in result) {
-            if (i === '0') {
+  _jquery2.default.ajax({
+    type: 'GET',
+    url: 'http://localhost:3000/medicine/category/small',
+    data: param,
+    dataType: 'json',
+    cache: false
+  }).done(function (result) {
+    for (i in result) {
+      if (i === '0') {
 
-                (0, _jquery2.default)('.small-category-select > select').nextAll('div.text').text('' + result[i].secondaryCategory);
+        (0, _jquery2.default)('.small-category-select > select').nextAll('div.text').text('' + result[i].secondaryCategory);
 
-                (0, _jquery2.default)('.small-category-select > select').append('<option selected value=\'' + result[i].secondaryCategory + '\'> ' + result[i].secondaryCategory + ' </option>');
-                var medicine = JSON.parse(window.localStorage.getItem('medicine'));
-                var categoryMain = (0, _jquery2.default)('.main-category-select option:selected').text();
-                var categorySmall = (0, _jquery2.default)('.small-category-select option:selected').text();
-                tableRenderMedicine = [];
+        (0, _jquery2.default)('.small-category-select > select').append('<option selected value=\'' + result[i].secondaryCategory + '\'> ' + result[i].secondaryCategory + ' </option>');
+        var medicine = JSON.parse(window.localStorage.getItem('medicine'));
+        var categoryMain = (0, _jquery2.default)('.main-category-select option:selected').text();
+        var categorySmall = (0, _jquery2.default)('.small-category-select option:selected').text();
+        tableRenderMedicine = [];
 
-                medicine.find(function (x) {
-                    if (_jquery2.default.trim(x.primaryCategory) === _jquery2.default.trim(categoryMain) && _jquery2.default.trim(x.secondaryCategory) === _jquery2.default.trim(categorySmall)) {
-                        tableRenderMedicine.push(x);
-                    }
-                });
+        medicine.find(function (x) {
+          if (_jquery2.default.trim(x.primaryCategory) === _jquery2.default.trim(categoryMain) && _jquery2.default.trim(x.secondaryCategory) === _jquery2.default.trim(categorySmall)) {
+            tableRenderMedicine.push(x);
+          }
+        });
 
-                if ((0, _jquery2.default)('#medicineTableBody').children().length) (0, _jquery2.default)('#medicineTableBody *').remove();
+        if ((0, _jquery2.default)('#medicineTableBody').children().length) (0, _jquery2.default)('#medicineTableBody *').remove();
 
-                for (var i = 0; i < tableRenderMedicine.length; i++) {
-                    (0, _jquery2.default)('#medicineTableBody').append('<tr id=' + tableRenderMedicine[i].id + ' class=\'pharmacopoeia-hover\'>\n                       <td>' + tableRenderMedicine[i].name + '</td>\n                       <td>' + tableRenderMedicine[i].ingredient + '</td>\n                       <td>' + tableRenderMedicine[i].medication + '</td>\n                       <td>' + tableRenderMedicine[i].property + '</td>\n                </tr>');
-                }
-            } else {
-                (0, _jquery2.default)('.small-category-select > select').append('<option value=\'' + result[i].secondaryCategory + '\'> ' + result[i].secondaryCategory + ' </option>');
-            }
+        for (var i = 0; i < tableRenderMedicine.length; i++) {
+          (0, _jquery2.default)('#medicineTableBody').append('<tr id=' + tableRenderMedicine[i].id + ' class=\'pharmacopoeia-hover\'>\n                       <td>' + tableRenderMedicine[i].name + '</td>\n                       <td>' + tableRenderMedicine[i].ingredient + '</td>\n                       <td>' + tableRenderMedicine[i].medication + '</td>\n                       <td>' + tableRenderMedicine[i].property + '</td>\n                </tr>');
         }
-    });
+      } else {
+        (0, _jquery2.default)('.small-category-select > select').append('<option value=\'' + result[i].secondaryCategory + '\'> ' + result[i].secondaryCategory + ' </option>');
+      }
+    }
+  });
 });
 
 (0, _jquery2.default)('.small-category-select').change(function () {
-    var medicine = JSON.parse(window.localStorage.getItem('medicine'));
-    var categoryMain = (0, _jquery2.default)('.main-category-select option:selected').text();
-    var categorySmall = (0, _jquery2.default)('.small-category-select option:selected').text();
-    tableRenderMedicine = [];
+  var medicine = JSON.parse(window.localStorage.getItem('medicine'));
+  var categoryMain = (0, _jquery2.default)('.main-category-select option:selected').text();
+  var categorySmall = (0, _jquery2.default)('.small-category-select option:selected').text();
+  tableRenderMedicine = [];
 
-    medicine.find(function (x) {
-        if (_jquery2.default.trim(x.primaryCategory) === _jquery2.default.trim(categoryMain) && _jquery2.default.trim(x.secondaryCategory) === _jquery2.default.trim(categorySmall)) {
-            tableRenderMedicine.push(x);
-        }
-    });
-
-    if ((0, _jquery2.default)('#medicineTableBody').children().length) (0, _jquery2.default)('#medicineTableBody *').remove();
-
-    for (var i = 0; i < tableRenderMedicine.length; i++) {
-        (0, _jquery2.default)('#medicineTableBody').append('<tr id=' + tableRenderMedicine[i].id + ' class=\'pharmacopoeia-hover\'>\n               <td>' + tableRenderMedicine[i].name + '</td>\n               <td>' + tableRenderMedicine[i].ingredient + '</td>\n               <td>' + tableRenderMedicine[i].medication + '</td>\n               <td>' + tableRenderMedicine[i].property + '</td>\n        </tr>');
+  medicine.find(function (x) {
+    if (_jquery2.default.trim(x.primaryCategory) === _jquery2.default.trim(categoryMain) && _jquery2.default.trim(x.secondaryCategory) === _jquery2.default.trim(categorySmall)) {
+      tableRenderMedicine.push(x);
     }
+  });
+
+  if ((0, _jquery2.default)('#medicineTableBody').children().length) (0, _jquery2.default)('#medicineTableBody *').remove();
+
+  for (var i = 0; i < tableRenderMedicine.length; i++) {
+    (0, _jquery2.default)('#medicineTableBody').append('<tr id=' + tableRenderMedicine[i].id + ' class=\'pharmacopoeia-hover\'>\n               <td>' + tableRenderMedicine[i].name + '</td>\n               <td>' + tableRenderMedicine[i].ingredient + '</td>\n               <td>' + tableRenderMedicine[i].medication + '</td>\n               <td>' + tableRenderMedicine[i].property + '</td>\n        </tr>');
+  }
 });
 
 (0, _jquery2.default)('.pharmacySearchButton').on('click', function () {
 
-    // 공백일 경우 검색할 약품명 또는 성분명을 입력해주세요 alert 출력
+  // 공백일 경우 검색할 약품명 또는 성분명을 입력해주세요 alert 출력
 
-    (0, _jquery2.default)('.main-category-select > select > .default').attr('selected', 'selected');
-    (0, _jquery2.default)('.small-category-select > select > .default').attr('selected', 'selected');
-    (0, _jquery2.default)('.main-category-select > select').nextAll('div.text').text('대분류');
-    (0, _jquery2.default)('.small-category-select > select').nextAll('div.text').text('소분류');
+  (0, _jquery2.default)('.main-category-select > select > .default').attr('selected', 'selected');
+  (0, _jquery2.default)('.small-category-select > select > .default').attr('selected', 'selected');
+  (0, _jquery2.default)('.main-category-select > select').nextAll('div.text').text('대분류');
+  (0, _jquery2.default)('.small-category-select > select').nextAll('div.text').text('소분류');
 
-    var searchText = (0, _jquery2.default)('input[name=medicineSearchText]').val();
-    var option = (0, _jquery2.default)('.medicineSearchSelect option:selected').val();
-    var param = {
-        searchText: searchText,
-        option: option
-    };
+  var searchText = (0, _jquery2.default)('input[name=medicineSearchText]').val();
+  var option = (0, _jquery2.default)('.medicineSearchSelect option:selected').val();
+  var param = {
+    searchText: searchText,
+    option: option
+  };
 
-    _jquery2.default.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/medicine/search',
-        data: param,
-        dataType: 'json',
-        cache: false
-    }).done(function (result) {
+  if (searchText === '') {
+    alert('검색할 약품명 또는 성분명을 입력해주세요.');
+    return;
+  }
 
-        if ((0, _jquery2.default)('#medicineTableBody').children().length) (0, _jquery2.default)('#medicineTableBody *').remove();
+  _jquery2.default.ajax({
+    type: 'GET',
+    url: 'http://localhost:3000/medicine/search',
+    data: param,
+    dataType: 'json',
+    cache: false
+  }).done(function (result) {
 
-        for (var i in result) {
-            (0, _jquery2.default)('#medicineTableBody').append('<tr id=' + result[i].id + ' class=\'pharmacopoeia-hover\'>\n                 <td>' + result[i].name + '</td>\n                 <td>' + result[i].ingredient + '</td>\n                 <td>' + result[i].medication + '</td>\n                 <td>' + result[i].property + '</td>\n          </tr>');
-        }
-    });
+    if ((0, _jquery2.default)('#medicineTableBody').children().length) (0, _jquery2.default)('#medicineTableBody *').remove();
+
+    for (var i in result) {
+      (0, _jquery2.default)('#medicineTableBody').append('<tr id=' + result[i].id + ' class=\'pharmacopoeia-hover\'>\n                 <td>' + result[i].name + '</td>\n                 <td>' + result[i].ingredient + '</td>\n                 <td>' + result[i].medication + '</td>\n                 <td>' + result[i].property + '</td>\n          </tr>');
+    }
+  });
 });
 
 (0, _jquery2.default)(document).on('click', '.pharmacopoeia-hover', function (e) {
 
-    if ((0, _jquery2.default)('#prescriptionTableBody .defaultPrescriptionTableBody').length) (0, _jquery2.default)('#prescriptionTableBody .defaultPrescriptionTableBody').remove();
+  if ((0, _jquery2.default)('#prescriptionTableBody .defaultPrescriptionTableBody').length) (0, _jquery2.default)('#prescriptionTableBody .defaultPrescriptionTableBody').remove();
 
-    JSON.parse(window.localStorage.getItem('medicine')).find(function (x) {
-        if (x.id === Number(e.currentTarget.id)) {
-            (0, _jquery2.default)('#prescriptionTableBody').append('<tr id=' + x.id + '>\n               <td>' + x.name + '</td>\n               <td>' + x.ingredient + '</td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td class="deletePrescriptionTD">\n                <i class="sign out icon delete-icon-size deleteTargetByIcon"></i>\n               </td>\n         </tr>');
-            _jquery2.default.uiAlert({
-                textHead: '[알림]',
-                text: '처방전에 ' + x.name + '이(가) 추가되었습니다.',
-                bgcolor: '#55a9ee',
-                textcolor: '#fff',
-                position: 'top-left',
-                time: 2
-            });
-        }
-    });
+  JSON.parse(window.localStorage.getItem('medicine')).find(function (x) {
+    if (x.id === Number(e.currentTarget.id)) {
+      (0, _jquery2.default)('#prescriptionTableBody').append('<tr id=' + x.id + '>\n               <td>' + x.name + '</td>\n               <td>' + x.ingredient + '</td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td><input /></td>\n               <td class="deletePrescriptionTD">\n                <i class="sign out icon delete-icon-size deleteTargetByIcon"></i>\n               </td>\n         </tr>');
+      _jquery2.default.uiAlert({
+        textHead: '[알림]',
+        text: '처방전에 ' + x.name + '이(가) 추가되었습니다.',
+        bgcolor: '#55a9ee',
+        textcolor: '#fff',
+        position: 'top-left',
+        time: 2
+      });
+    }
+  });
 });
 
 (0, _jquery2.default)(document).on('click', '.deleteTargetByIcon', function (e) {
-    (0, _jquery2.default)(e.target).parent().parent().remove();
+  (0, _jquery2.default)(e.target).parent().parent().remove();
 });
 
 function getStatus(status) {
 
-    switch (status) {
-        case 1:
-            return '접수';break;
-        case 2:
-            return '예진';break;
-        case 3:
-            return '본진';break;
-        case 4:
-            return '대기';break;
-        case 5:
-            return '조제';break;
-        case 6:
-            return '완료';break;
-    }
+  switch (status) {
+    case 1:
+      return '접수 완료';break;
+    case 2:
+      return '예진 완료';break;
+    case 3:
+      return '처방 대기';break;
+    case 4:
+      return '약 조제중';break;
+    case 5:
+      return '조제';break;
+  }
 }
 
 /***/ }),
-/* 14 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {/*eslint-env browser*/
@@ -15406,11 +15504,11 @@ if (typeof window !== 'undefined') {
 }
 
 function createReporter() {
-  var strip = __webpack_require__(16);
+  var strip = __webpack_require__(19);
 
   var overlay;
   if (typeof document !== 'undefined' && options.overlay) {
-    overlay = __webpack_require__(18);
+    overlay = __webpack_require__(21);
   }
 
   var styles = {
@@ -15463,7 +15561,7 @@ function createReporter() {
   };
 }
 
-var processUpdate = __webpack_require__(23);
+var processUpdate = __webpack_require__(26);
 
 var customHandler;
 var subscribeAllHandler;
@@ -15529,10 +15627,10 @@ if (module) {
   };
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)(module)))
 
 /***/ }),
-/* 15 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -15560,12 +15658,12 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 16 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var ansiRegex = __webpack_require__(17)();
+var ansiRegex = __webpack_require__(20)();
 
 module.exports = function (str) {
 	return typeof str === 'string' ? str.replace(ansiRegex, '') : str;
@@ -15573,7 +15671,7 @@ module.exports = function (str) {
 
 
 /***/ }),
-/* 17 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15584,7 +15682,7 @@ module.exports = function () {
 
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*eslint-env browser*/
@@ -15613,7 +15711,7 @@ for (var key in styles) {
   clientOverlay.style[key] = styles[key];
 }
 
-var ansiHTML = __webpack_require__(19);
+var ansiHTML = __webpack_require__(22);
 var colors = {
   reset: ['transparent', 'transparent'],
   black: '181818',
@@ -15628,7 +15726,7 @@ var colors = {
 };
 ansiHTML.setColors(colors);
 
-var Entities = __webpack_require__(20).AllHtmlEntities;
+var Entities = __webpack_require__(23).AllHtmlEntities;
 var entities = new Entities();
 
 exports.showProblems =
@@ -15669,7 +15767,7 @@ function problemType (type) {
 
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15852,19 +15950,19 @@ ansiHTML.reset()
 
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-  XmlEntities: __webpack_require__(21),
-  Html4Entities: __webpack_require__(22),
+  XmlEntities: __webpack_require__(24),
+  Html4Entities: __webpack_require__(25),
   Html5Entities: __webpack_require__(1),
   AllHtmlEntities: __webpack_require__(1)
 };
 
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, exports) {
 
 var ALPHA_INDEX = {
@@ -16025,7 +16123,7 @@ module.exports = XmlEntities;
 
 
 /***/ }),
-/* 22 */
+/* 25 */
 /***/ (function(module, exports) {
 
 var HTML_ALPHA = ['apos', 'nbsp', 'iexcl', 'cent', 'pound', 'curren', 'yen', 'brvbar', 'sect', 'uml', 'copy', 'ordf', 'laquo', 'not', 'shy', 'reg', 'macr', 'deg', 'plusmn', 'sup2', 'sup3', 'acute', 'micro', 'para', 'middot', 'cedil', 'sup1', 'ordm', 'raquo', 'frac14', 'frac12', 'frac34', 'iquest', 'Agrave', 'Aacute', 'Acirc', 'Atilde', 'Auml', 'Aring', 'Aelig', 'Ccedil', 'Egrave', 'Eacute', 'Ecirc', 'Euml', 'Igrave', 'Iacute', 'Icirc', 'Iuml', 'ETH', 'Ntilde', 'Ograve', 'Oacute', 'Ocirc', 'Otilde', 'Ouml', 'times', 'Oslash', 'Ugrave', 'Uacute', 'Ucirc', 'Uuml', 'Yacute', 'THORN', 'szlig', 'agrave', 'aacute', 'acirc', 'atilde', 'auml', 'aring', 'aelig', 'ccedil', 'egrave', 'eacute', 'ecirc', 'euml', 'igrave', 'iacute', 'icirc', 'iuml', 'eth', 'ntilde', 'ograve', 'oacute', 'ocirc', 'otilde', 'ouml', 'divide', 'oslash', 'ugrave', 'uacute', 'ucirc', 'uuml', 'yacute', 'thorn', 'yuml', 'quot', 'amp', 'lt', 'gt', 'OElig', 'oelig', 'Scaron', 'scaron', 'Yuml', 'circ', 'tilde', 'ensp', 'emsp', 'thinsp', 'zwnj', 'zwj', 'lrm', 'rlm', 'ndash', 'mdash', 'lsquo', 'rsquo', 'sbquo', 'ldquo', 'rdquo', 'bdquo', 'dagger', 'Dagger', 'permil', 'lsaquo', 'rsaquo', 'euro', 'fnof', 'Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta', 'Eta', 'Theta', 'Iota', 'Kappa', 'Lambda', 'Mu', 'Nu', 'Xi', 'Omicron', 'Pi', 'Rho', 'Sigma', 'Tau', 'Upsilon', 'Phi', 'Chi', 'Psi', 'Omega', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigmaf', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega', 'thetasym', 'upsih', 'piv', 'bull', 'hellip', 'prime', 'Prime', 'oline', 'frasl', 'weierp', 'image', 'real', 'trade', 'alefsym', 'larr', 'uarr', 'rarr', 'darr', 'harr', 'crarr', 'lArr', 'uArr', 'rArr', 'dArr', 'hArr', 'forall', 'part', 'exist', 'empty', 'nabla', 'isin', 'notin', 'ni', 'prod', 'sum', 'minus', 'lowast', 'radic', 'prop', 'infin', 'ang', 'and', 'or', 'cap', 'cup', 'int', 'there4', 'sim', 'cong', 'asymp', 'ne', 'equiv', 'le', 'ge', 'sub', 'sup', 'nsub', 'sube', 'supe', 'oplus', 'otimes', 'perp', 'sdot', 'lceil', 'rceil', 'lfloor', 'rfloor', 'lang', 'rang', 'loz', 'spades', 'clubs', 'hearts', 'diams'];
@@ -16178,7 +16276,7 @@ module.exports = Html4Entities;
 
 
 /***/ }),
-/* 23 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -16328,80 +16426,6 @@ module.exports = function(hash, moduleMap, options) {
   }
 };
 
-
-/***/ }),
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {
-
-$.uiAlert = function (options) {
-  var setUI = $.extend({
-    textHead: 'Your user registration was successful.',
-    text: 'You may now log-in with the username you have chosen',
-    textcolor: '#19c3aa',
-    bgcolors: '#fff',
-    position: 'top-right',
-    icon: '',
-    time: 5,
-    permanent: false
-  }, options);
-
-  var ui_alert = 'ui-alert-content';
-  ui_alert += '-' + setUI.position;
-  setUI.bgcolors = 'style="background-color: ' + setUI.bgcolor + ';   box-shadow: 0 0 0 1px rgba(255,255,255,.5) inset,0 0 0 0 transparent;"';
-  if (setUI.bgcolors === '') setUI.bgcolors = 'style="background-color: ; box-shadow: 0 0 0 1px rgba(255,255,255,.5) inset,0 0 0 0 transparent;"';
-  if (!$('body > .' + ui_alert).length) {
-    $('body').append('<div class="ui-alert-content ' + ui_alert + '" style="width: inherit;"></div>');
-  }
-  var message = $('<div id="messages" class="ui icon message" ' + setUI.bgcolors + '><i class="' + setUI.icon + ' icon" style="color: ' + setUI.textcolor + ';"></i><i class="close icon" style="color: ' + setUI.textcolor + ';" id="messageclose"></i><div style="color: ' + setUI.textcolor + '; margin-right: 10px;">   <div class="header">' + setUI.textHead + '</div>  <p> ' + setUI.text + '</p></div>  </div>');
-  $('.' + ui_alert).prepend(message);
-  message.animate({
-    opacity: '1'
-  }, 300);
-  if (setUI.permanent === false) {
-    var timer = 0;
-    $(message).mouseenter(function () {
-      clearTimeout(timer);
-    }).mouseleave(function () {
-      uiAlertHide();
-    });
-    uiAlertHide();
-  }
-  function uiAlertHide() {
-    timer = setTimeout(function () {
-      message.animate({
-        opacity: '0'
-      }, 300, function () {
-        message.remove();
-      });
-    }, setUI.time * 1000);
-  }
-
-  $('#messageclose').on('click', function () {
-    $(this).closest('#messages').transition('fade');
-  });
-};
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
 /******/ ]);

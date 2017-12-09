@@ -14603,8 +14603,8 @@ $.fn.search.settings = {
         // message type
         if(type == 'empty') {
           html += ''
-            + '<div class="header">No Results</div class="header">'
-            + '<div class="description">' + message + '</div class="description">'
+            + '<div class="header">검색 결과 없음</div class="header">'
+            + '<div class="description">이 창이 계속 보이신다면 백 스페이스 키를 눌러주세요.</div class="description">'
           ;
         }
         else {
