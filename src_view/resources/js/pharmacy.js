@@ -94,38 +94,6 @@ $('.getPharmacyOCS').on('click', () => {
   });
 });
 
-$('#pharmacopoeia').on('click', () => {
-
-  if ($('.main-category-select > select').children().length) {
-    $('.main-category-select > select *').remove();
-    $('.main-category-select > select').append(
-        `<option class='default' value=''>대분류</option>`
-    )}
-
-  if ($('.small-category-select > select').children().length) {
-    $('.small-category-select > select *').remove();
-    $('.small-category-select > select').append(
-        `<option class='default' value=''>소분류</option>`
-    )}
-
-  $.ajax({
-      type: 'GET',
-      url: 'http://localhost:3000/medicine/category/main',
-      dataType: 'json',
-      cache: false,
-  }).done(result => {
-      for (var i = 0; i < result.length; i++) {
-
-          $('.main-category-select > select').append(
-              `<option value='${result[i].primaryCategory}'> ${result[i].primaryCategory} </option>`
-          )}
-  });
-  $('.ui.longer.modal.pharmacopoeia').modal('show');
-  $(".main-category-select option[value='심혈관계질환']").attr("selected", "selected");
-  // console.log($('.main-category-select option').attr('value'));
-  // $('.main-category-select > select > option').val();
-});
-
 $('.main-category-select').change( () => {
   var param = {
     primaryCategory : $('.main-category-select option:selected').attr('value')

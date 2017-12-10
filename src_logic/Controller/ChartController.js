@@ -1,7 +1,22 @@
-const express = require('express');
 
+/**
+ * Defendencies
+ */
+const express = require('express');
 const chartModel = require('../Model/ChartModel.js');
 const waitingModel = require('../Model/WaitingModel.js');
+const resultCode = require('../Common/ResultCode');
+const { respondJson, respondOnError } = require('../Utils/respond');
+
+
+/**
+ * Entity
+ */
+const chart = require('../Entity/Chart.js');
+const patient = require('../Entity/Patient.js');
+const complaintEntity = require('../Entity/Complaint.js');
+
+
 
 const router = express.Router();
 
@@ -11,9 +26,9 @@ router.use(function log(req, res, next) {
     next();
 });
 
-router.get('/', function (req, res){
+router.get('/', function (req, res) {
 
-    chartModel.getChartByChartNumber (req.query, result => {
+    chartModel.getChartByChartNumber(req.query, result => {
         //console.log(result);
         res.send(result);
     });
@@ -22,11 +37,11 @@ router.get('/', function (req, res){
 router.post('/update', function (req, res) {
 
     const data = {
-        status : req.body.updateStatus,
-        chart_id : req.body.chartNumber,
+        status: req.body.updateStatus,
+        chart_id: req.body.chartNumber,
     };
 
-    chartModel.updateChartByChartNumber (req.body, result => {
+    chartModel.updateChartByChartNumber(req.body, result => {
         waitingModel.Update(data, result => {
             res.send(result);
         });
@@ -48,5 +63,27 @@ router.get('/pastOne', function (req, res) {
     });
 
 });
+
+/**
+ * patient id를 통해 vital sign json 데이터 가져오기 
+ */
+router.get('/vitalSign/:patient_id', function (req, res, next) {
+
+    //TODO middleware로 권한체크해야함.
+
+    //condition
+    const options = {};
+    options.where = { patient_id: 1 }
+    options.include = { model: patient }
+    options.limit = 10
+    options.order = [['createdAt', 'DESC']]
+
+ 
+    chartModel
+        .find(options)
+        .then(result => respondJson(res, resultCode.success, result))
+        .catch((error) => respondOnError(res, resultCode.fail, error))
+
+})
 
 module.exports = router;

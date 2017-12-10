@@ -1,5 +1,10 @@
 .idea
+npm-debug.log 
+
+
+# build
 node_modules/*
-dist/* 
-npm-debug.log
-Config/env/setting.js
+*/dist/** 
+*/env/**
+
+package-lock.json
