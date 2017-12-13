@@ -2,14 +2,13 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const hotMiddlewareScript = 'webpack-hot-middleware/client';
 const paths = require('./paths');
 
 const config = {
     context: paths.appBuild,
 
     entry: {
-        index: [paths.appIndexJs, hotMiddlewareScript]
+        index: [paths.appIndexJs]
     },
 
     output: {
@@ -63,7 +62,7 @@ const config = {
     },
     plugins: [
         new ExtractTextPlugin({ filename: '[name].css' }),
-        new webpack.HotModuleReplacementPlugin(),
+        // new webpack.HotModuleReplacementPlugin(),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"

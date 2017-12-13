@@ -141,33 +141,7 @@ Cluster.ProcessRun = function (workerId) {
     passportService.Init();
     entityService.Init(); // 테이블 생성
 
-
-
-    /**
-     * Hot reload
-     */
-    if (env === 'development') {
-        const webpack = require('webpack');
-        const webpackConfig = require(path.join(__dirname, 'scripts/webpack.config.dev'));
-        const compiler = webpack(webpackConfig);
-        const devMiddleware = require("webpack-dev-middleware")(compiler, {
-            noInfo: true, publicPath: webpackConfig.output.publicPath
-        })
-
-        const hotMiddleware = require("webpack-hot-middleware")(compiler, {
-            log: false, heartbeat: 10 * 1000
-        });
-
-        compiler.plugin("compilation", compilation => {
-            compilation.plugin("html-webpack-plugin-after-emit", (__data, cb) => {
-                hotMiddleware.publish({ action: "reload" });
-                cb();
-            })
-        })
-
-        app.use(devMiddleware);
-        app.use(hotMiddleware);
-    }
+ 
 
     http.createServer(app).listen(app.get('port'), function () {
         console.log(util.format('## [processRun] [pid:%d] [childNo:%d] Server running at %d ##', process.pid, workerId, config.server.port));

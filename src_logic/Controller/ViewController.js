@@ -26,9 +26,10 @@ router.get('/pharmacy', (req, res, next) => {
     respondHtml(res, 'pharmacy');
 })
 
-router.get('/main', (req, res, next) => {
-    respondHtml(res, 'main');
-})
+router.get('/originalDiagnosis', (req, res, next) => {
+    respondHtml(res, 'originalDiagnosis');
+});
+
 router.get('/management', (req, res, next) => {
     respondHtml(res, 'management');
 })
