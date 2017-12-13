@@ -140,9 +140,10 @@ $('.completeTab').on('click', () => {
 });
 
 $(document).on('click', '.diagnosis-table-content', (e) => {
-    // console.log(e.target);
+
     if ($('#originalDiagnosisCCsegment').children().length)
         $('#originalDiagnosisCCsegment *').remove();
+    // 현재 화면에 렌더링 되어있던 CC rows 전체 삭제
 
     const docs = {
         chartNumber: e.target.id,
@@ -163,6 +164,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#preName').val(result.patient.name);
         $('#originChartId').val(result.chartNumber);
         $('#originName').val(result.patient.name);
+        // 차트 번호, 이름 화면 렌더링
 
         $('#heartRate').val(result.heartRate);
         $('#pulseRate').val(result.pulseRate);
@@ -172,6 +174,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#bloodGlucose').val(result.bloodGlucose);
         $('#originName').val(result.patient.name);
         $('#mealTerm').val(result.mealTerm + '시간');
+        // 예진 정보 화면 렌더링
 
         for(var i in result.complaints) {
 
@@ -190,11 +193,20 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
                       </div>
                   </div>`
           );
+          // CC 갯수에 따라 화면 렌더링
         }
-        // $('#getPastCC').attr('disabled', false);
-        // $('#pastDiagnosisRecord').attr('disabled', false);
-        // $('#vitalSign').attr('disabled', false);
-        // $('#pharmacopoeia').attr('disabled', false);
+
+        $('#name').val(result.patient.name);
+        $('#gender').val(result.patient.gender);
+        $('#birth').val(result.patient.birth.slice(0, 10));
+        $('#height').val(result.patient.height + 'cm');
+        $('#weight').val(result.patient.weight + 'kg');
+        $('#bmi').val(result.patient.BMI);
+        $('#smoking').val(result.patient.smokingAmount);
+        $('#smokingPeriod').val(result.patient.smokingPeriod);
+        $('#drinking').val(result.patient.drinkingAmount);
+        $('#drinkingPeriod').val(result.patient.drinkingPeriod);
+        // $('#name').val(result.patient.name);
     })
 
     $('#vitalSign').attr('disabled', false);
