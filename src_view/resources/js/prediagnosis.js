@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-$('#waitingList').on('click', () => {
+$('#preDiagonosisWaitingList').on('click', () => {
 
     if($('#tableBody').children().length)
         $('#tableBody *').remove();
@@ -19,7 +19,7 @@ $('#waitingList').on('click', () => {
 
         for(let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="table-content">
+                `<tr id=${result[i].chart_id} class="pre-diagnosis-table-content">
                        <td id=${result[i].chart_id}>${result[i].chart_id}</td>
                        <td id=${result[i].chart_id}>${result[i].name}</td>
                        <td id=${result[i].chart_id}>${result[i].birth}</td>
@@ -33,7 +33,7 @@ $('#waitingList').on('click', () => {
 
 });
 
-$(document).on('click', '.table-content', (e) => {
+$(document).on('click', '.pre-diagnosis-table-content', (e) => {
 
     // console.log(e.target);
     const docs = {
@@ -48,13 +48,13 @@ $(document).on('click', '.table-content', (e) => {
         cache: false,
     }).done(result => {
 
+        console.log(result)
+
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
 
         $('#getPastCC').attr('disabled', false);
         $('#pastDiagnosisRecord').attr('disabled', false);
-        $('#vitalSign').attr('disabled', false);
-        $('#pharmacopoeia').attr('disabled', false);
     })
 
 

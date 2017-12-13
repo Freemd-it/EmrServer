@@ -15,13 +15,14 @@ import moment from 'moment';
 const init = () => {
     // default 진료
     showAndHide('diagosis-container');
+
 }
 
 /**
- * 
- * @param {string} newIdType 
+ *
+ * @param {string} newIdType
  * @description
- * tmeplate originalDiagnosis.ejs class main-hide-and-show-row 중 
+ * tmeplate originalDiagnosis.ejs class main-hide-and-show-row 중
  * 보여주고 있는것은 숨기고 새로운 것을 보여줌
  * default id diagosis
  */
@@ -37,8 +38,6 @@ const showAndHide = (newIdType) => {
         $(`#${newIdType}`).show()
     }
 }
-
-
 
 $('.diagnosisWaitings').on('click', () => {
 
@@ -60,7 +59,7 @@ $('.diagnosisWaitings').on('click', () => {
         // console.log(result);
         for (let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="table-content">
+                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
                     <td id=${result[i].chart_id}>${result[i].chart_id}</td>
                     <td id=${result[i].chart_id}>${result[i].name}</td>
                     <td id=${result[i].chart_id}>${result[i].birth}</td>
@@ -93,7 +92,7 @@ $('.waitingTab').on('click', () => {
 
         for (let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="table-content">
+                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
                        <td id=${result[i].chart_id}>${result[i].chart_id}</td>
                        <td id=${result[i].chart_id}>${result[i].name}</td>
                        <td id=${result[i].chart_id}>${result[i].birth}</td>
@@ -126,7 +125,7 @@ $('.completeTab').on('click', () => {
 
         for (let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="table-content">
+                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
                        <td id=${result[i].chart_id}>${result[i].chart_id}</td>
                        <td id=${result[i].chart_id}>${result[i].name}</td>
                        <td id=${result[i].chart_id}>${result[i].birth}</td>
@@ -138,6 +137,70 @@ $('.completeTab').on('click', () => {
 
     $(".waitingTab").removeClass("active");
     $(".completeTab").addClass("active");
+});
+
+$(document).on('click', '.diagnosis-table-content', (e) => {
+    // console.log(e.target);
+    if ($('#originalDiagnosisCCsegment').children().length)
+        $('#originalDiagnosisCCsegment *').remove();
+
+    const docs = {
+        chartNumber: e.target.id,
+        complaintsKey: e.target.id
+    };
+
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/chart',
+        data: docs,
+        dataType: 'json',
+        cache: false,
+    }).done(result => {
+
+        console.log(result)
+
+        $('#preChartId').val(result.chartNumber);
+        $('#preName').val(result.patient.name);
+        $('#originChartId').val(result.chartNumber);
+        $('#originName').val(result.patient.name);
+
+        $('#heartRate').val(result.heartRate);
+        $('#pulseRate').val(result.pulseRate);
+        $('#bodyTemporature').val(result.bodyTemporature);
+        $('#systoleBloodPressure').val(result.systoleBloodPressure);
+        $('#diastoleBloodPressure').val(result.diastoleBloodPressure);
+        $('#bloodGlucose').val(result.bloodGlucose);
+        $('#originName').val(result.patient.name);
+        $('#mealTerm').val(result.mealTerm + '시간');
+
+        for(var i in result.complaints) {
+
+          $('#originalDiagnosisCCsegment').append(
+              ` <div class="inner-div" style="border-color: #ddd;">
+                  <div class="sixteen wide column">
+                          <div class="ui fluid input focus">
+                              <input type="text" placeholder="C.C" value="${result.complaints[i].chiefComplaint}" />
+                          </div>
+
+                          <div class="ui form" style="margin-top: 1%">
+                              <div class="field">
+                                  <textarea rows="3" placeholder="History of C.C">${result.complaints[i].chiefComplaintHistory}</textarea>
+                              </div>
+                          </div>
+                      </div>
+                  </div>`
+          );
+        }
+        // $('#getPastCC').attr('disabled', false);
+        // $('#pastDiagnosisRecord').attr('disabled', false);
+        // $('#vitalSign').attr('disabled', false);
+        // $('#pharmacopoeia').attr('disabled', false);
+    })
+
+    $('#vitalSign').attr('disabled', false);
+    $('#pharmacopoeia').attr('disabled', false);
+    $('#pastDiagnosisRecord').attr('disabled', false);
+    $('.ui.longer.modal').modal('hide');
 });
 
 $('#doctorSignedComplete').on('click', function () {
@@ -207,7 +270,7 @@ $('#doctorSignedComplete').on('click', function () {
 
 
 /**
- * 
+ *
  * 약전 클릭시
  */
 $('#pharmacopoeia').on('click', () => {
@@ -248,12 +311,28 @@ $('#pharmacopoeia').on('click', () => {
 });
 
 /**
- * 일반 진료 클릭
+ * 본진 정보 클릭
  */
 $('#diagonosis').on('click', () => {
     showAndHide('diagosis-container');
 })
-/** 
+
+/**
+ * 예진 정보 클릭
+ */
+$('#preDiagonosis').on('click', () => {
+    showAndHide('pre-diagosis-container');
+})
+
+/**
+ * 환자 정보 클릭
+ */
+$('#patientInfo').on('click', () => {
+    showAndHide('patient-info-container');
+})
+
+
+/**
  * vital sign 생성
  */
 $('#vitalSign').on('click', () => {
@@ -279,7 +358,7 @@ $('#vitalSign').on('click', () => {
         let new_columns = [];
         _.each(vitalDatas, (vitalData, vitalIndex) => {
             _each(vitalData, (data, key, i) => {
-                // 초기화 
+                // 초기화
                 if (!new_columns[i]) {
                     new_columns[i] = [];
                 }

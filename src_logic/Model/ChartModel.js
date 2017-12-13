@@ -37,11 +37,25 @@ ChartModel.getChartByChartNumber = function (data, callback) {
         where: {
             chartNumber: data.chartNumber
         },
-        include: {
-            model: patient,
-        }
+        include: [
+          {
+            model: patient
+          }
+        ]
     }).then(result => {
-        callback(result);
+
+        const chartInfo = result
+
+        if (data.complaintsKey) {
+          return new Promise(function GETComplaints(resolve, reject) {
+              complaint.findAllByChartId(result.id, result => {
+                chartInfo.dataValues.complaints = result
+                callback(chartInfo)
+              })
+          })
+        } else {
+          callback(chartInfo)
+        }
     })
 }
 

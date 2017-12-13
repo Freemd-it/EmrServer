@@ -1,10 +1,10 @@
 .idea
-npm-debug.log 
+npm-debug.log
 
 
 # build
 node_modules/*
-*/dist/** 
+*/dist/**
 */env/**
 
 package-lock.json
