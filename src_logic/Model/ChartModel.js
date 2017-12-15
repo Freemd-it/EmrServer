@@ -38,23 +38,23 @@ ChartModel.getChartByChartNumber = function (data, callback) {
             chartNumber: data.chartNumber
         },
         include: [
-          {
-            model: patient
-          }
+            {
+                model: patient
+            }
         ]
     }).then(result => {
 
         const chartInfo = result
 
         if (data.complaintsKey) {
-          return new Promise(function GETComplaints(resolve, reject) {
-              complaint.findAllByChartId(result.id, result => {
-                chartInfo.dataValues.complaints = result
-                callback(chartInfo)
-              })
-          })
+            return new Promise(function GETComplaints(resolve, reject) {
+                complaint.findAllByChartId(result.id, result => {
+                    chartInfo.dataValues.complaints = result
+                    callback(chartInfo)
+                })
+            })
         } else {
-          callback(chartInfo)
+            callback(chartInfo)
         }
     })
 }
@@ -152,7 +152,8 @@ ChartModel.find = async function (options) {
         return await chart.findAll({
             where: where,
             include: include,
-            order: order
+            order: order,
+            limit: limit
         })
     } else {
         return await chart.findOne({
