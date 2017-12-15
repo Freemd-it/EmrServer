@@ -176,10 +176,10 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#mealTerm').val(result.mealTerm + '시간');
         // 예진 정보 화면 렌더링
 
-        for(var i in result.complaints) {
+        for (var i in result.complaints) {
 
-          $('#originalDiagnosisCCsegment').append(
-              ` <div class="inner-div" style="border-color: #ddd;">
+            $('#originalDiagnosisCCsegment').append(
+                ` <div class="inner-div" style="border-color: #ddd;">
                   <div class="sixteen wide column">
                           <div class="ui fluid input focus">
                               <input type="text" placeholder="C.C" value="${result.complaints[i].chiefComplaint}" />
@@ -192,8 +192,8 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
                           </div>
                       </div>
                   </div>`
-          );
-          // CC 갯수에 따라 화면 렌더링
+            );
+            // CC 갯수에 따라 화면 렌더링
         }
 
         $('#name').val(result.patient.name);
@@ -348,10 +348,7 @@ $('#patientInfo').on('click', () => {
  * vital sign 생성
  */
 $('#vitalSign').on('click', () => {
-
     showAndHide('vital-sign-container');
-
-
 
     function _each(data, iter) {
         if (Array.isArray(data)) {
@@ -365,9 +362,17 @@ $('#vitalSign').on('click', () => {
         }
     }
 
-
-    const dataInput = (vitalDatas, types) => {
+    /**
+     * 
+     * @param {array} vitalDatas 
+     * @param {array} types      y 축 대상자들 
+     * @param {string} standard  x 축 기준이 될 것
+     */
+    const dataInput = (vitalDatas, types, standard) => {
         let new_columns = [];
+        const startIndex = 0;
+        const notFoundIndex = -1;
+
         _.each(vitalDatas, (vitalData, vitalIndex) => {
             _each(vitalData, (data, key, i) => {
                 // 초기화
@@ -375,17 +380,17 @@ $('#vitalSign').on('click', () => {
                     new_columns[i] = [];
                 }
                 //types 에 포함되어있어야만 push
-                if (_.findIndex(types, (type) => type === key) !== -1) {
-                    if (vitalIndex === 0) {
+                if (!_.eq(_.findIndex(types, (type) => type === key), notFoundIndex)) {
+                    if (_.eq(vitalIndex, startIndex)) {
                         // key insert
-                        if (key === "createdAt") {
+                        if (_.eq(key, standard)) {
                             new_columns[i].push('x');
                         } else {
                             new_columns[i].push(key);
                         }
                     }
                     //value insert
-                    if (key === "createdAt") {
+                    if (_.eq(key, standard)) {
                         new_columns[i].push(moment(data).format('YYYY-MM-DD'));
                     } else {
                         new_columns[i].push(data);
@@ -398,14 +403,13 @@ $('#vitalSign').on('click', () => {
 
 
     const chartGenerator = _.flow((chartDataInfo) => {
-        const { vitalDatas, types, selectGraph } = chartDataInfo
+        const { vitalDatas, types, selectGraph, standard } = chartDataInfo
 
-
-        let info = {
+        const info = {
             "x": "x",
             "columns": []
         };
-        info.columns = dataInput(vitalDatas, types);
+        info.columns = dataInput(vitalDatas, types, standard);
 
         const returnToData = {
             info,
@@ -466,28 +470,32 @@ $('#vitalSign').on('click', () => {
             const pulseRateChart = {
                 vitalDatas: datas,
                 types: ['createdAt', 'pulseRate'],
-                selectGraph: 'pulseRateChart'
+                selectGraph: 'pulseRateChart',
+                standard: 'createdAt'
             }
             chartGenerator(pulseRateChart);
 
             const BloodPressureChart = {
                 vitalDatas: datas,
                 types: ['createdAt', 'systoleBloodPressure', 'diastoleBloodPressure'],
-                selectGraph: 'bloodPressureChart'
+                selectGraph: 'bloodPressureChart',
+                standard: 'createdAt'
             }
             chartGenerator(BloodPressureChart);
 
             const bloodGlucoseChart = {
                 vitalDatas: datas,
                 types: ['createdAt', 'bloodGlucose'],
-                selectGraph: 'bloodGlucoseChart'
+                selectGraph: 'bloodGlucoseChart',
+                standard: 'createdAt'
             }
             chartGenerator(bloodGlucoseChart);
 
             const bodyTemporatureChart = {
                 vitalDatas: datas,
                 types: ['createdAt', 'bodyTemporature'],
-                selectGraph: 'bodyTemporatureChart'
+                selectGraph: 'bodyTemporatureChart',
+                standard: 'createdAt'
             }
             chartGenerator(bodyTemporatureChart);
 
