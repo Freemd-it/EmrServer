@@ -31,7 +31,11 @@ ComplaintModel.Insert = function(data, callback){
         _.forEach(CCmodels, (object) => {
             complaint.create(_.assign(object, {'chart_id' : result.dataValues.id, 'patient_id': result.dataValues.patient_id}));
         });
-    }).then(callback);
+    }).then(result => {
+      callback(1)
+    }).catch(error => {
+      callback(0)
+    })
 }
 
 ComplaintModel.findAllByChartId = function(data, callback){

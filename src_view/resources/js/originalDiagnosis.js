@@ -250,6 +250,7 @@ $('#doctorSignedComplete').on('click', function () {
         dataType: 'json',
         cache: false,
     }).done(result => {
+        console.log(result)
         if (result[0] === 1) {
 
             $('#preChartId').val('');
@@ -274,6 +275,8 @@ $('#doctorSignedComplete').on('click', function () {
                 position: 'top-left',
                 time: 2,
             })
+
+            window.scrollTo(0, 0);
         } else {
             alert('[System Error]\n IT 본부 단원에게 문의해주세요.');
         }

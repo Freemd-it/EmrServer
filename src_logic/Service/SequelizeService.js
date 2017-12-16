@@ -1,7 +1,5 @@
 var Sequelize = require("sequelize");
 var config = require('../../Config');
-console.log(config);
-
 
 var sequelize = new Sequelize(
   config.store.mysqlDatabase,

@@ -7,7 +7,7 @@ var MedicineModel = function(data){
 }
 
 /* Read */
-MedicineModel.List = function(data, callback){
+MedicineModel.list = function(data, callback){
 
     medicine.findAll({
       attributes: [
@@ -22,7 +22,7 @@ MedicineModel.List = function(data, callback){
     });
 }
 
-MedicineModel.Search = function(data, callback){
+MedicineModel.search = function(data, callback){
 
     if (data.option === '1') {
       medicine.findAll({

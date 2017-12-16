@@ -3,6 +3,7 @@ const patient = require('../Entity/Patient.js');
 const complaintEntity = require('../Entity/Complaint.js');
 
 const complaint = require('./ComplaintModel');
+const ocs = require('./OCSModel');
 const prescription = require('./PrescriptionModel');
 
 var ChartModel = function (data) {
@@ -11,7 +12,6 @@ var ChartModel = function (data) {
 
 ChartModel.create = function (data, callback) {
     const chartDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-
     chart.findAll({
         where: {
             chartNumber: {
@@ -25,7 +25,9 @@ ChartModel.create = function (data, callback) {
             chartNumber: chartDate + num,
         }).then(result => {
             result['name'] = data.name;
-            callback(result);
+            ocs.receipt(data, result, ocsResult => {
+              callback(result)
+            })
         })
     });
 
@@ -78,7 +80,11 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                 }
             }).then(results => {
 
-                complaint.Insert(data, callback)
+                complaint.Insert(data, result => {
+                  if (result === 1) {
+                    ocs.preDiagonosis(data.chartNumber, callback)
+                  }
+                })
             })
     }
     else if (data.updateStatus === '3') {
@@ -93,8 +99,9 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                     chartNumber: data.chartNumber
                 }
             }).then(result => {
-
-                prescription.createAll(data, callback);
+                prescription.createAll(data, result => {
+                  ocs.originalDiagnosis(data.chartNumber, callback)
+                });
             })
     }
 }

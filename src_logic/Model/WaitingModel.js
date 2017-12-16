@@ -14,7 +14,6 @@ WaitingModel.FindByStatus = function(status, callback) {
       attributes: ['chart_id', 'name', 'birth', 'status'],
     })
     .then(result => {
-      // console.log(result);
       callback(result);
     })
     .catch(error => {
@@ -28,11 +27,9 @@ WaitingModel.FindAll = function(callback) {
       attributes: ['chart_id', 'name', 'birth', 'status'],
     })
     .then(result => {
-      // console.log(result);
       callback(result);
     })
     .catch(error => {
-      // console.log(result);
       callback(error);
     });
 }
@@ -55,7 +52,8 @@ WaitingModel.Insert = function(data, callback) {
   waiting.create({
       chart_id: data.dataValues.chartNumber,
       name: data.name,
-      birth: data.birth
+      birth: data.birth,
+      status: 1
     }).then(result => {
       callback(result);
     })
