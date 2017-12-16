@@ -368,6 +368,8 @@ $('#sendToPart2').on('click', () => {
     let docs;
     const name = $('#name').val();
     const birth = $('#birth').val();
+    console.log(birth)
+    console.log(typeof birth)
     const height = $('#height').val();
     const weight = $('#weight').val();
     const BMI = $('#bmi').val();
@@ -389,7 +391,7 @@ $('#sendToPart2').on('click', () => {
 
     docs = {
         name,
-        birth,
+        birth: birth.toString(),
         height,
         weight,
         BMI,
@@ -409,6 +411,8 @@ $('#sendToPart2').on('click', () => {
         pastMedicationType,
         pastMedication,
     };
+    console.log(docs)
+    // return 0;
 
     $.ajax({
         type: 'POST',
@@ -423,7 +427,6 @@ $('#sendToPart2').on('click', () => {
             this.reset();
         });
 
-        console.log(result);
         $.uiAlert({
           textHead: '[알림]',
           text: name+'님의 접수가 완료되었습니다.',
