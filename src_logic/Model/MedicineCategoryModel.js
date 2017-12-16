@@ -6,7 +6,7 @@ var MedicineCategoryModel = function(data){
     this.data = data;
 }
 
-MedicineCategoryModel.ListMain = function(callback){
+MedicineCategoryModel.listMain = function(callback){
 
     category.findAll({
       attributes: [sequelize.fn('DISTINCT', sequelize.col('primaryCategory')) ,'primaryCategory']
@@ -19,7 +19,7 @@ MedicineCategoryModel.ListMain = function(callback){
     });
 }
 
-MedicineCategoryModel.ListSmall = function(data, callback){
+MedicineCategoryModel.listSmall = function(data, callback){
 
     category.findAll({
       attributes: ['secondaryCategory'],
@@ -34,30 +34,5 @@ MedicineCategoryModel.ListSmall = function(data, callback){
         callback(error);
     });
 }
-
-// MedicineCategoryModel.getPastChart = function (data, callback) {
-//     const chartDate = new Date().toISOString().slice(0,10).replace(/-/g,"");
-//
-//     chart.find({
-//         where : {
-//             chartNumber : data.chartId,
-//         },
-//     }).then(result => {
-//         console.log(result.dataValues.patient_id);
-//
-//         chart.findAll({
-//             where : {
-//                 patient_id : result.dataValues.patient_id,
-//                 $and: { chartNumber : {
-//                     $lt : chartDate + '00',
-//                 }}
-//             },
-//             limit : 10,
-//             order : [['chartNumber', 'DESC']],
-//         }).then(result => {
-//             callback(result);
-//         });
-//     });
-// }
 
 module.exports = MedicineCategoryModel;

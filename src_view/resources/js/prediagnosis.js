@@ -112,6 +112,8 @@ $(document).on('click', '.negative.send.ui.button', () => {
               time: 2,
             })
 
+            window.scrollTo(0, 0);
+
             return 0;
         }
     })
