@@ -7,8 +7,13 @@ const paths = require('./paths');
 const config = {
     context: paths.appBuild,
 
-    entry: {
-        index: [paths.appIndexJs]
+    entry: {  
+        index:[paths.appIndex],
+        ocs: [paths.appOcsJs],
+        originalDiagnosis: [paths.appOriginalDiagnosisJs],
+        pharmacy: [paths.appPharmacyJs],
+        prediagnosis: [paths.appPrediagnosisJs],
+        receipt: [paths.appReceiptJs],
     },
 
     output: {

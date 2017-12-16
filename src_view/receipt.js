@@ -12,4 +12,6 @@ import './vendors/js/Semantic-UI-Alert.js';
   
 //css 
 import './resources/css/index.scss';
- 
+
+//접수
+import './resources/js/receipt.js'; 

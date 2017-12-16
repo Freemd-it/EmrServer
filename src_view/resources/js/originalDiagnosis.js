@@ -10,32 +10,29 @@ import { resultCode } from '../utils/constant';
 import moment from 'moment';
 
 /**
- * Init
+ * init
  */
-const init = () => {
-    // default 진료
-    showAndHide('diagosis-container');
-
+function init() {
+    showAndHide('main-hide-and-show-row', 'diagosis-container');
 }
-
 /**
  *
- * @param {string} newIdType
+ * @param {string} newId
  * @description
  * tmeplate originalDiagnosis.ejs class main-hide-and-show-row 중
  * 보여주고 있는것은 숨기고 새로운 것을 보여줌
- * default id diagosis
+ * default class     main-hide-and-show-row
+ * default id           diagosis
  */
-const showAndHide = (newIdType) => {
-
+const showAndHide = (rowsClass, newId) => {
     //현재 목록 가져온 후 보여주고 있는 row 찾기
-    const rows = $('.main-hide-and-show-row');
+    const rows = $(`.${rowsClass}`);  
     const findRow = _.find(rows, row => $(row).is(':visible'));
-
+    const { id: findId = "" } = findRow;
     // 다를 경우만 변화
-    if (!_.eq(findRow.id, newIdType)) {
-        $('.main-hide-and-show-row').hide()
-        $(`#${newIdType}`).show()
+    if (!_.eq(findId, newId)) {
+        $(`.${rowsClass}`).hide()
+        $(`#${newId}`).show()
     }
 }
 
@@ -329,21 +326,21 @@ $('#pharmacopoeia').on('click', () => {
  * 본진 정보 클릭
  */
 $('#diagonosis').on('click', () => {
-    showAndHide('diagosis-container');
+    showAndHide('main-hide-and-show-row', 'diagosis-container');
 })
 
 /**
  * 예진 정보 클릭
  */
 $('#preDiagonosis').on('click', () => {
-    showAndHide('pre-diagosis-container');
+    showAndHide('main-hide-and-show-row', 'pre-diagosis-container');
 })
 
 /**
  * 환자 정보 클릭
  */
 $('#patientInfo').on('click', () => {
-    showAndHide('patient-info-container');
+    showAndHide('main-hide-and-show-row', 'patient-info-container');
 })
 
 
@@ -351,7 +348,7 @@ $('#patientInfo').on('click', () => {
  * vital sign 생성
  */
 $('#vitalSign').on('click', () => {
-    showAndHide('vital-sign-container');
+    showAndHide('main-hide-and-show-row', 'vital-sign-container');
 
     function _each(data, iter) {
         if (Array.isArray(data)) {
@@ -406,8 +403,8 @@ $('#vitalSign').on('click', () => {
 
 
     const chartGenerator = _.flow((chartDataInfo) => {
-        const { vitalDatas, types, selectGraph, standard } = chartDataInfo
-
+        const { vitalDatas, types, selectGraph } = chartDataInfo;
+        const standard = 'createdAt';
         const info = {
             "x": "x",
             "columns": []
@@ -440,8 +437,10 @@ $('#vitalSign').on('click', () => {
     /**
      * get data
      */
+    const parentId = 1;
+
     http
-        .getMethod('/chart/vitalSign/1')
+        .getMethod(`/chart/vitalSign/${parentId}`)
         .then((result) => {
             const { data, code } = result;
 
@@ -451,8 +450,7 @@ $('#vitalSign').on('click', () => {
             return Promise.resolve(data);
 
         }).then(datas => {
-
-
+            const startArd = 'createdAt';
             // heartRate tinyint(3), # HR 심박수
             // pulseRate tinyint(3), # PR 맥박수
             // bodyTemporature tinyint(3), # BT 체온
@@ -473,32 +471,28 @@ $('#vitalSign').on('click', () => {
             const pulseRateChart = {
                 vitalDatas: datas,
                 types: ['createdAt', 'pulseRate'],
-                selectGraph: 'pulseRateChart',
-                standard: 'createdAt'
+                selectGraph: 'pulseRateChart'
             }
             chartGenerator(pulseRateChart);
 
             const BloodPressureChart = {
                 vitalDatas: datas,
                 types: ['createdAt', 'systoleBloodPressure', 'diastoleBloodPressure'],
-                selectGraph: 'bloodPressureChart',
-                standard: 'createdAt'
+                selectGraph: 'bloodPressureChart'
             }
             chartGenerator(BloodPressureChart);
 
             const bloodGlucoseChart = {
                 vitalDatas: datas,
                 types: ['createdAt', 'bloodGlucose'],
-                selectGraph: 'bloodGlucoseChart',
-                standard: 'createdAt'
+                selectGraph: 'bloodGlucoseChart'
             }
             chartGenerator(bloodGlucoseChart);
 
             const bodyTemporatureChart = {
                 vitalDatas: datas,
                 types: ['createdAt', 'bodyTemporature'],
-                selectGraph: 'bodyTemporatureChart',
-                standard: 'createdAt'
+                selectGraph: 'bodyTemporatureChart'
             }
             chartGenerator(bodyTemporatureChart);
 
@@ -510,11 +504,8 @@ $('#vitalSign').on('click', () => {
              */
         })
 
-})
+});
 
 
-
-/**
- * initial
- */
 init();
+
