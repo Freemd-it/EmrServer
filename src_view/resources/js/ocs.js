@@ -5,7 +5,7 @@ import $ from 'jquery';
 
 
 function init() {
-    if (!_.eq(location.pathname, '/views/ocs')) return; 
+    if (!_.eq(location.pathname, '/views/ocs')) return;
     getOcsData('now');
 }
 
@@ -22,7 +22,7 @@ function getOcsData(nowData = "now", page = 1) {
         .then(result => {
             const { data, code } = result;
             data.nowData = nowData;
-            
+
             if (!_.eq(code, resultCode.success)) {
                 return Promise.reject(`fail ocs data ${data.error}`);
             }
@@ -44,7 +44,6 @@ function ocsTableDataSetting(result) {
     const changeToHangle = ['예진 대기', '본진 대기', '처방 대기', '처방중', '완료'];
     const START_NUM = 1;
     const footEle = [];
-
     /**
      * table row data setting
      */
@@ -76,7 +75,7 @@ function ocsTableDataSetting(result) {
             <i class="left chevron icon"></i>
         </a>`)
     }
-    // Center
+    // Center  
     footEle.push(_.map(_.range(startPage, endPage + 1), (num) => {
         if (_.eq(num, page)) {
             return `<a class="item">${num}</a>`
@@ -96,9 +95,8 @@ function ocsTableDataSetting(result) {
         <a class="icon item">
           <i class="right chevron icon"></i>
         </a>`)
-    }
-
-    $('.floated .pagination').append(footEle);
+    } 
+    $('.ocs-table').append(_.flatten(footEle));
 
 }
 
@@ -112,7 +110,7 @@ $('.ocs-reload__btn ').click((e) => {
      * 기존 데이터 제거
      */
     $('table tbody').empty();
-    $('.floated .pagination').empty();
+    $('.ocs-table').empty();
     /**
      * reload
      */
@@ -128,7 +126,7 @@ $('.ocs-reload__btn ').click((e) => {
  * Excel Download
  * 금일 OCS 자료만 뽑아가도록.
  */
-$('.ocs-excel').click((e) => { 
-    location.href = '/ocs/excel'; 
+$('.ocs-excel').click((e) => {
+    location.href = '/ocs/excel';
 })
 init();
