@@ -9,6 +9,7 @@ function init() {
     getOcsData('now');
 }
 
+
 /**
  * 
  * @param {string} nowData now or before
@@ -17,6 +18,13 @@ function init() {
  * 이전 OCS, 현재 OCS 데이터 불러오기 
  */
 function getOcsData(nowData = "now", page = 1) {
+
+    /**
+     * 기존 데이터 제거
+     */
+    $('table tbody').empty();
+    $('.ocs-table').empty();
+    
     http
         .getMethod(`/ocs/${nowData}/${page}`)
         .then(result => {
@@ -31,6 +39,7 @@ function getOcsData(nowData = "now", page = 1) {
         .then(ocsTableDataSetting)
         .catch(error => console.log(error))
 }
+window.getOcsData = getOcsData;
 
 /**
  * 
@@ -66,7 +75,7 @@ function ocsTableDataSetting(result) {
     // LEFT
     if (page > pageSize) {
         footEle.push(`
-        <a class="icon item" style="text-decoreation:none" href="/ocs/${nowData}/${startPage - 1}">
+        <a class="icon item ocs-paging" style="text-decoreation:none" onclick="this.getOcsData(${nowData},${startPage - 1})">
             <i class="left chevron icon"></i>
         </a>`)
     } else {
@@ -80,14 +89,14 @@ function ocsTableDataSetting(result) {
         if (_.eq(num, page)) {
             return `<a class="item">${num}</a>`
         } else {
-            return `<a class="item" style="text-decoreation:none" href="/ocs/${nowData}/${num}">${num}</a>`
+            return `<a class="item ocs-paging" style="text-decoreation:none" onclick="javascript:getOcsData('${nowData}',${num})">${num}</a>`
 
         }
     }))
     // Right
     if (endPage < totalPage) {
         footEle.push(`
-        <a class="icon item"  style="text-decoreation:none" href="/ocs/${nowData}/${endPage + 1}">
+        <a class="icon item ocs-paging"  style="text-decoreation:none"  onclick="this.getOcsData('${nowData}',${endPage + 1})">
           <i class="right chevron icon"></i>
         </a>`)
     } else {
@@ -95,22 +104,17 @@ function ocsTableDataSetting(result) {
         <a class="icon item">
           <i class="right chevron icon"></i>
         </a>`)
-    } 
+    }
     $('.ocs-table').append(_.flatten(footEle));
 
 }
-
+ 
 /**
  * Data Reload
  */
 $('.ocs-reload__btn ').click((e) => {
     const $target = $(e.target);
 
-    /**
-     * 기존 데이터 제거
-     */
-    $('table tbody').empty();
-    $('.ocs-table').empty();
     /**
      * reload
      */
