@@ -36,7 +36,7 @@ OCSModel.originalDiagnosis = function (data, callback) {
     }).then(callback)
 }
 
-OCSModel.rrescription = function (data, callback) {
+OCSModel.prescription = function (data, callback) {
 
 }
 
