@@ -10,32 +10,32 @@ import { resultCode } from '../utils/constant';
 import moment from 'moment';
 
 /**
- * Init
+ * init
  */
-const init = () => {
-    // default 진료
-    showAndHide('diagosis-container');
+function init() { 
+    
+    if (!_.eq(location.pathname, '/views/originalDiagnosis')) return; 
 
+    showAndHide('main-hide-and-show-row', 'diagosis-container');
 }
-
 /**
  *
- * @param {string} newIdType
+ * @param {string} newId
  * @description
  * tmeplate originalDiagnosis.ejs class main-hide-and-show-row 중
  * 보여주고 있는것은 숨기고 새로운 것을 보여줌
- * default id diagosis
+ * default class     main-hide-and-show-row
+ * default id           diagosis
  */
-const showAndHide = (newIdType) => {
-
+const showAndHide = (rowsClass, newId) => {
     //현재 목록 가져온 후 보여주고 있는 row 찾기
-    const rows = $('.main-hide-and-show-row');
+    const rows = $(`.${rowsClass}`);
     const findRow = _.find(rows, row => $(row).is(':visible'));
-
+    const { id: findId = "" } = findRow;
     // 다를 경우만 변화
-    if (!_.eq(findRow.id, newIdType)) {
-        $('.main-hide-and-show-row').hide()
-        $(`#${newIdType}`).show()
+    if (!_.eq(findId, newId)) {
+        $(`.${rowsClass}`).hide()
+        $(`#${newId}`).show()
     }
 }
 
@@ -176,10 +176,10 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#mealTerm').val(result.mealTerm + '시간');
         // 예진 정보 화면 렌더링
 
-        for(var i in result.complaints) {
+        for (var i in result.complaints) {
 
-          $('#originalDiagnosisCCsegment').append(
-              ` <div class="inner-div" style="border-color: #ddd;">
+            $('#originalDiagnosisCCsegment').append(
+                ` <div class="inner-div" style="border-color: #ddd;">
                   <div class="sixteen wide column">
                           <div class="ui fluid input focus">
                               <input type="text" placeholder="C.C" value="${result.complaints[i].chiefComplaint}" />
@@ -192,8 +192,8 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
                           </div>
                       </div>
                   </div>`
-          );
-          // CC 갯수에 따라 화면 렌더링
+            );
+            // CC 갯수에 따라 화면 렌더링
         }
 
         $('#name').val(result.patient.name);
@@ -250,6 +250,7 @@ $('#doctorSignedComplete').on('click', function () {
         dataType: 'json',
         cache: false,
     }).done(result => {
+        console.log(result)
         if (result[0] === 1) {
 
             $('#preChartId').val('');
@@ -274,6 +275,8 @@ $('#doctorSignedComplete').on('click', function () {
                 position: 'top-left',
                 time: 2,
             })
+
+            window.scrollTo(0, 0);
         } else {
             alert('[System Error]\n IT 본부 단원에게 문의해주세요.');
         }
@@ -326,21 +329,21 @@ $('#pharmacopoeia').on('click', () => {
  * 본진 정보 클릭
  */
 $('#diagonosis').on('click', () => {
-    showAndHide('diagosis-container');
+    showAndHide('main-hide-and-show-row', 'diagosis-container');
 })
 
 /**
  * 예진 정보 클릭
  */
 $('#preDiagonosis').on('click', () => {
-    showAndHide('pre-diagosis-container');
+    showAndHide('main-hide-and-show-row', 'pre-diagosis-container');
 })
 
 /**
  * 환자 정보 클릭
  */
 $('#patientInfo').on('click', () => {
-    showAndHide('patient-info-container');
+    showAndHide('main-hide-and-show-row', 'patient-info-container');
 })
 
 
@@ -348,10 +351,7 @@ $('#patientInfo').on('click', () => {
  * vital sign 생성
  */
 $('#vitalSign').on('click', () => {
-
-    showAndHide('vital-sign-container');
-
-
+    showAndHide('main-hide-and-show-row', 'vital-sign-container');
 
     function _each(data, iter) {
         if (Array.isArray(data)) {
@@ -365,9 +365,17 @@ $('#vitalSign').on('click', () => {
         }
     }
 
-
-    const dataInput = (vitalDatas, types) => {
+    /**
+     * 
+     * @param {array} vitalDatas 
+     * @param {array} types      y 축 대상자들 
+     * @param {string} standard  x 축 기준이 될 것
+     */
+    const dataInput = (vitalDatas, types, standard) => {
         let new_columns = [];
+        const startIndex = 0;
+        const notFoundIndex = -1;
+
         _.each(vitalDatas, (vitalData, vitalIndex) => {
             _each(vitalData, (data, key, i) => {
                 // 초기화
@@ -375,17 +383,17 @@ $('#vitalSign').on('click', () => {
                     new_columns[i] = [];
                 }
                 //types 에 포함되어있어야만 push
-                if (_.findIndex(types, (type) => type === key) !== -1) {
-                    if (vitalIndex === 0) {
+                if (!_.eq(_.findIndex(types, (type) => type === key), notFoundIndex)) {
+                    if (_.eq(vitalIndex, startIndex)) {
                         // key insert
-                        if (key === "createdAt") {
+                        if (_.eq(key, standard)) {
                             new_columns[i].push('x');
                         } else {
                             new_columns[i].push(key);
                         }
                     }
                     //value insert
-                    if (key === "createdAt") {
+                    if (_.eq(key, standard)) {
                         new_columns[i].push(moment(data).format('YYYY-MM-DD'));
                     } else {
                         new_columns[i].push(data);
@@ -398,14 +406,13 @@ $('#vitalSign').on('click', () => {
 
 
     const chartGenerator = _.flow((chartDataInfo) => {
-        const { vitalDatas, types, selectGraph } = chartDataInfo
-
-
-        let info = {
+        const { vitalDatas, types, selectGraph } = chartDataInfo;
+        const standard = 'createdAt';
+        const info = {
             "x": "x",
             "columns": []
         };
-        info.columns = dataInput(vitalDatas, types);
+        info.columns = dataInput(vitalDatas, types, standard);
 
         const returnToData = {
             info,
@@ -433,8 +440,10 @@ $('#vitalSign').on('click', () => {
     /**
      * get data
      */
+    const parentId = 1;
+
     http
-        .getMethod('/chart/vitalSign/1')
+        .getMethod(`/chart/vitalSign/${parentId}`)
         .then((result) => {
             const { data, code } = result;
 
@@ -444,8 +453,7 @@ $('#vitalSign').on('click', () => {
             return Promise.resolve(data);
 
         }).then(datas => {
-
-
+            const startArd = 'createdAt';
             // heartRate tinyint(3), # HR 심박수
             // pulseRate tinyint(3), # PR 맥박수
             // bodyTemporature tinyint(3), # BT 체온
@@ -499,11 +507,8 @@ $('#vitalSign').on('click', () => {
              */
         })
 
-})
+});
 
 
-
-/**
- * initial
- */
 init();
+

@@ -19,7 +19,8 @@ import './resources/css/index.scss';
 
 //접수
 import './resources/js/receipt.js';
-import './resources/js/prediagnosis.js'
-import './resources/js/originalDiagnosis.js'
-import './resources/js/pharmacy.js' 
+import './resources/js/prediagnosis.js';
+import './resources/js/originalDiagnosis.js';
+import './resources/js/pharmacy.js';
+import './resources/js/ocs.js';
 
