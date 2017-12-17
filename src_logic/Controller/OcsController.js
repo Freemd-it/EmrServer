@@ -3,7 +3,6 @@
  * Defendencies
  */
 const Sequelize = require('sequelize');
-const { Op } = Sequelize;
 const express = require('express');
 const ocsModel = require('../Model/OCSModel.js');
 const resultCode = require('../Common/ResultCode');
@@ -33,7 +32,7 @@ router.get('/now/:page', function (req, res, next) {
     let { page = 1 } = req.params;
     page = parseInt(page, 10);
 
-    const SIZE = 10; // 한번에 보여줄 글의 수 
+    const SIZE = 10; // 한번에 보여줄 글의 수
     const PAGE_SIZE = 10; // 보여주는 링크 수
     const BEGIN = (page - 1) * 10; //시작 글
     const nowTime = moment(new Date());
@@ -45,10 +44,10 @@ router.get('/now/:page', function (req, res, next) {
     let max;
 
     /**
-     * 
+     *
      * @param {number} cnt 총 ocs 갯수
      * @description
-     * 범위 정해서 데이터 전달. 
+     * 범위 정해서 데이터 전달.
      */
     const tableRange = (cnt) => {
         totalPage = Math.ceil(cnt / SIZE);
@@ -103,25 +102,27 @@ router.get('/excel', function (req, res, next) {
         { caption: '이름', type: 'string' },
         { caption: '성별', type: 'string' },
         { caption: '생년월일', type: 'string' },
-        { caption: '차트 상태', type: 'string' }];
+        { caption: '차트 상태', type: 'string' },
+        { caption: '진료 날짜', type: 'string' }];
 
     /**
      * 날짜 제한 걸기
      */
     const options = {};
+    options.attributes = ['chartNumber', 'name', 'gender', 'birth', 'status', 'createdAt']
     options.order = [['id', 'DESC']];
     options.where = { createdAt: { lt: Date.parse(nowDay) } }
 
     ocsModel
         .find(options)
         .then(results => {
-            conf.rows = _.map(results, result => _.values(result.get({ plain: true })));
 
+            conf.rows = _.map(results, result => _.values(result.get({ plain: true })));
             const excelFile = nodeExcel.execute(conf);
 
             res.setHeader('Content-Type', 'application/vnd.openxmlformats');
             res.setHeader("Content-Disposition", `attachment; filename=OCS-${nowDay}.xlsx`);
-            res.end(excelFile, 'binary'); 
+            res.end(excelFile, 'binary');
         })
 
 

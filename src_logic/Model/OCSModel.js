@@ -42,9 +42,10 @@ OCSModel.rrescription = function (data, callback) {
 
 OCSModel.find = async function (options) {
 
-  const { where = {}, limit = 1, order = [] } = options;
+  const { attributes = [], where = {}, limit = 1, order = [] } = options;
   if (limit) {
     return await ocs.findAll({
+      attributes: attributes,
       where: where,
       order: order,
       limit: limit
