@@ -1,3 +1,4 @@
+const moment = require('moment');
 const sequelize = require('sequelize');
 const dbService = require('../Service/SequelizeService.js');
 const ocs = require('../Entity/OCS.js');
@@ -12,7 +13,7 @@ OCSModel.receipt = function (patient, chart, callback) {
     chartNumber: chart.chartNumber,
     name: patient.name,
     gender: patient.gender,
-    birth: patient.birth
+    birth: moment(patient.birth).format('YYYY-MM-DD').toString()
   }).then(result => {
     callback(result.id)
   }).catch(error => {
@@ -42,7 +43,7 @@ OCSModel.prescription = function (data, callback) {
 
 OCSModel.find = async function (options) {
 
-  const { limit } = options; 
+  const { limit } = options;
   if (limit) {
     return await ocs.findAll(options)
   } else {
@@ -54,7 +55,6 @@ OCSModel.find = async function (options) {
 }
 
 OCSModel.findAll = async function (options) {
- 
 
   return ocs.findAll(options)
 };

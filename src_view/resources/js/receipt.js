@@ -423,7 +423,6 @@ $('#sendToPart2').on('click', () => {
             this.reset();
         });
 
-        console.log(result);
         $.uiAlert({
           textHead: '[알림]',
           text: name+'님의 접수가 완료되었습니다.',
@@ -432,7 +431,6 @@ $('#sendToPart2').on('click', () => {
           position: 'top-left',
           time: 2,
         })
-        //todo 정상적으로 등록되었는지 어럴트, 정상적 등록시 적힌데이터 지우기
     });
 
 });
