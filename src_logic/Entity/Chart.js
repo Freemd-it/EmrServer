@@ -16,16 +16,6 @@ const Chart = dbService.define('chart', {
     impression: { type: sequelize.STRING(300), allowNull: true },
     presentIllness: { type: sequelize.STRING(300), allowNull: true },
     treatmentNote: { type: sequelize.STRING(300), allowNull: true },
-
-    patient_id: {
-        type: sequelize.INTEGER,
-        references: {
-            model: Patient,
-            key: 'id',
-            deferrable: sequelize.Deferrable.INITIALLY_IMMEDIATE
-        }
-    }
-
 });
 
 module.exports = Chart;

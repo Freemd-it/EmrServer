@@ -63,6 +63,7 @@ RoutesService.Init = function () {
     app.use('/chart', chartController); 
     app.use('/views', viewsController);
     app.use('/medicine', medicineController);
+    app.use('/ocs', ocsController);
 
     console.log("## setup routes ##");
 }

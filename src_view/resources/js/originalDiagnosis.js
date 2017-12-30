@@ -12,11 +12,11 @@ import moment from 'moment';
 /**
  * init
  */
-function init() { 
-    
-    if (!_.eq(location.pathname, '/views/originalDiagnosis')) return; 
+function init() {
 
-    showAndHide('main-hide-and-show-row', 'diagosis-container');
+    if (!_.eq(location.pathname, '/originalDiagnosis')) return;
+
+    showAndHide('main-hide-and-show-row', 'diagnosis-container');
 }
 /**
  *
@@ -250,14 +250,17 @@ $('#doctorSignedComplete').on('click', function () {
         dataType: 'json',
         cache: false,
     }).done(result => {
-        console.log(result)
-        if (result[0] === 1) {
 
-            $('#preChartId').val('');
-            $('#preName').val('');
-            $('.impression').val('');
-            $('.presentIllness').val('');
+        if (result[0] === 1) {
+          
             $('.treatmentNote').val('');
+            $('#diagonosisChartForm, #preDiagonosisChartForm, #patient_form').each(function(){
+                this.reset();
+            });
+
+            if ($('#originalDiagnosisCCsegment').children().length) {
+              $('#originalDiagnosisCCsegment *').remove();
+            }
 
             if ($('#prescriptionTableBody').children().length > 0) {
                 $('#prescriptionTableBody *').remove();
@@ -329,14 +332,14 @@ $('#pharmacopoeia').on('click', () => {
  * 본진 정보 클릭
  */
 $('#diagonosis').on('click', () => {
-    showAndHide('main-hide-and-show-row', 'diagosis-container');
+    showAndHide('main-hide-and-show-row', 'diagnosis-container');
 })
 
 /**
  * 예진 정보 클릭
  */
 $('#preDiagonosis').on('click', () => {
-    showAndHide('main-hide-and-show-row', 'pre-diagosis-container');
+    showAndHide('main-hide-and-show-row', 'pre-diagnosis-container');
 })
 
 /**
@@ -366,9 +369,9 @@ $('#vitalSign').on('click', () => {
     }
 
     /**
-     * 
-     * @param {array} vitalDatas 
-     * @param {array} types      y 축 대상자들 
+     *
+     * @param {array} vitalDatas
+     * @param {array} types      y 축 대상자들
      * @param {string} standard  x 축 기준이 될 것
      */
     const dataInput = (vitalDatas, types, standard) => {

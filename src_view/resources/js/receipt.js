@@ -431,7 +431,6 @@ $('#sendToPart2').on('click', () => {
           position: 'top-left',
           time: 2,
         })
-        //todo 정상적으로 등록되었는지 어럴트, 정상적 등록시 적힌데이터 지우기
     });
 
 });

@@ -6,8 +6,8 @@ const Sequelize = require('sequelize');
 const express = require('express');
 const ocsModel = require('../Model/OCSModel.js');
 const resultCode = require('../Common/ResultCode');
-const { respondHtml, respondJson, respondOnError } = require('../Utils/respond');
-const moment = require('moment'); 
+const { respondJson, respondOnError, respondHtml } = require('../Utils/respond');
+const moment = require('moment');
 const _ = require('lodash');
 /**
  * Entity
@@ -99,8 +99,9 @@ router.get('/excel', function (req, res, next) {
     const conf = {};
     const nowTime = moment(new Date());
     const nowDay = nowTime.format('YYYY-MM-DD');
-
+    const STATUS = ['', '처방대기', '처방중', '완료'];
     conf.name = "OCS";
+
     conf.cols = [
         { caption: '차트 번호', type: 'string' },
         { caption: '이름', type: 'string' },
@@ -118,18 +119,19 @@ router.get('/excel', function (req, res, next) {
     options.where = { createdAt: { lt: Date.parse(nowDay) } }
 
     ocsModel
-        .find(options)
+        .findAll(options)
         .then(results => {
-
-            conf.rows = _.map(results, result => _.values(result.get({ plain: true })));
+            conf.rows = _.map(results, result => {
+                const row = result.get({ plain: true });
+                row.status = STATUS[row.status];
+                return _.values(row)
+            });
             const excelFile = require('excel-export').execute(conf);
 
             res.setHeader('Content-Type', 'application/vnd.openxmlformats');
             res.setHeader("Content-Disposition", `attachment; filename=OCS-${nowDay}.xlsx`);
             res.end(excelFile, 'binary');
         })
-
-
 })
 
 module.exports = router;

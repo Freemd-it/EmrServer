@@ -5,9 +5,10 @@ import $ from 'jquery';
 
 
 function init() {
-    if (!_.eq(location.pathname, '/views/ocs')) return; 
-    getOcsData('now')
+    if (!_.eq(location.pathname, '/ocs')) return;
+    getOcsData('now');
 }
+
 
 /**
  * 
@@ -17,6 +18,13 @@ function init() {
  * 이전 OCS, 현재 OCS 데이터 불러오기 
  */
 function getOcsData(nowData = "now", page = 1) {
+
+    /**
+     * 기존 데이터 제거
+     */
+    $('table tbody').empty();
+    $('.ocs-table').empty();
+    
     http
         .getMethod(`/ocs/${nowData}/${page}`)
         .then(result => {
@@ -31,6 +39,7 @@ function getOcsData(nowData = "now", page = 1) {
         .then(ocsTableDataSetting)
         .catch(error => console.log(error))
 }
+window.getOcsData = getOcsData;
 
 /**
  * 
@@ -44,7 +53,6 @@ function ocsTableDataSetting(result) {
     const changeToHangle = ['예진 대기', '본진 대기', '처방 대기', '처방중', '완료'];
     const START_NUM = 1;
     const footEle = [];
-
     /**
      * table row data setting
      */
@@ -67,7 +75,7 @@ function ocsTableDataSetting(result) {
     // LEFT
     if (page > pageSize) {
         footEle.push(`
-        <a class="icon item" style="text-decoreation:none" href="/ocs/${nowData}/${startPage - 1}">
+        <a class="icon item ocs-paging" style="text-decoreation:none" onclick="this.getOcsData(${nowData},${startPage - 1})">
             <i class="left chevron icon"></i>
         </a>`)
     } else {
@@ -76,19 +84,19 @@ function ocsTableDataSetting(result) {
             <i class="left chevron icon"></i>
         </a>`)
     }
-    // Center
+    // Center  
     footEle.push(_.map(_.range(startPage, endPage + 1), (num) => {
         if (_.eq(num, page)) {
             return `<a class="item">${num}</a>`
         } else {
-            return `<a class="item" style="text-decoreation:none" href="/ocs/${nowData}/${num}">${num}</a>`
+            return `<a class="item ocs-paging" style="text-decoreation:none" onclick="javascript:getOcsData('${nowData}',${num})">${num}</a>`
 
         }
     }))
     // Right
     if (endPage < totalPage) {
         footEle.push(`
-        <a class="icon item"  style="text-decoreation:none" href="/ocs/${nowData}/${endPage + 1}">
+        <a class="icon item ocs-paging"  style="text-decoreation:none"  onclick="this.getOcsData('${nowData}',${endPage + 1})">
           <i class="right chevron icon"></i>
         </a>`)
     } else {
@@ -97,22 +105,16 @@ function ocsTableDataSetting(result) {
           <i class="right chevron icon"></i>
         </a>`)
     }
-
-    $('.floated .pagination').append(footEle);
+    $('.ocs-table').append(_.flatten(footEle));
 
 }
-
+ 
 /**
  * Data Reload
  */
 $('.ocs-reload__btn ').click((e) => {
     const $target = $(e.target);
 
-    /**
-     * 기존 데이터 제거
-     */
-    $('table tbody').empty();
-    $('.floated .pagination').empty();
     /**
      * reload
      */
@@ -128,7 +130,7 @@ $('.ocs-reload__btn ').click((e) => {
  * Excel Download
  * 금일 OCS 자료만 뽑아가도록.
  */
-$('.ocs-excel').click((e) => { 
-    location.href = '/ocs/excel'; 
+$('.ocs-excel').click((e) => {
+    location.href = '/ocs/excel';
 })
 init();
