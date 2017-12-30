@@ -3,7 +3,7 @@
 
 <head>
     <link href="/vscode.ico" rel="shortcut icon">
-    <link href="/dist/login.css" rel="stylesheet">
+    <link href="/dist/index.css" rel="stylesheet">
 
 </head>
 
@@ -12,7 +12,7 @@
         <div class="login-wrapper">
 
             <div class="login-logo">
-                <img class="logo-img" src="./resources/img/freemed_logo_eng.png" alt="">
+                <img class="logo-img" src="/img/freemed_logo_eng.png" alt="">
                 <h4>Welcome to Freemed</h4>
                 <p>Login with your
                     <b>Freemed ID</b>
@@ -23,16 +23,16 @@
                 <form action="/" method="POST" class="form login">
 
                     <div class="group">
-                        <input type="text" name="userid" required>
-                        <span class="highlight"></span>
+                        <input type="text" name="userid" placeholder="Input your Id" required>
+                        <!-- <span class="highlight"></span> -->
                         <span class="bar"></span>
-                        <label>ID</label>
+                        <!-- <label>ID</label> -->
                     </div>
                     <div class="group">
-                        <input type="password" name="password" required>
-                        <span class="highlight"></span>
+                        <input type="password" name="password" placeholder="Input your Password" required> 
+                        <!-- <span class="highlight"></span> -->
                         <span class="bar"></span>
-                        <label>Password</label>
+                        <!-- <label>Password</label> -->
                     </div>
 
                     <button class="send-btn loginForm__login_btn">

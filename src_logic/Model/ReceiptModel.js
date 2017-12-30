@@ -9,22 +9,19 @@ var ReceiptModel = function(data) {
 
 /* Read */
 ReceiptModel.FindAll = function(name, callback) {
-
   patient.findAll({
       attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt', 'gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod', 'firstVisit'],
       where: {
         name
-      },
-      include: {
-        model: history
+      }, 
+      include: { 
+        model: history,  
       }
     })
-    .then(result => {
-      console.log(result)
+    .then(result => {  
       callback(result);
     })
-    .catch(error => {
-      console.log(error)
+    .catch(error => {  
       callback(error);
     });
 }

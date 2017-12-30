@@ -12,7 +12,10 @@ import moment from 'moment';
 /**
  * init
  */
-function init() {
+function init() { 
+    
+    if (!_.eq(location.pathname, '/views/originalDiagnosis')) return; 
+
     showAndHide('main-hide-and-show-row', 'diagosis-container');
 }
 /**
@@ -26,7 +29,7 @@ function init() {
  */
 const showAndHide = (rowsClass, newId) => {
     //현재 목록 가져온 후 보여주고 있는 row 찾기
-    const rows = $(`.${rowsClass}`);  
+    const rows = $(`.${rowsClass}`);
     const findRow = _.find(rows, row => $(row).is(':visible'));
     const { id: findId = "" } = findRow;
     // 다를 경우만 변화

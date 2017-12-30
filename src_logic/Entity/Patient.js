@@ -17,6 +17,7 @@ const Patient = dbService.define('patient', {
     smokingPeriod : { type : sequelize.CHAR(2), allowNull : true },
     drinkingAmount : { type : sequelize.STRING(3), allowNull : true },
     drinkingPeriod : { type : sequelize.STRING(3), allowNull : true }
+    
 });
 
 module.exports = Patient;

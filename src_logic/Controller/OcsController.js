@@ -6,9 +6,8 @@ const Sequelize = require('sequelize');
 const express = require('express');
 const ocsModel = require('../Model/OCSModel.js');
 const resultCode = require('../Common/ResultCode');
-const { respondJson, respondOnError } = require('../Utils/respond');
-const moment = require('moment');
-const nodeExcel = require('excel-export');
+const { respondHtml, respondJson, respondOnError } = require('../Utils/respond');
+const moment = require('moment'); 
 const _ = require('lodash');
 /**
  * Entity
@@ -23,6 +22,11 @@ router.use(function log(req, res, next) {
     console.log('## [OCS] OCSController started ##');
     next();
 });
+
+
+router.get('/', (req, res, next) => {
+    respondHtml(res, 'ocs');
+})
 
 /**
  * 금일 OCS 환자 목록 보기
@@ -118,7 +122,7 @@ router.get('/excel', function (req, res, next) {
         .then(results => {
 
             conf.rows = _.map(results, result => _.values(result.get({ plain: true })));
-            const excelFile = nodeExcel.execute(conf);
+            const excelFile = require('excel-export').execute(conf);
 
             res.setHeader('Content-Type', 'application/vnd.openxmlformats');
             res.setHeader("Content-Disposition", `attachment; filename=OCS-${nowDay}.xlsx`);

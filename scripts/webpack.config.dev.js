@@ -8,12 +8,7 @@ const config = {
     context: paths.appBuild,
 
     entry: {  
-        index:[paths.appIndex],
-        ocs: [paths.appOcsJs],
-        originalDiagnosis: [paths.appOriginalDiagnosisJs],
-        pharmacy: [paths.appPharmacyJs],
-        prediagnosis: [paths.appPrediagnosisJs],
-        receipt: [paths.appReceiptJs],
+        index:[paths.appIndex], 
     },
 
     output: {

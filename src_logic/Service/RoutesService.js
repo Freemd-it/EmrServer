@@ -10,6 +10,12 @@ const chartController = require('../Controller/ChartController.js');
 const viewsController = require('../Controller/ViewController.js');
 const ocsController = require('../Controller/OcsController');
 const medicineController = require('../Controller/MedicineController.js');
+const loginController = require('../Controller/LoginController.js');
+const prediagnosisController = require('../Controller/PrediagnosisController')
+const pharmacyController = require('../Controller/PharmacyController');
+const originalDiagnosisController = require('../Controller/OriginalDiagnosisController');
+const managementController = require('../Controller/ManagementController');
+
 
 var csrfProtection = new csurf({ cookie: true });
 
@@ -43,12 +49,18 @@ RoutesService.Init = function () {
         // res.status(200).json({ "result" : result });
 
     });
+    app.use('/login',loginController);
     app.use('/user', userController);
     app.use('/auth', authController);
+    app.use('/ocs', ocsController);
     app.use('/receipt', receiptController);
+    app.use('/prediagnosis',prediagnosisController);
+    app.use('/pharmacy',pharmacyController);
+    app.use('/originalDiagnosis',originalDiagnosisController);
+    app.use('/management',managementController);
+
     app.use('/waitingList', waitingController);
     app.use('/chart', chartController); 
-    app.use('/ocs', ocsController);
     app.use('/views', viewsController);
     app.use('/medicine', medicineController);
 

@@ -9,7 +9,7 @@ var sequelize = require('../Service/SequelizeService.js');
 var receiptModel = require('../Model/ReceiptModel.js');
 const waitingModel = require('../Model/WaitingModel.js');
 const chartModel = require('../Model/ChartModel.js');
-
+const { respondHtml, respondJson, respondOnError } = require('../Utils/respond');
 
 var router = express.Router();
 
@@ -18,6 +18,10 @@ router.use(function log(req, res, next) {
     console.log('## [Receipt] ReceiptController started ##');
     next();
 });
+
+router.get('/', (req, res, next) => {
+    respondHtml(res, 'receipt');
+})
 
 router.get('/patients',function (req, res) {
     const name = req.query.name;

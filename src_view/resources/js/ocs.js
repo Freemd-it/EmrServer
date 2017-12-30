@@ -5,6 +5,7 @@ import $ from 'jquery';
 
 
 function init() {
+    if (!_.eq(location.pathname, '/views/ocs')) return; 
     getOcsData('now')
 }
 

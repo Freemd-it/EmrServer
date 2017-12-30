@@ -1,7 +1,7 @@
 const express = require('express');
 
 const categoryModel = require('../Model/MedicineCategoryModel.js');
-
+const { respondHtml } = require('../Utils/respond');
 const router = express.Router();
 
 router.use(function log(req, res, next) {
@@ -10,22 +10,25 @@ router.use(function log(req, res, next) {
     next();
 });
 
-router.get('/', function (req, res){
+router.get('/', function (req, res, next) {
+    respondHtml(res,'pharmacy');
+})
 
-    chartModel.getChartByChartNumber (req.query, result => {
-        //console.log(result);
-        res.send(result);
-    });
-});
+// router.get('/', function (req, res){
+//     chartModel.getChartByChartNumber (req.query, result => {
+//         //console.log(result); 
+//         res.send(result);
+//     });
+// });
 
 router.post('/update', function (req, res) {
 
     const data = {
-        status : 2,
-        chart_id : req.body.chartNumber,
+        status: 2,
+        chart_id: req.body.chartNumber,
     };
 
-    chartModel.updateChartByChartNumber (req.body, result => {
+    chartModel.updateChartByChartNumber(req.body, result => {
         waitingModel.Update(data, result => {
             res.send(result);
         });

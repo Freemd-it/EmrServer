@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "start": "set NODE_ENV=development && nodemon Main.js",
-    "start_pro": "set NODE_ENV=production && node Main.js",
-    "clean": "rm -rf public/dist && mkdir public/dist",
-    "build": "npm run clean && webpack --watch --config ./scripts/webpack.config.dev.js",
+    "start_pro": "set NODE_ENV=production && node Main.js", 
+    "build": "webpack --watch --config ./scripts/webpack.config.dev.js",
     "build:prod": "webpack -p --config ./scripts/webpack.config.prod.js"
   },
   "dependencies": {
