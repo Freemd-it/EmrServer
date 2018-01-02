@@ -35,7 +35,9 @@ function init() {
       )
     }
   });
+}
 
+$(document).ready(() => {
   $.ajax({
     type: 'GET',
     url: 'http://localhost:3000/medicine/list',
@@ -60,7 +62,7 @@ function init() {
         source: JSON.parse(window.localStorage.getItem('medicineName'))
       });
   });
-}
+});
 
 
 $('.medicineSearchSelect').change(() => {
