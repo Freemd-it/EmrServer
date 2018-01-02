@@ -249,7 +249,14 @@ $(document).on('click', '.pharmacopoeia-hover', (e) => {
                <td>${x.name}</td>
                <td>${x.ingredient}</td>
                <td><input /></td>
-               <td><input /></td>
+               <td width="10%">
+                 <select class="doses-for-day">
+                    <option selected value="qd">qd</option>
+                    <option value="bid">bid</option>
+                    <option value="tid">tid</option>
+                    <option value="hs">hs</option>
+                 </select>
+               </td>
                <td><input /></td>
                <td><input /></td>
                <td class="deletePrescriptionTD">
@@ -257,6 +264,10 @@ $(document).on('click', '.pharmacopoeia-hover', (e) => {
                </td>
          </tr>`
       )
+
+      $('.doses-for-day').addClass('ui search fluid dropdown');
+      $('.doses-for-day.dropdown').dropdown();
+
       $.uiAlert({
         textHead: '[알림]',
         text: '처방전에 ' + x.name + '이(가) 추가되었습니다.',

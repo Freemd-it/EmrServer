@@ -228,7 +228,7 @@ $('#doctorSignedComplete').on('click', function () {
         medicine.medicineName = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(0).text());
         medicine.medicineIngredient = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(1).text());
         medicine.doses = $('#prescriptionTableBody').children().eq(i).children().eq(2).children().val();
-        medicine.dosesCountByDay = $('#prescriptionTableBody').children().eq(i).children().eq(3).children().val();
+        medicine.dosesCountByDay = $('#prescriptionTableBody').children().eq(i).children().eq(3).children().children().val();
         medicine.dosesDay = $('#prescriptionTableBody').children().eq(i).children().eq(4).children().val();
         medicine.remarks = $('#prescriptionTableBody').children().eq(i).children().eq(5).children().val();
         prescription.push(medicine);
@@ -252,7 +252,7 @@ $('#doctorSignedComplete').on('click', function () {
     }).done(result => {
 
         if (result[0] === 1) {
-          
+
             $('.treatmentNote').val('');
             $('#diagonosisChartForm, #preDiagonosisChartForm, #patient_form').each(function(){
                 this.reset();
@@ -514,4 +514,3 @@ $('#vitalSign').on('click', () => {
 
 
 init();
-
