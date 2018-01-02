@@ -1,6 +1,7 @@
 const chart = require('../Entity/Chart.js');
 const patient = require('../Entity/Patient.js');
 const complaintEntity = require('../Entity/Complaint.js');
+let history = require('../Entity/History');
 
 const complaint = require('./ComplaintModel');
 const ocs = require('./OCSModel');
@@ -41,7 +42,10 @@ ChartModel.getChartByChartNumber = function (data, callback) {
         },
         include: [
             {
-                model: patient
+                model: patient,
+                include: [
+                  history
+                ]
             }
         ]
     }).then(result => {
@@ -107,9 +111,8 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
 }
 
 ChartModel.getPastChart = function (data, callback) {
+
     const chartDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-
-
     const chartFindAll = (result) => {
 
         return chart.findAll({

@@ -12,6 +12,9 @@ WaitingModel.FindByStatus = function(status, callback) {
         status,
       },
       attributes: ['chart_id', 'name', 'birth', 'status'],
+      order: [
+        ['chart_id', 'ASC']
+      ]
     })
     .then(result => {
       callback(result);
