@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "window_dev" : "nodemon Main.js",
     "start": "set NODE_ENV=development && nodemon Main.js",
-    "start_pro": "set NODE_ENV=production && node Main.js", 
+    "start_pro": "set NODE_ENV=production && node Main.js",
     "build": "webpack --watch --config ./scripts/webpack.config.dev.js",
     "build:prod": "webpack -p --config ./scripts/webpack.config.prod.js"
   },
