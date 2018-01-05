@@ -1,52 +1,59 @@
 import $ from 'jquery';
 import 'jquery-validation';
 
-$(document).ready(function(){
-            
-    
-    //jquery-validation test
-   var v =  $('#patient_form').validate({
-       onkeyup:false,
-        onfocusout : function(element){
-            $(element).valid();
-        },
-        rules:{
-            name: "required",
-            birth: "date",
-            height: "digits",
-            weight: "digits",
-            smoking: "digits",
-            smokingPeriod: "digits",
-            drinking: "digits",
-            drinkingPeriod: "digits"
-        },
-        messages:{
-            name: "이름을 입력해주세요",
-            birth: "생년월일을 다시 확인해주세요",
-            height: "신장을 정수 형식으로 입력해주세요",
-            weight: "체중을 정수 형식으로 입력해주세요",
-            smoking: "흡연량을 정수 형식으로 입력해주세요",
-            smokingPeriod: "흡연경력을 정수 형식으로 입력해주세요",
-            drinking: "음주량을 정수 형식으로 입력해주세요",
-            drinkingPeriod: "음주경력을 정수 형삭으로 입력해주세요"
-        },
-        showErrors:function(errorMap, errorList){
-            if(this.numberOfInvalids()) {
-                $.uiAlert({
-                    textHead: '[경고]',
-                    text: errorList[0].message,
-                    bgcolor: '#FF5A5A',
-                    textcolor: '#fff',
-                    position: 'top-center',
-                    time: 2
-                });
-                errorList[0].element.focus();
-            }
+/**
+ * patient form 유효성 검사 
+ */
+$('#patient_form').validate({
+    onkeyup:false,
+    onfocusout : function(element){
+        $(element).valid();
+    },
+    rules:{
+        name: "required",
+        birth: "date",
+        height: "digits",
+        weight: "digits",
+        smoking: "number",
+        smokingPeriod: "digits",
+        drinking: "number",
+        drinkingPeriod: "digits"
+    },
+    messages:{
+        name: "이름을 입력해주세요",
+        birth: "생년월일을 다시 확인해주세요",
+        height: "신장을 정수 형식으로 입력해주세요",
+        weight: "체중을 정수 형식으로 입력해주세요",
+        smoking: "흡연량을 숫자 형식으로 입력해주세요",
+        smokingPeriod: "흡연경력을 정수 형식으로 입력해주세요",
+        drinking: "음주량을 숫자 형식으로 입력해주세요",
+        drinkingPeriod: "음주경력을 정수 형삭으로 입력해주세요"
+    },
+    showErrors:function(errorMap, errorList){
+        if(this.numberOfInvalids()) {
+            $.uiAlert({
+                textHead: '[경고]',
+                text: errorList[0].message,
+                bgcolor: '#FF5A5A',
+                textcolor: '#fff',
+                position: 'top-center',
+                time: 2
+            });
+            errorList[0].element.focus();
         }
-    });
-    console.log(v);
+    }
 });
 
+/**
+ * 엔터 search버튼 임포팅
+ */
+
+ $('#nameInput').keydown(function(){
+    if(event.keyCode == 13){
+       $('#btn-name-send').trigger('click');
+    }
+});
+ 
 /**
  * 이름으로 조회
  */
