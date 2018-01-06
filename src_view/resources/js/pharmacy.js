@@ -1,4 +1,7 @@
 import $ from 'jquery';
+import _ from 'lodash';
+import http from '../utils/http';
+import { resultCode } from '../utils/constant';
 
 var tableRenderMedicine = [];
 
@@ -15,29 +18,13 @@ function init() {
   if ($('#PharmacyOCSTableBody').children().length)
     $('#PharmacyOCSTableBody *').remove();
 
-  $.ajax({
-    type: 'GET',
-    url: 'http://localhost:3000/waitingList',
-    dataType: 'json',
-    cache: false,
-  }).done(result => {
 
-    var convertStatus = '';
-
-    for (let i = 0; i < result.length; i++) {
-
-      convertStatus = getStatus(result[i].status);
-      $('#PharmacyOCSTableBody').append(
-        `<tr id=${result[i].chart_id} class="table-content">
-                   <td>${result[i].name}</td>
-                   <td>${convertStatus}</td>
-            </tr>`
-      )
-    }
-  });
 }
 
 $(document).ready(() => {
+
+  getPharmacyOcsData('now');
+
   $.ajax({
     type: 'GET',
     url: 'http://localhost:3000/medicine/list',
@@ -75,33 +62,6 @@ $('.medicineSearchSelect').change(() => {
     sourceTarget = JSON.parse(window.localStorage.getItem('medicineIngredient'));
   }
   $('.search.ui').search({ source: sourceTarget })
-});
-
-$('.getPharmacyOCS').on('click', () => {
-
-  if ($('#PharmacyOCSTableBody').children().length)
-    $('#PharmacyOCSTableBody *').remove();
-
-  $.ajax({
-    type: 'GET',
-    url: 'http://localhost:3000/waitingList',
-    dataType: 'json',
-    cache: false,
-  }).done(result => {
-
-    var convertStatus = '';
-
-    for (let i = 0; i < result.length; i++) {
-
-      convertStatus = getStatus(result[i].status);
-      $('#PharmacyOCSTableBody').append(
-        `<tr id=${result[i].chart_id} class="table-content">
-                   <td>${result[i].name}</td>
-                   <td>${convertStatus}</td>
-            </tr>`
-      )
-    }
-  });
 });
 
 $('.main-category-select').change(() => {
@@ -293,6 +253,159 @@ function getStatus(status) {
     case 4: return '약 조제중'; break;
     case 5: return '조제'; break;
   }
+}
+
+function getStatusClass(status) {
+
+  switch (status) {
+    case 3: return 'ocs-hover negative'; break;
+    case 4: return 'ocs-hover warning'; break;
+    case 5: return 'ocs-hover positive'; break;
+    default : return 'selectable'; break;
+  }
+}
+
+function getPharmacyOcsData(nowData = "now", page = 1) {
+
+    if ($('#PharmacyOCSTableBody').children().length)
+      $('#PharmacyOCSTableBody *').remove();
+    $('.pharmacy-ocs-table').empty();
+
+    http
+        .getMethod(`/waitingList/pharmacy/${nowData}/${page}`)
+        .then(result => {
+            const { data, code } = result;
+            data.nowData = nowData;
+
+            if (!_.eq(code, resultCode.success)) {
+                return Promise.reject(`fail pharmacy ocs data ${data.error}`);
+            }
+            return Promise.resolve(data);
+        })
+        .then(pharmacyOcsTableDataSetting)
+        .catch(error => console.log(error))
+}
+
+window.getPharmacyOcsData = getPharmacyOcsData;
+
+function pharmacyOcsTableDataSetting(result) {
+
+  const { endPage, startPage, totalPage, max,
+      page, pageSize, datas, nowData } = result;
+  const footEle = [];
+
+  $('#PharmacyOCSTableBody').append(
+      _.map(datas, data => {
+          const { chartNumber, name, status } = data;
+          return ` <tr attr="${chartNumber}" class="${getStatusClass(status)}">
+              <td>${chartNumber}</td>
+              <td>${name}</td>
+              <td>${getStatus(status)}</td>
+          </tr>`
+      })
+  );
+
+  if (page <= pageSize) {
+      footEle.push(`
+      <a class="icon item pharmacy-ocs-paging" style="text-decoreation:none" onclick="javascript:getPharmacyOcsData('${nowData}',${startPage === page ? startPage : (page - 1)})">
+          <i class="left chevron icon"></i>
+      </a>`)
+  } else {
+      footEle.push(`
+      <a class="icon item">
+          <i class="left chevron icon"></i>
+      </a>`)
+  }
+
+  footEle.push(_.map(_.range(startPage, endPage + 1), (num) => {
+
+      if (_.eq(num, page)) {
+          return `<a class="item">${num}</a>`
+      } else {
+          return `<a class="item pharmacy-ocs-paging" style="text-decoreation:none" onclick="javascript:getPharmacyOcsData('${nowData}',${num})">${num}</a>`
+
+      }
+  }))
+
+  if (endPage <= totalPage) {
+      footEle.push(`
+      <a class="icon item pharmacy-ocs-paging"  style="text-decoreation:none"  onclick="javascript:getPharmacyOcsData('${nowData}',${endPage === page ? endPage : (page + 1)})">
+        <i class="right chevron icon"></i>
+      </a>`)
+  } else {
+      footEle.push(`
+      <a class="icon item">
+        <i class="right chevron icon"></i>
+      </a>`)
+  }
+  $('.pharmacy-ocs-table').append(_.flatten(footEle));
+}
+
+$('.getPharmacyOCS').on('click', () => {
+
+  getPharmacyOcsData('now');
+});
+
+$('#PharmacyOCSTableBody').on('click', (e) => {
+
+  const chartNumber = $(e.target.parentNode).attr('attr');
+  getPrescription(chartNumber);
+});
+
+function getPrescription(chartNumber) {
+
+  $('.prescription-table-body').empty();
+
+  http
+      .getMethod(`/prescription/${chartNumber}`)
+      .then(result => {
+          const { data, code } = result;
+
+          if (!_.eq(code, resultCode.success)) {
+              return Promise.reject(`fail ocs data ${data.error}`);
+          }
+          return Promise.resolve(data);
+      })
+      .then(prescriptionDataSetting)
+      .catch(error => console.log(error))
+}
+
+function prescriptionDataSetting(data) {
+
+  const { prescriptions, chartNumber, name = data.patient.name, impression, presentIllness, treatmentNote } = data;
+
+  if (prescriptions.length === 0) {
+    $('.prescription-table-body').append(
+      `<tr>
+          <td class="defaultPrescriptionTableBody" style="text-align:center;" colspan="7">처방된 약이 없습니다. 본진 보조에게 먼저 문의해본 후 IT 본부 단원을 찾아주세요.</td>
+      </tr>`
+    )
+  } else {
+    $('.prescription-table-body').append(
+        _.map(prescriptions, data => {
+          const { medicineName, medicineIngredient, doses, dosesCountByDay, dosesDay, remarks } = data;
+          return ` <tr class="ui fluid">
+            <td>${medicineName}</td>
+            <td>${medicineIngredient}</td>
+            <td>${doses}</td>
+            <td>${dosesCountByDay}</td>
+            <td>${dosesDay}</td>
+            <td>${remarks === '' ? '-' : remarks}</td>
+            <td>
+              <i class="configure link icon"></i>
+              <i class="trash link icon"></i>
+            </td>
+          </tr>`
+        })
+    );
+  }
+
+  $('#pharmacy-chart-id').val(chartNumber);
+  $('#pharmacy-chart-name').val(name);
+  $('.pharmacy-impression').val(impression);
+  $('.pharmacy-present-illness').val(presentIllness);
+  $('.pharmacy-treatment-note').val(treatmentNote);
+
 }
 
 init();

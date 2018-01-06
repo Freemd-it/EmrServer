@@ -39,7 +39,7 @@ router.get('/now/:page', function (req, res, next) {
     const PAGE_SIZE = 10; // 보여주는 링크 수
     const BEGIN = (page - 1) * 10; //시작 글
     const nowTime = moment(new Date());
-    const nowDay = nowTime.format('YYYY-MM-DD');
+    const nowDay = moment('00:00:00', 'hh:mm:ss');
 
     let totalPage;
     let startPage;
@@ -73,7 +73,7 @@ router.get('/now/:page', function (req, res, next) {
     ocsModel
         .count()
         .then(tableRange)
-        .then((datas) => { 
+        .then((datas) => {
             const result = {};
             result.pageSize = PAGE_SIZE;
             result.page = page;

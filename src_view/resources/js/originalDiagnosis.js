@@ -59,10 +59,10 @@ $('.diagnosisWaitings').on('click', () => {
         // console.log(result);
         for (let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
-                    <td id=${result[i].chart_id}>${result[i].chart_id}</td>
-                    <td id=${result[i].chart_id}>${result[i].name}</td>
-                    <td id=${result[i].chart_id}>${result[i].birth}</td>
+                `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
+                    <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
+                    <td id=${result[i].chartNumber}>${result[i].name}</td>
+                    <td id=${result[i].chartNumber}>${result[i].birth}</td>
                 </tr>`
 
             )
@@ -92,10 +92,10 @@ $('.waitingTab').on('click', () => {
 
         for (let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
-                       <td id=${result[i].chart_id}>${result[i].chart_id}</td>
-                       <td id=${result[i].chart_id}>${result[i].name}</td>
-                       <td id=${result[i].chart_id}>${result[i].birth}</td>
+                `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
+                       <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
+                       <td id=${result[i].chartNumber}>${result[i].name}</td>
+                       <td id=${result[i].chartNumber}>${result[i].birth}</td>
                 </tr>`
 
             )
@@ -125,10 +125,10 @@ $('.completeTab').on('click', () => {
 
         for (let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
-                       <td id=${result[i].chart_id}>${result[i].chart_id}</td>
-                       <td id=${result[i].chart_id}>${result[i].name}</td>
-                       <td id=${result[i].chart_id}>${result[i].birth}</td>
+                `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
+                       <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
+                       <td id=${result[i].chartNumber}>${result[i].name}</td>
+                       <td id=${result[i].chartNumber}>${result[i].birth}</td>
                 </tr>`
 
             )
@@ -356,9 +356,6 @@ $('#pharmacopoeia').on('click', () => {
 
     $('.ui.longer.modal.pharmacopoeia').modal('show')
     $('.dropdown').dropdown()
-    // $(".main-category-select option[value='심혈관계질환']").attr("selected", "selected");
-    // console.log($('.main-category-select option').attr('value'));
-    // $('.main-category-select > select > option').val();
 });
 
 /**
