@@ -32,7 +32,6 @@ router.get('/', (req, res, next) => {
  * 금일 OCS 환자 목록 보기
  */
 router.get('/now/:page', function (req, res, next) {
-
     let { page = 1 } = req.params;
     page = parseInt(page, 10);
 
@@ -65,7 +64,7 @@ router.get('/now/:page', function (req, res, next) {
 
         const options = {};
         options.order = [['id', 'DESC']];
-        options.where = { createdAt: { lt: Date.parse(nowDay) } }
+        options.where = { createdAt: { gt: Date.parse(nowDay) } }
         options.offset = BEGIN;
         options.limit = SIZE;
         return ocsModel.find(options);
@@ -74,7 +73,7 @@ router.get('/now/:page', function (req, res, next) {
     ocsModel
         .count()
         .then(tableRange)
-        .then((datas) => {
+        .then((datas) => { 
             const result = {};
             result.pageSize = PAGE_SIZE;
             result.page = page;
@@ -116,7 +115,7 @@ router.get('/excel', function (req, res, next) {
     const options = {};
     options.attributes = ['chartNumber', 'name', 'gender', 'birth', 'status', 'createdAt']
     options.order = [['id', 'DESC']];
-    options.where = { createdAt: { lt: Date.parse(nowDay) } }
+    options.where = { createdAt: { gt: Date.parse(nowDay) } }
 
     ocsModel
         .findAll(options)
