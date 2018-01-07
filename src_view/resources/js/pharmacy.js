@@ -348,6 +348,7 @@ $('.getPharmacyOCS').on('click', () => {
 
 $('#PharmacyOCSTableBody').on('click', (e) => {
 
+  // TODO 권한에 따른 처방전 보여주기
   const chartNumber = $(e.target.parentNode).attr('attr');
   getPrescription(chartNumber);
 });
@@ -383,8 +384,8 @@ function prescriptionDataSetting(data) {
   } else {
     $('.prescription-table-body').append(
         _.map(prescriptions, data => {
-          const { medicineName, medicineIngredient, doses, dosesCountByDay, dosesDay, remarks } = data;
-          return ` <tr class="ui fluid">
+          const { id, medicineName, medicineIngredient, doses, dosesCountByDay, dosesDay, remarks } = data;
+          return ` <tr prescription-id="${id}" class="ui fluid">
             <td>${medicineName}</td>
             <td>${medicineIngredient}</td>
             <td>${doses}</td>
@@ -392,8 +393,8 @@ function prescriptionDataSetting(data) {
             <td>${dosesDay}</td>
             <td>${remarks === '' ? '-' : remarks}</td>
             <td>
-              <i class="configure link icon"></i>
-              <i class="trash link icon"></i>
+              <i class="configure-medicine configure link icon"></i>
+              <i class="delete-medicine trash link icon"></i>
             </td>
           </tr>`
         })
@@ -406,6 +407,39 @@ function prescriptionDataSetting(data) {
   $('.pharmacy-present-illness').val(presentIllness.replace(/<br>/g, "\r\n"));
   $('.pharmacy-treatment-note').val(treatmentNote.replace(/<br>/g, "\r\n"));
 
+}
+
+$(document).on('click', '.configure-medicine', (e) => {
+
+  const target = $(e.target).parent().parent();
+  transformPrescriptionInput(target)
+});
+
+function transformPrescriptionInput(target) {
+
+  console.log(target.children().eq(2).text())
+  console.log(target.children().eq(3).text())
+  console.log(target.children().eq(4).text())
+  console.log(target.children().eq(5).text())
+  /**
+   * TODO 파트장 처방전 수정
+   * @description 이 위에것들 다 값으로 변환 후 append input 창 + value로 박아줄 것
+   * 그리고 기타에 버튼 수정 취소로 변환 수정 시 서버 호출 후 다시 아이콘이랑 휴지통으로 취소시 그냥 롤백
+   */
+}
+
+$(document).on('click', '.delete-medicine', (e) => {
+
+  const target = $(e.target).parent().parent();
+  deletePrescriptionRow(target)
+
+});
+
+function deletePrescriptionRow(target) {
+
+  // TODO DB delete record then success and delete row
+  console.log(target.attr('prescription-id'));
+  target.remove(); // 성공하면 이거 수행
 }
 
 init();
