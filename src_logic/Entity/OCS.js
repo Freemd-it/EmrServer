@@ -1,7 +1,7 @@
 var sequelize = require('sequelize');
 var dbService = require('../Service/SequelizeService.js');
 
-const OCS = dbService.define('oc', {
+const OCS = dbService.define('ocs', {
 
     chart_id : { type : sequelize.INTEGER(11), allowNull : false},
     chartNumber : { type : sequelize.INTEGER(11), allowNull : false},

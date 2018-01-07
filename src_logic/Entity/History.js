@@ -2,9 +2,9 @@
  * Created by donghyun on 2017. 7. 24..
  */
 
-var sequelize = require('sequelize');
-var dbService = require('../Service/SequelizeService.js');
-
+const sequelize = require('sequelize');
+const dbService = require('../Service/SequelizeService.js');
+const Patient = require('./Patient');
 const History = dbService.define('history', {
 
   pastHistory : { type : sequelize.STRING(60) , allowNull : true },
@@ -16,7 +16,8 @@ const History = dbService.define('history', {
   pastMedicalArea : { type : sequelize.STRING(255), allowNull : true },
   pastMedication : { type : sequelize.ENUM('Y', 'N'), allowNull : true },
   pastMedicationType : { type : sequelize.STRING(255), allowNull : true },
-  pastMedicationPeriod : { type : sequelize.STRING(255), allowNull : true }
+  pastMedicationPeriod : { type : sequelize.STRING(255), allowNull : true },
+
 });
 
  module.exports = History;

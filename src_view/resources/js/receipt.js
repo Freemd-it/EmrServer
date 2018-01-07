@@ -36,7 +36,6 @@ $('#btn-name-send').on('click', () => {
         cache: false,
     }).done((result) => {
 
-        console.log(result);
         if(!result.length) {
 
 
@@ -54,6 +53,7 @@ $('#btn-name-send').on('click', () => {
             }, 1000);
 
             $('#nameInput').val('');
+            $('#name').val(name);
             $('#name').val(name);
             $('#height').val('');
             $('#weight').val('');
@@ -89,6 +89,8 @@ $('#btn-name-send').on('click', () => {
         }
 
         if(result.length == 1) {
+
+            console.log(result[0]);
 
             $('#nameMessage').html('[ ' + result[0].name + ' ]' + ' 님이 조회됐습니다.');
 
@@ -214,8 +216,6 @@ $(document).on('click', '.item', (e) => {
         dataType: 'json',
         cache: false,
     }).done((result) => {
-        console.log('#####')
-        console.log(result)
         $('#nameMessage').html('[ ' + result.name + ' ]' + ' 님이 조회됐습니다.');
 
         $('#message').attr({
@@ -368,8 +368,6 @@ $('#sendToPart2').on('click', () => {
     let docs;
     const name = $('#name').val();
     const birth = $('#birth').val();
-    console.log(birth)
-    console.log(typeof birth)
     const height = $('#height').val();
     const weight = $('#weight').val();
     const BMI = $('#bmi').val();
@@ -391,7 +389,7 @@ $('#sendToPart2').on('click', () => {
 
     docs = {
         name,
-        birth: birth.toString(),
+        birth,
         height,
         weight,
         BMI,
@@ -411,8 +409,6 @@ $('#sendToPart2').on('click', () => {
         pastMedicationType,
         pastMedication,
     };
-    console.log(docs)
-    // return 0;
 
     $.ajax({
         type: 'POST',
@@ -427,6 +423,8 @@ $('#sendToPart2').on('click', () => {
             this.reset();
         });
 
+        $('#gender').dropdown('set selected', 'male');
+
         $.uiAlert({
           textHead: '[알림]',
           text: name+'님의 접수가 완료되었습니다.',
@@ -435,7 +433,6 @@ $('#sendToPart2').on('click', () => {
           position: 'top-left',
           time: 2,
         })
-        //todo 정상적으로 등록되었는지 어럴트, 정상적 등록시 적힌데이터 지우기
     });
 
 });

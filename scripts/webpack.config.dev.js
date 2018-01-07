@@ -7,8 +7,8 @@ const paths = require('./paths');
 const config = {
     context: paths.appBuild,
 
-    entry: {
-        index: [paths.appIndexJs]
+    entry: {  
+        index:[paths.appIndex], 
     },
 
     output: {

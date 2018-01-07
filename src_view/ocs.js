@@ -9,14 +9,13 @@ import './vendors/js/semantic.js';
 import './vendors/js/semantic.js';
 import './vendors/js/Semantic-UI-Alert.js';
  
-  
+ 
+// 바이탈
+import './vendors/js/d3.min.js';
+import './vendors/js/billboard.min.js'
+ 
 //css 
 import './resources/css/index.scss';
 
-//js 
+//접수 
 import './resources/js/ocs.js';
-import './resources/js/originalDiagnosis.js';
-import './resources/js/pharmacy.js';
-import './resources/js/prediagnosis.js';
-import './resources/js/receipt.js';
-

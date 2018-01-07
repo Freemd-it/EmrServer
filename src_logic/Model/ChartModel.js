@@ -1,10 +1,12 @@
 const chart = require('../Entity/Chart.js');
 const patient = require('../Entity/Patient.js');
+const prescription = require('../Entity/Prescription.js');
 const complaintEntity = require('../Entity/Complaint.js');
+let history = require('../Entity/History');
 
-const complaint = require('./ComplaintModel');
-const ocs = require('./OCSModel');
-const prescription = require('./PrescriptionModel');
+const complaintModel = require('./ComplaintModel');
+const ocsModel = require('./OCSModel');
+const prescriptionModel = require('./PrescriptionModel');
 
 var ChartModel = function (data) {
     this.data = data;
@@ -25,7 +27,7 @@ ChartModel.create = function (data, callback) {
             chartNumber: chartDate + num,
         }).then(result => {
             result['name'] = data.name;
-            ocs.receipt(data, result, ocsResult => {
+            ocsModel.receipt(data, result, ocsResult => {
               callback(result)
             })
         })
@@ -40,23 +42,26 @@ ChartModel.getChartByChartNumber = function (data, callback) {
             chartNumber: data.chartNumber
         },
         include: [
-          {
-            model: patient
-          }
+            {
+                model: patient,
+                include: [
+                  history
+                ]
+            }
         ]
     }).then(result => {
 
         const chartInfo = result
 
         if (data.complaintsKey) {
-          return new Promise(function GETComplaints(resolve, reject) {
-              complaint.findAllByChartId(result.id, result => {
-                chartInfo.dataValues.complaints = result
-                callback(chartInfo)
-              })
-          })
+            return new Promise(function GETComplaints(resolve, reject) {
+                complaintModel.findAllByChartId(result.id, result => {
+                    chartInfo.dataValues.complaints = result
+                    callback(chartInfo)
+                })
+            })
         } else {
-          callback(chartInfo)
+            callback(chartInfo)
         }
     })
 }
@@ -80,9 +85,9 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                 }
             }).then(results => {
 
-                complaint.Insert(data, result => {
+                complaintModel.Insert(data, result => {
                   if (result === 1) {
-                    ocs.preDiagonosis(data.chartNumber, callback)
+                    ocsModel.preDiagonosis(data.chartNumber, callback)
                   }
                 })
             })
@@ -99,17 +104,16 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                     chartNumber: data.chartNumber
                 }
             }).then(result => {
-                prescription.createAll(data, result => {
-                  ocs.originalDiagnosis(data.chartNumber, callback)
+                prescriptionModel.createAll(data, result => {
+                  ocsModel.originalDiagnosis(data.chartNumber, callback)
                 });
             })
     }
 }
 
 ChartModel.getPastChart = function (data, callback) {
+
     const chartDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-
-
     const chartFindAll = (result) => {
 
         return chart.findAll({
@@ -159,7 +163,8 @@ ChartModel.find = async function (options) {
         return await chart.findAll({
             where: where,
             include: include,
-            order: order
+            order: order,
+            limit: limit
         })
     } else {
         return await chart.findOne({

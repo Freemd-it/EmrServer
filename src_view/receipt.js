@@ -13,10 +13,5 @@ import './vendors/js/Semantic-UI-Alert.js';
 //css 
 import './resources/css/index.scss';
 
-//js 
-import './resources/js/ocs.js';
-import './resources/js/originalDiagnosis.js';
-import './resources/js/pharmacy.js';
-import './resources/js/prediagnosis.js';
-import './resources/js/receipt.js';
-
+//접수
+import './resources/js/receipt.js'; 
