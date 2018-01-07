@@ -36,7 +36,6 @@ $('#btn-name-send').on('click', () => {
         cache: false,
     }).done((result) => {
 
-        console.log(result);
         if(!result.length) {
 
 
@@ -54,6 +53,7 @@ $('#btn-name-send').on('click', () => {
             }, 1000);
 
             $('#nameInput').val('');
+            $('#name').val(name);
             $('#name').val(name);
             $('#height').val('');
             $('#weight').val('');
@@ -89,6 +89,8 @@ $('#btn-name-send').on('click', () => {
         }
 
         if(result.length == 1) {
+
+            console.log(result[0]);
 
             $('#nameMessage').html('[ ' + result[0].name + ' ]' + ' 님이 조회됐습니다.');
 
@@ -214,8 +216,6 @@ $(document).on('click', '.item', (e) => {
         dataType: 'json',
         cache: false,
     }).done((result) => {
-        console.log('#####')
-        console.log(result)
         $('#nameMessage').html('[ ' + result.name + ' ]' + ' 님이 조회됐습니다.');
 
         $('#message').attr({
@@ -422,6 +422,8 @@ $('#sendToPart2').on('click', () => {
         $('#patient_form').each(function(){
             this.reset();
         });
+
+        $('#gender').dropdown('set selected', 'male');
 
         $.uiAlert({
           textHead: '[알림]',

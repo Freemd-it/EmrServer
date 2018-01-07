@@ -249,9 +249,9 @@ function getStatus(status) {
   switch (status) {
     case 1: return '접수 완료'; break;
     case 2: return '예진 완료'; break;
-    case 3: return '처방 대기'; break;
-    case 4: return '약 조제중'; break;
-    case 5: return '조제'; break;
+    case 3: return '조제 대기'; break;
+    case 4: return '조제중'; break;
+    case 5: return '처방 대기'; break;
   }
 }
 
@@ -402,9 +402,9 @@ function prescriptionDataSetting(data) {
 
   $('#pharmacy-chart-id').val(chartNumber);
   $('#pharmacy-chart-name').val(name);
-  $('.pharmacy-impression').val(impression);
-  $('.pharmacy-present-illness').val(presentIllness);
-  $('.pharmacy-treatment-note').val(treatmentNote);
+  $('.pharmacy-impression').val(impression.replace(/<br>/g, "\r\n"));
+  $('.pharmacy-present-illness').val(presentIllness.replace(/<br>/g, "\r\n"));
+  $('.pharmacy-treatment-note').val(treatmentNote.replace(/<br>/g, "\r\n"));
 
 }
 

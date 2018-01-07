@@ -13,15 +13,15 @@ ReceiptModel.FindAll = function(name, callback) {
       attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt', 'gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod', 'firstVisit'],
       where: {
         name
-      }, 
-      include: { 
-        model: history,  
+      },
+      include: {
+        model: history,
       }
     })
-    .then(result => {  
+    .then(result => {
       callback(result);
     })
-    .catch(error => {  
+    .catch(error => {
       callback(error);
     });
 }
@@ -45,12 +45,13 @@ ReceiptModel.Find = function(id, callback) {
 }
 
 ReceiptModel.UpdateOrCreate = function(data, callback) {
+
   const birth = data.birth + 'T00:00:00.000Z';
 
   patient.find({
       where: {
         name: data.name,
-        birth
+        birth: data.birth
       },
       attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt', 'gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod', 'firstVisit'],
       include: {
