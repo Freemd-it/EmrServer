@@ -60,7 +60,7 @@ $('#patient_form').validate({
             min: "음주량은 음수를 임력할 수 없습니다."
         },
         drinkingPeriod: {
-            digits: "음주경력을 양의 정수 형삭으로 입력해주세요"
+            digits: "음주경력을 양의 정수 형식으로 입력해주세요"
         }
     },
     showErrors:function(errorMap, errorList){

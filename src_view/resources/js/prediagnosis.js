@@ -38,27 +38,27 @@ $('#chartForm').validate({
     messages: {
         heartRate: {
             number: "심박수는 숫자 형식으로 입력해주세요",
-            min: "심박수는 음수를 임력할 수 없습니다."
+            min: "심박수는 음수를 입력할 수 없습니다."
         },
         pulseRate: {
             number: "맥박수는 숫자 형식으로 입력해주세요",
-            min: "맥박수는 음수를 임력할 수 없습니다."
+            min: "맥박수는 음수를 입력할 수 없습니다."
         },
         bodyTemporature: {
             number: "체온은 숫자 형식으로 입력해주세요",
-            min: "체온은 음수를 임력할 수 없습니다."
+            min: "체온은 음수를 입력할 수 없습니다."
         },
         systoleBloodPressure: {
             number: "혈압(수축기)는 숫자 형식으로 입력해주세요",
-            min: "혈압(수축기)는 음수를 임력할 수 없습니다."
+            min: "혈압(수축기)는 음수를 입력할 수 없습니다."
         },
         diastoleBloodPressure: {
             number: "혈압(이완기)는 숫자 형식으로 입력해주세요",
-            min: "혈압(이완기)는 음수를 임력할 수 없습니다."
+            min: "혈압(이완기)는 음수를 입력할 수 없습니다."
         },
         bloodGlucose: {
             number: "혈당은 숫자 형식으로 입력해주세요",
-            min: "혈당은 음수를 임력할 수 없습니다."
+            min: "혈당은 음수를 입력할 수 없습니다."
         }
     },
     showErrors:function(errorMap, errorList){
