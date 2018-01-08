@@ -40,8 +40,6 @@ router.post('/patient', function (req, res){
 
     let waitingInsertBirth = req.body.birth;
 
-    console.log(req.body);
-
     receiptModel.UpdateOrCreate (req.body, result => {
         if(result.sqlStatus === 200) {
 

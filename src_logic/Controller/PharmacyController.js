@@ -14,13 +14,6 @@ router.get('/', function (req, res, next) {
     respondHtml(res,'pharmacy');
 })
 
-// router.get('/', function (req, res){
-//     chartModel.getChartByChartNumber (req.query, result => {
-//         //console.log(result); 
-//         res.send(result);
-//     });
-// });
-
 router.post('/update', function (req, res) {
 
     const data = {

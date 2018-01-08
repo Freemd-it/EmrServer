@@ -15,6 +15,7 @@ const prediagnosisController = require('../Controller/PrediagnosisController')
 const pharmacyController = require('../Controller/PharmacyController');
 const originalDiagnosisController = require('../Controller/OriginalDiagnosisController');
 const managementController = require('../Controller/ManagementController');
+const prescriptionController = require('../Controller/PrescriptionController');
 
 
 var csrfProtection = new csurf({ cookie: true });
@@ -60,12 +61,13 @@ RoutesService.Init = function () {
     app.use('/management',managementController);
 
     app.use('/waitingList', waitingController);
-    app.use('/chart', chartController); 
+    app.use('/chart', chartController);
     app.use('/views', viewsController);
     app.use('/medicine', medicineController);
     app.use('/ocs', ocsController);
+    app.use('/prescription', prescriptionController);
 
-    console.log("## setup routes ##");
+    console.log("## setup routes service ##");
 }
 
 module.exports = RoutesService;

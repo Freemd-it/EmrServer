@@ -94,10 +94,10 @@ $('#preDiagonosisWaitingList').on('click', () => {
 
         for(let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="pre-diagnosis-table-content">
-                       <td id=${result[i].chart_id}>${result[i].chart_id}</td>
-                       <td id=${result[i].chart_id}>${result[i].name}</td>
-                       <td id=${result[i].chart_id}>${result[i].birth}</td>
+                `<tr id=${result[i].chartNumber} class="pre-diagnosis-table-content">
+                       <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
+                       <td id=${result[i].chartNumber}>${result[i].name}</td>
+                       <td id=${result[i].chartNumber}>${result[i].birth}</td>
                 </tr>`
 
             )}
@@ -110,7 +110,6 @@ $('#preDiagonosisWaitingList').on('click', () => {
 
 $(document).on('click', '.pre-diagnosis-table-content', (e) => {
 
-    // console.log(e.target);
     const docs = {
         chartNumber: e.target.id,
     };

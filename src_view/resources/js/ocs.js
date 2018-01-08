@@ -11,11 +11,11 @@ function init() {
 
 
 /**
- * 
+ *
  * @param {string} nowData now or before
  * @param {number} page page index
  * @description
- * 이전 OCS, 현재 OCS 데이터 불러오기 
+ * 이전 OCS, 현재 OCS 데이터 불러오기
  */
 function getOcsData(nowData = "now", page = 1) {
 
@@ -24,7 +24,7 @@ function getOcsData(nowData = "now", page = 1) {
      */
     $('table tbody').empty();
     $('.ocs-table').empty();
-    
+
     http
         .getMethod(`/ocs/${nowData}/${page}`)
         .then(result => {
@@ -42,15 +42,15 @@ function getOcsData(nowData = "now", page = 1) {
 window.getOcsData = getOcsData;
 
 /**
- * 
- * @param {object} datas 
+ *
+ * @param {object} datas
  * @description
- * OCS 테이블 데이터 
+ * OCS 테이블 데이터
  */
 function ocsTableDataSetting(result) {
     const { endPage, startPage, totalPage, max,
         page, pageSize, datas, nowData } = result;
-    const changeToHangle = ['예진 대기', '본진 대기', '처방 대기', '처방중', '완료'];
+    const changeToHangle = ['접수 완료', '예진 완료', '조제 대기', '조제중', '처방 대기', '완료'];
     const START_NUM = 1;
     const footEle = [];
     /**
@@ -64,7 +64,7 @@ function ocsTableDataSetting(result) {
                 <td>${name}</td>
                 <td>${gender}</td>
                 <td>${birth}</td>
-                <td>${changeToHangle[status + START_NUM]}</td>
+                <td>${changeToHangle[status - 1]}</td>
             </tr>`
         })
     );
@@ -84,7 +84,7 @@ function ocsTableDataSetting(result) {
             <i class="left chevron icon"></i>
         </a>`)
     }
-    // Center  
+    // Center
     footEle.push(_.map(_.range(startPage, endPage + 1), (num) => {
         if (_.eq(num, page)) {
             return `<a class="item">${num}</a>`
@@ -108,7 +108,7 @@ function ocsTableDataSetting(result) {
     $('.ocs-table').append(_.flatten(footEle));
 
 }
- 
+
 /**
  * Data Reload
  */

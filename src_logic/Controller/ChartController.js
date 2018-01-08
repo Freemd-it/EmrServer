@@ -65,10 +65,10 @@ router.get('/pastOne', function (req, res) {
 });
 
 /**
- * patient id를 통해 vital sign json 데이터 가져오기 
+ * patient id를 통해 vital sign json 데이터 가져오기
  */
 router.get('/vitalSign/:patient_id', function (req, res, next) {
-    const { patient_id } = req.params; 
+    const { patient_id } = req.params;
     //TODO middleware로 권한체크해야함.
 
     //condition

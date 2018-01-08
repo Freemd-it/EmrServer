@@ -59,10 +59,10 @@ $('.diagnosisWaitings').on('click', () => {
         // console.log(result);
         for (let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
-                    <td id=${result[i].chart_id}>${result[i].chart_id}</td>
-                    <td id=${result[i].chart_id}>${result[i].name}</td>
-                    <td id=${result[i].chart_id}>${result[i].birth}</td>
+                `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
+                    <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
+                    <td id=${result[i].chartNumber}>${result[i].name}</td>
+                    <td id=${result[i].chartNumber}>${result[i].birth}</td>
                 </tr>`
 
             )
@@ -92,10 +92,10 @@ $('.waitingTab').on('click', () => {
 
         for (let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
-                       <td id=${result[i].chart_id}>${result[i].chart_id}</td>
-                       <td id=${result[i].chart_id}>${result[i].name}</td>
-                       <td id=${result[i].chart_id}>${result[i].birth}</td>
+                `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
+                       <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
+                       <td id=${result[i].chartNumber}>${result[i].name}</td>
+                       <td id=${result[i].chartNumber}>${result[i].birth}</td>
                 </tr>`
 
             )
@@ -125,10 +125,10 @@ $('.completeTab').on('click', () => {
 
         for (let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
-                       <td id=${result[i].chart_id}>${result[i].chart_id}</td>
-                       <td id=${result[i].chart_id}>${result[i].name}</td>
-                       <td id=${result[i].chart_id}>${result[i].birth}</td>
+                `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
+                       <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
+                       <td id=${result[i].chartNumber}>${result[i].name}</td>
+                       <td id=${result[i].chartNumber}>${result[i].birth}</td>
                 </tr>`
 
             )
@@ -158,7 +158,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         cache: false,
     }).done(result => {
 
-        console.log(result)
+        // console.log(result)
 
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
@@ -206,7 +206,40 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#smokingPeriod').val(result.patient.smokingPeriod);
         $('#drinking').val(result.patient.drinkingAmount);
         $('#drinkingPeriod').val(result.patient.drinkingPeriod);
-        // $('#name').val(result.patient.name);
+
+        let idx = 1; /* 과거력 조회용 인덱스 */
+
+        for (let i of result.patient.histories[0].pastHistory) {
+            let id = '#disease'+idx;
+            if(i == 1) {
+                $(id).prop("checked", true);
+            }
+            idx++;
+        }
+
+        idx = 1;
+
+        for (let i of result.patient.histories[0].allergy) {
+            let id = '#allergy'+idx;
+            if(i == 1) {
+                $(id).prop("checked", true);
+            }
+            idx++;
+        }
+
+        let value = result.patient.histories[0].pastMedical;
+
+        $('input[name="pastMedical"][value=' + value + ']').prop('checked', true).trigger("change");
+        $('#pastMedicalTime').val(result.patient.histories[0].pastMedicalTime);
+        $('#pastMedicalArea').val(result.patient.histories[0].pastMedicalArea);
+
+        value = result.patient.histories[0].pastMedication;
+
+        $('input[name="pastMedication"][value=' + value + ']').prop('checked', true).trigger("change");
+        $('#pastMedicationPeriod').val(result.patient.histories[0].pastMedicationPeriod);
+        $('#pastMedicationType').val(result.patient.histories[0].pastMedicationType);
+        $('#diseaseDescription').val(result.patient.histories[0].pastHistoryComment);
+        $('#allergyDescription').val(result.patient.histories[0].allergyComment)
     })
 
     $('#vitalSign').attr('disabled', false);
@@ -228,7 +261,7 @@ $('#doctorSignedComplete').on('click', function () {
         medicine.medicineName = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(0).text());
         medicine.medicineIngredient = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(1).text());
         medicine.doses = $('#prescriptionTableBody').children().eq(i).children().eq(2).children().val();
-        medicine.dosesCountByDay = $('#prescriptionTableBody').children().eq(i).children().eq(3).children().val();
+        medicine.dosesCountByDay = $('#prescriptionTableBody').children().eq(i).children().eq(3).children().children().val();
         medicine.dosesDay = $('#prescriptionTableBody').children().eq(i).children().eq(4).children().val();
         medicine.remarks = $('#prescriptionTableBody').children().eq(i).children().eq(5).children().val();
         prescription.push(medicine);
@@ -252,9 +285,9 @@ $('#doctorSignedComplete').on('click', function () {
     }).done(result => {
 
         if (result[0] === 1) {
-          
+
             $('.treatmentNote').val('');
-            $('#diagonosisChartForm, #preDiagonosisChartForm, #patient_form').each(function(){
+            $('#diagonosisChartForm, #preDiagonosisChartForm, #patientChartForm').each(function(){
                 this.reset();
             });
 
@@ -323,9 +356,6 @@ $('#pharmacopoeia').on('click', () => {
 
     $('.ui.longer.modal.pharmacopoeia').modal('show')
     $('.dropdown').dropdown()
-    // $(".main-category-select option[value='심혈관계질환']").attr("selected", "selected");
-    // console.log($('.main-category-select option').attr('value'));
-    // $('.main-category-select > select > option').val();
 });
 
 /**
@@ -514,4 +544,3 @@ $('#vitalSign').on('click', () => {
 
 
 init();
-
