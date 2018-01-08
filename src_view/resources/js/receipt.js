@@ -50,14 +50,14 @@ $('#patient_form').validate({
         },
         smoking: {
             number: "흡연량을 숫자 형식으로 입력해주세요",
-            min: "흡연량은 음수를 임력할 수 없습니다."
+            min: "흡연량은 음수를 입력할 수 없습니다."
         },
         smokingPeriod: {
             digits: "흡연경력을 양의 정수 형식으로 입력해주세요"
         },
         drinking: {
             number: "음주량을 숫자 형식으로 입력해주세요",
-            min: "음주량은 음수를 임력할 수 없습니다."
+            min: "음주량은 음수를 입력할 수 없습니다."
         },
         drinkingPeriod: {
             digits: "음주경력을 양의 정수 형식으로 입력해주세요"
