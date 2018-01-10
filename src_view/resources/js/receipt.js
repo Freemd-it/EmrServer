@@ -1,9 +1,98 @@
 import $ from 'jquery';
+import 'jquery-validation';
 
+/**
+ * patient form 유효성 검사 
+ */
+$('#patient_form').validate({
+    onkeyup:false,
+    onfocusout : function(element){
+        $(element).valid();
+    },
+    rules:{
+        name: {
+            required: true,
+            rangelength: [2, 10]
+        },
+        birth: "date",
+        height: {
+            digits: true
+        },
+        weight: {
+            digits: true
+        },
+        smoking: {
+            number: true,
+            min: 0
+        },
+        smokingPeriod: {
+            digits: true
+        },
+        drinking: {
+            number: true,
+            min: 0
+        },
+        drinkingPeriod: {
+            digits: true
+        }
+    },
+    messages:{
+        name: {
+            required: "이름을 입력해주세요",
+            rangelength: "이름을 2자에서 10자 사이로 입력해주세요"
+        },
+        birth: "생년월일을 다시 확인해주세요",
+        height: {
+            digits: "신장을 양의 정수 형식으로 입력해주세요"
+        },
+        weight: {
+            digits: "체중을 양의 정수 형식으로 입력해주세요"
+        },
+        smoking: {
+            number: "흡연량을 숫자 형식으로 입력해주세요",
+            min: "흡연량은 음수를 입력할 수 없습니다."
+        },
+        smokingPeriod: {
+            digits: "흡연경력을 양의 정수 형식으로 입력해주세요"
+        },
+        drinking: {
+            number: "음주량을 숫자 형식으로 입력해주세요",
+            min: "음주량은 음수를 입력할 수 없습니다."
+        },
+        drinkingPeriod: {
+            digits: "음주경력을 양의 정수 형식으로 입력해주세요"
+        }
+    },
+    showErrors:function(errorMap, errorList){
+        if(this.numberOfInvalids()) {
+            $.uiAlert({
+                textHead: '[경고]',
+                text: errorList[0].message,
+                bgcolor: '#FF5A5A',
+                textcolor: '#fff',
+                position: 'top-center',
+                time: 2
+            });
+            errorList[0].element.focus();
+        }
+    }
+});
+
+/**
+ * 엔터 search버튼 임포팅
+ */
+
+ $('#nameInput').keydown(function(){
+    if(event.keyCode == 13){
+       $('#btn-name-send').trigger('click');
+    }
+});
+ 
 /**
  * 이름으로 조회
  */
 $('#btn-name-send').on('click', () => {
+    
     const name = $.trim($('#nameInput').val());
     let docs;
     let date;
@@ -115,9 +204,9 @@ $('#btn-name-send').on('click', () => {
 
             $('#weight').val(result[0].weight);
 
-            $('#drinking').val(result[0].smokingAmount);
+            $('#drinking').val(result[0].drinkingAmount);
 
-            $('#smoking').val(result[0].drinkingAmount);
+            $('#smoking').val(result[0].smokingAmount);
 
             $('#smokingPeriod').val(result[0].smokingPeriod);
 
@@ -364,8 +453,11 @@ $('input[name="pastMedication"]').on('change', () => {
     }
 });
 
+    
+
 $('#sendToPart2').on('click', () => {
     let docs;
+
     const name = $('#name').val();
     const birth = $('#birth').val();
     const height = $('#height').val();

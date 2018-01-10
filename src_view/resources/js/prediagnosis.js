@@ -1,5 +1,80 @@
 import $ from 'jquery';
+import 'jquery-validation';
 
+/**
+ * chrtForm 유효성 검사
+ */
+$('#chartForm').validate({
+    onkeyup:false,
+    onfocusout : function(element){
+        $(element).valid();
+    },
+    rules: {
+        heartRate: {
+            number: true,
+            min: 0
+        },
+        pulseRate: {
+            number: true,
+            min: 0
+        },
+        bodyTemporature: {
+            number: true,
+            min: 0
+        },
+        systoleBloodPressure: {
+            number: true,
+            min: 0
+        },
+        diastoleBloodPressure: {
+            number: true,
+            min: 0
+        },
+        bloodGlucose: {
+            number: true,
+            min: 0
+        }
+    },
+    messages: {
+        heartRate: {
+            number: "심박수는 숫자 형식으로 입력해주세요",
+            min: "심박수는 음수를 입력할 수 없습니다."
+        },
+        pulseRate: {
+            number: "맥박수는 숫자 형식으로 입력해주세요",
+            min: "맥박수는 음수를 입력할 수 없습니다."
+        },
+        bodyTemporature: {
+            number: "체온은 숫자 형식으로 입력해주세요",
+            min: "체온은 음수를 입력할 수 없습니다."
+        },
+        systoleBloodPressure: {
+            number: "혈압(수축기)는 숫자 형식으로 입력해주세요",
+            min: "혈압(수축기)는 음수를 입력할 수 없습니다."
+        },
+        diastoleBloodPressure: {
+            number: "혈압(이완기)는 숫자 형식으로 입력해주세요",
+            min: "혈압(이완기)는 음수를 입력할 수 없습니다."
+        },
+        bloodGlucose: {
+            number: "혈당은 숫자 형식으로 입력해주세요",
+            min: "혈당은 음수를 입력할 수 없습니다."
+        }
+    },
+    showErrors:function(errorMap, errorList){
+        if(this.numberOfInvalids()) {
+            $.uiAlert({
+                textHead: '[경고]',
+                text: errorList[0].message,
+                bgcolor: '#FF5A5A',
+                textcolor: '#fff',
+                position: 'top-center',
+                time: 2
+            });
+            errorList[0].element.focus();
+        }
+    }
+});
 $('#preDiagonosisWaitingList').on('click', () => {
 
     if($('#tableBody').children().length)
@@ -46,7 +121,6 @@ $(document).on('click', '.pre-diagnosis-table-content', (e) => {
         dataType: 'json',
         cache: false,
     }).done(result => {
-
         console.log(result)
 
         $('#preChartId').val(result.chartNumber);
@@ -54,6 +128,8 @@ $(document).on('click', '.pre-diagnosis-table-content', (e) => {
 
         $('#getPastCC').attr('disabled', false);
         $('#pastDiagnosisRecord').attr('disabled', false);
+    }).fail((jq, txt)=>{
+        alert(txt);
     })
 
 
