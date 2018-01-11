@@ -40,7 +40,60 @@ router.get('/:chartNumber', (req, res) => {
       .catch((error) =>{
         respondOnError(res, resultCode.fail, error)
       })
+});
 
+router.get('/medicine/:prescriptionId', (req, res) => {
+
+  const { prescriptionId } = req.params;
+
+  const options = {};
+  options.where = { id: prescriptionId }
+  options.order = [['id', 'ASC']]
+
+  prescriptionModel
+      .findOne(options)
+      .then(result => {
+        respondJson(res, resultCode.success, result);
+      })
+      .catch((error) =>{
+        respondOnError(res, resultCode.fail, error)
+      })
+});
+
+router.post('/update', (req, res) => {
+
+  const { prescriptionId } = req.body;
+  delete req.body.prescriptionId;
+  const data = req.body;
+
+  const options = {};
+  options.update = data
+  options.where = { id: prescriptionId }
+
+  prescriptionModel
+      .update(options)
+      .then(result => {
+        respondJson(res, resultCode.success, result);
+      })
+      .catch((error) =>{
+        console.log(error)
+        respondOnError(res, resultCode.fail, error)
+      })
+});
+
+router.post('/create', (req, res) => {
+
+  const data = req.body;
+
+  prescriptionModel
+      .create(data)
+      .then(result => {
+        respondJson(res, resultCode.success, result);
+      })
+      .catch((error) =>{
+        console.log(error)
+        respondOnError(res, resultCode.fail, error)
+      })
 });
 
 module.exports = router;
