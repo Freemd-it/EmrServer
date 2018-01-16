@@ -44,6 +44,21 @@
     .ocs-hover:hover {
       cursor: pointer;
     }
+    .update-medicine-in-prescription:hover, .cancel-update-prescription:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .add-medicine-in-prescription:hover, .add-cancel-medicine-in-prescription:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .confirm-modal-wrap {
+      margin-top: -150px;
+      height: 185px;
+    }
+    .confirm-modal-wrap .actions .ui.cancel.button {
+      margin-left: 0px;
+    }
   </style>
 </head>
 
@@ -205,6 +220,18 @@
           </table>
       </div>
   </div>
+
+  <div class="ui mini modal confirm-modal-wrap">
+      <div class="header">알림</div>
+      <div class="content">
+          <p></p>
+      </div>
+      <div class="actions">
+          <div class="ui approve button">확인</div>
+          <div class="ui cancel button">취소</div>
+      </div>
+  </div>
+
   <script src="/dist/index.bundle.js"></script>
 </body>
 

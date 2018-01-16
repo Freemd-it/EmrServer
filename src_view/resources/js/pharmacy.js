@@ -454,8 +454,7 @@ function transformPrescriptionInput(target) {
 $(document).on('click', '.update-medicine-in-prescription', (e) => {
 
   const target = $(e.target).parent().parent();
-  updateMedicineInPrescription(target)
-
+  openConfirmModal(target, { confirmMessage: '정말로 처방전을 수정하시겠습니까?' }, updateMedicineInPrescription)
 });
 
 function updateMedicineInPrescription (target) {
@@ -483,7 +482,30 @@ function updateMedicineInPrescription (target) {
 }
 
 function resultUpdatePrescription (result) {
-  console.log(result)
+
+  if (result[0] === 1) {
+
+    getMedicineInPrescription(result.target)
+    $.uiAlert({
+      textHead: '[알림]',
+      text: '처방전 수정이 완료되었습니다.',
+      bgcolor: '#55a9ee',
+      textcolor: '#fff',
+      position: 'top-left',
+      time: 2,
+    })
+  } else {
+
+    getMedicineInPrescription(result.target)
+    $.uiAlert({
+      textHead: '[ERROR-CODE 7001]',
+      text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+      bgcolor: '#F2711C',
+      textcolor: '#fff',
+      position: 'top-center',
+      time: 10,
+    })
+  }
 }
 
 $(document).on('click', '.cancel-update-prescription', (e) => {
@@ -528,7 +550,9 @@ function cancelUpdatePrescription(data) {
 $(document).on('click', '.add-medicine-in-prescription', (e) => {
 
   const target = $(e.target).parent().parent();
-  getAddMedicineInPrescription(target)
+  const medicine = target.children().eq(0).text();
+  openConfirmModal(target, { confirmMessage: '처방전에 ' + medicine + '을(를) 추가하시겠습니까?' }, getAddMedicineInPrescription)
+  // getAddMedicineInPrescription(target)
 
 });
 
@@ -553,14 +577,41 @@ function getAddMedicineInPrescription (target) {
               return Promise.reject(`fail add medicine data ${data.error}`);
           }
           data.target = target;
+          console.log(data)
           return Promise.resolve(data);
       })
       .then(resultAddPrescription)
       .catch(error => console.log(error))
 }
 
-function resultAddPrescription (data) {
-  console.log(data)
+function resultAddPrescription (result) {
+
+  console.log(result)
+  console.log(result.target)
+
+  if (result.id > 0) {
+
+    getMedicineInPrescription(result.target)
+    $.uiAlert({
+      textHead: '[알림]',
+      text: '처방전 수정이 완료되었습니다.',
+      bgcolor: '#55a9ee',
+      textcolor: '#fff',
+      position: 'top-left',
+      time: 2,
+    })
+  } else {
+
+    getMedicineInPrescription(result.target)
+    $.uiAlert({
+      textHead: '[ERROR-CODE 7002]',
+      text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+      bgcolor: '#F2711C',
+      textcolor: '#fff',
+      position: 'top-center',
+      time: 10,
+    })
+  }
 }
 
 $(document).on('click', '.add-cancel-medicine-in-prescription', (e) => {
@@ -581,6 +632,20 @@ function deletePrescriptionRow(target) {
   // TODO DB delete record then success and delete row
   console.log(target.attr('prescription-id'));
   target.remove(); // 성공하면 이거 수행
+}
+
+function openConfirmModal (target, message, gotoFunction) {
+
+  $('.ui.mini.modal').modal({
+    closable: false,
+    onShow: () => {
+      $('.confirm-modal-wrap > .content > p').empty();
+      $('.confirm-modal-wrap > .content > p').text(message.confirmMessage);
+    },
+    onApprove: () => {
+      gotoFunction(target)
+    }
+  }).modal('show')
 }
 
 init();
