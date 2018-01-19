@@ -76,6 +76,25 @@ router.post('/update', (req, res) => {
         respondJson(res, resultCode.success, result);
       })
       .catch((error) =>{
+        respondOnError(res, resultCode.fail, error)
+      })
+});
+
+router.post('/delete', (req, res) => {
+
+  const { prescriptionId } = req.body;
+  console.log(req.body)
+  console.log(prescriptionId)
+
+  const options = {};
+  options.where = { id: prescriptionId }
+
+  prescriptionModel
+      .delete(options)
+      .then(result => {
+        respondJson(res, resultCode.success, result);
+      })
+      .catch((error) =>{
         console.log(error)
         respondOnError(res, resultCode.fail, error)
       })
@@ -91,7 +110,6 @@ router.post('/create', (req, res) => {
         respondJson(res, resultCode.success, result);
       })
       .catch((error) =>{
-        console.log(error)
         respondOnError(res, resultCode.fail, error)
       })
 });

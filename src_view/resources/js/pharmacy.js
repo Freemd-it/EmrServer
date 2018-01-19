@@ -552,7 +552,6 @@ $(document).on('click', '.add-medicine-in-prescription', (e) => {
   const target = $(e.target).parent().parent();
   const medicine = target.children().eq(0).text();
   openConfirmModal(target, { confirmMessage: '처방전에 ' + medicine + '을(를) 추가하시겠습니까?' }, getAddMedicineInPrescription)
-  // getAddMedicineInPrescription(target)
 
 });
 
@@ -577,7 +576,6 @@ function getAddMedicineInPrescription (target) {
               return Promise.reject(`fail add medicine data ${data.error}`);
           }
           data.target = target;
-          console.log(data)
           return Promise.resolve(data);
       })
       .then(resultAddPrescription)
@@ -586,8 +584,8 @@ function getAddMedicineInPrescription (target) {
 
 function resultAddPrescription (result) {
 
-  console.log(result)
-  console.log(result.target)
+  result.target.removeAttr('id');
+  result.target.attr('prescription-id', result.id);
 
   if (result.id > 0) {
 
@@ -624,14 +622,61 @@ $(document).on('click', '.add-cancel-medicine-in-prescription', (e) => {
 $(document).on('click', '.delete-medicine', (e) => {
 
   const target = $(e.target).parent().parent();
-  deletePrescriptionRow(target);
+  const medicine = target.children().eq(0).text();
+  openConfirmModal(target, { confirmMessage: '정말로 ' + medicine + '을(를) 처방전에서 삭제하시겠습니까?' }, deleteMedicineInPrescription)
 });
 
-function deletePrescriptionRow(target) {
+function deleteMedicineInPrescription(target) {
 
-  // TODO DB delete record then success and delete row
-  console.log(target.attr('prescription-id'));
-  target.remove(); // 성공하면 이거 수행
+  const deleteMedicine = {
+      prescriptionId: target.attr('prescription-id')
+  }
+
+  http
+      .postMethod(`/prescription/delete`, deleteMedicine)
+      .then(result => {
+
+          const { code } = result;
+          delete result.headers;
+
+          if (!_.eq(code, resultCode.success)) {
+              return Promise.reject(`fail delete medicine data ${data.error}`);
+          }
+
+          result.target = target;
+          return Promise.resolve(result);
+      })
+      .then(resultDeletePrescription)
+      .catch(error => console.log(error))
+}
+
+function resultDeletePrescription (result) {
+
+  const { target } = result;
+
+  if (result.data === 1) {
+
+    $.uiAlert({
+      textHead: '[알림]',
+      text: '처방전 내 ' + target.children().eq(0).text() + ' 이(가) 삭제되었습니다.',
+      bgcolor: '#55a9ee',
+      textcolor: '#fff',
+      position: 'top-left',
+      time: 2,
+    })
+    target.remove();
+
+  } else {
+
+    $.uiAlert({
+      textHead: '[ERROR-CODE 7003]',
+      text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+      bgcolor: '#F2711C',
+      textcolor: '#fff',
+      position: 'top-center',
+      time: 10,
+    })
+  }
 }
 
 function openConfirmModal (target, message, gotoFunction) {

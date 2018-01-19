@@ -41,4 +41,12 @@ PrescriptionModel.update = async function (options) {
     })
 }
 
+PrescriptionModel.delete = async function (options) {
+
+    const { where = {} } = options;
+    return await prescription.destroy({
+      where: where
+    })
+}
+
 module.exports = PrescriptionModel;
