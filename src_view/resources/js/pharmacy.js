@@ -199,12 +199,18 @@ $('.pharmacySearchButton').on('click', () => {
 
 $(document).on('click', '.pharmacopoeia-hover', (e) => {
 
-  if ($('#prescriptionTableBody .defaultPrescriptionTableBody').length)
-    $('#prescriptionTableBody .defaultPrescriptionTableBody').remove();
+  if ($('#prescription-table-body .defaultPrescriptionTableBody').length)
+    $('#prescription-table-body .defaultPrescriptionTableBody').remove();
+
+  if (window.location.pathname === '/pharmacy') {
+    var icon = `<td><a class="add-medicine-in-prescription">추가하기</a><br /><a class="add-cancel-medicine-in-prescription">취소하기</a></td>`;
+  } else if (window.location.pathname === '/originalDiagnosis'){
+    var icon = `<td class="deletePrescriptionTD"><i class="sign out icon delete-icon-size deleteTargetByIcon"></i></td>`;
+  }
 
   JSON.parse(window.localStorage.getItem('medicine')).find(function (x) {
     if (x.id === Number(e.currentTarget.id)) {
-      $('#prescriptionTableBody').append(
+      $('#prescription-table-body').append(
         `<tr id=${x.id}>
                <td>${x.name}</td>
                <td>${x.ingredient}</td>
@@ -219,9 +225,7 @@ $(document).on('click', '.pharmacopoeia-hover', (e) => {
                </td>
                <td><input /></td>
                <td><input /></td>
-               <td class="deletePrescriptionTD">
-                <i class="sign out icon delete-icon-size deleteTargetByIcon"></i>
-               </td>
+               ${icon}
          </tr>`
       )
 
@@ -348,13 +352,14 @@ $('.getPharmacyOCS').on('click', () => {
 
 $('#PharmacyOCSTableBody').on('click', (e) => {
 
+  // TODO 권한에 따른 처방전 보여주기
   const chartNumber = $(e.target.parentNode).attr('attr');
   getPrescription(chartNumber);
 });
 
 function getPrescription(chartNumber) {
 
-  $('.prescription-table-body').empty();
+  $('#prescription-table-body').empty();
 
   http
       .getMethod(`/prescription/${chartNumber}`)
@@ -362,7 +367,7 @@ function getPrescription(chartNumber) {
           const { data, code } = result;
 
           if (!_.eq(code, resultCode.success)) {
-              return Promise.reject(`fail ocs data ${data.error}`);
+              return Promise.reject(`get fail prescriptions data ${data.error}`);
           }
           return Promise.resolve(data);
       })
@@ -375,16 +380,16 @@ function prescriptionDataSetting(data) {
   const { prescriptions, chartNumber, name = data.patient.name, impression, presentIllness, treatmentNote } = data;
 
   if (prescriptions.length === 0) {
-    $('.prescription-table-body').append(
+    $('#prescription-table-body').append(
       `<tr>
           <td class="defaultPrescriptionTableBody" style="text-align:center;" colspan="7">처방된 약이 없습니다. 본진 보조에게 먼저 문의해본 후 IT 본부 단원을 찾아주세요.</td>
       </tr>`
     )
   } else {
-    $('.prescription-table-body').append(
+    $('#prescription-table-body').append(
         _.map(prescriptions, data => {
-          const { medicineName, medicineIngredient, doses, dosesCountByDay, dosesDay, remarks } = data;
-          return ` <tr class="ui fluid">
+          const { id, medicineName, medicineIngredient, doses, dosesCountByDay, dosesDay, remarks } = data;
+          return ` <tr prescription-id="${id}" class="ui fluid">
             <td>${medicineName}</td>
             <td>${medicineIngredient}</td>
             <td>${doses}</td>
@@ -392,8 +397,8 @@ function prescriptionDataSetting(data) {
             <td>${dosesDay}</td>
             <td>${remarks === '' ? '-' : remarks}</td>
             <td>
-              <i class="configure link icon"></i>
-              <i class="trash link icon"></i>
+              <i class="configure-medicine configure link icon"></i>
+              <i class="delete-medicine trash link icon"></i>
             </td>
           </tr>`
         })
@@ -406,6 +411,286 @@ function prescriptionDataSetting(data) {
   $('.pharmacy-present-illness').val(presentIllness.replace(/<br>/g, "\r\n"));
   $('.pharmacy-treatment-note').val(treatmentNote.replace(/<br>/g, "\r\n"));
 
+}
+
+$(document).on('click', '.configure-medicine', (e) => {
+
+  const target = $(e.target).parent().parent();
+  transformPrescriptionInput(target)
+});
+
+function transformPrescriptionInput(target) {
+
+  const currentDoses = target.children().eq(2).text()
+  const currentDosesCountByDay = target.children().eq(3).text()
+  const currentDosesDay = target.children().eq(4).text()
+  const currentRemarks = target.children().eq(5).text() === '-' ? '' : target.children().eq(5).text();
+
+  target.children().eq(2).empty().append(`<input value="${currentDoses}" />`)
+  target.children().eq(3).empty().append(`
+    <select class="prescription-doses-for-day ui search fluid dropdown">
+       <option value="qd">qd</option>
+       <option value="bid">bid</option>
+       <option value="tid">tid</option>
+       <option value="hs">hs</option>
+    </select>
+    `)
+  target.children().eq(4).empty().append(`<input value="${currentDosesDay}" />`)
+  target.children().eq(5).empty().append(`<input value="${currentRemarks}" />`)
+  target.children().eq(6).empty().append(`
+    <a class="update-medicine-in-prescription">수정완료</a><br />
+    <a class="cancel-update-prescription">수정취소</a>
+    `)
+  $('.prescription-doses-for-day').dropdown();
+  target.children().eq(3).children().dropdown('set selected', currentDosesCountByDay);
+
+  /**
+   * TODO 파트장 처방전 수정
+   * @description 이 위에것들 다 값으로 변환 후 append input 창 + value로 박아줄 것
+   * 그리고 기타에 버튼 수정 취소로 변환 수정 시 서버 호출 후 다시 아이콘이랑 휴지통으로 취소시 그냥 롤백
+   */
+}
+
+$(document).on('click', '.update-medicine-in-prescription', (e) => {
+
+  const target = $(e.target).parent().parent();
+  openConfirmModal(target, { confirmMessage: '정말로 처방전을 수정하시겠습니까?' }, updateMedicineInPrescription)
+});
+
+function updateMedicineInPrescription (target) {
+
+  const data = {};
+  data.prescriptionId = target.attr('prescription-id');
+  data.doses = target.children().eq(2).children().val();
+  data.dosesCountByDay = target.children().eq(3).children().children().val();
+  data.dosesDay = target.children().eq(4).children().val();
+  data.remarks = target.children().eq(5).children().val();
+
+  http
+      .postMethod(`/prescription/update`, data)
+      .then(result => {
+          const { data, code } = result;
+
+          if (!_.eq(code, resultCode.success)) {
+              return Promise.reject(`get fail prescriptions data ${data.error}`);
+          }
+          data.target = target;
+          return Promise.resolve(data);
+      })
+      .then(resultUpdatePrescription)
+      .catch(error => console.log(error))
+}
+
+function resultUpdatePrescription (result) {
+
+  if (result[0] === 1) {
+
+    getMedicineInPrescription(result.target)
+    $.uiAlert({
+      textHead: '[알림]',
+      text: '처방전 수정이 완료되었습니다.',
+      bgcolor: '#55a9ee',
+      textcolor: '#fff',
+      position: 'top-left',
+      time: 2,
+    })
+  } else {
+
+    getMedicineInPrescription(result.target)
+    $.uiAlert({
+      textHead: '[ERROR-CODE 7001]',
+      text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+      bgcolor: '#F2711C',
+      textcolor: '#fff',
+      position: 'top-center',
+      time: 10,
+    })
+  }
+}
+
+$(document).on('click', '.cancel-update-prescription', (e) => {
+
+  const target = $(e.target).parent().parent();
+  getMedicineInPrescription(target)
+
+});
+
+function getMedicineInPrescription (target) {
+
+  const prescriptionId = target.attr('prescription-id');
+
+  http
+      .getMethod(`/prescription/medicine/${prescriptionId}`)
+      .then(result => {
+          const { data, code } = result;
+
+          if (!_.eq(code, resultCode.success)) {
+              return Promise.reject(`get fail prescriptions data ${data.error}`);
+          }
+          data.target = target;
+          return Promise.resolve(data);
+      })
+      .then(cancelUpdatePrescription)
+      .catch(error => console.log(error))
+}
+
+function cancelUpdatePrescription(data) {
+
+  const { target, doses, dosesCountByDay, dosesDay, remarks } = data;
+
+  target.children().eq(2).empty().append(doses)
+  target.children().eq(3).empty().append(dosesCountByDay)
+  target.children().eq(4).empty().append(dosesDay)
+  target.children().eq(5).empty().append(remarks  === '' ? '-' : remarks)
+  target.children().eq(6).empty().append(`
+      <i class="configure-medicine configure link icon"></i>
+      <i class="delete-medicine trash link icon"></i>`)
+}
+
+$(document).on('click', '.add-medicine-in-prescription', (e) => {
+
+  const target = $(e.target).parent().parent();
+  const medicine = target.children().eq(0).text();
+  openConfirmModal(target, { confirmMessage: '처방전에 ' + medicine + '을(를) 추가하시겠습니까?' }, getAddMedicineInPrescription)
+
+});
+
+function getAddMedicineInPrescription (target) {
+
+  const addMedicine = {};
+  addMedicine.medicine_id = target.attr('id')
+  addMedicine.chartNumber = $('#pharmacy-chart-id').val()
+  addMedicine.medicineName = target.children().eq(0).text()
+  addMedicine.medicineIngredient = target.children().eq(1).text()
+  addMedicine.doses = target.children().eq(2).children().val()
+  addMedicine.dosesCountByDay = target.children().eq(3).children().children().val()
+  addMedicine.dosesDay = target.children().eq(4).children().val()
+  addMedicine.remarks = target.children().eq(5).children().val()
+
+  http
+      .postMethod(`/prescription/create`, addMedicine)
+      .then(result => {
+          const { data, code } = result;
+
+          if (!_.eq(code, resultCode.success)) {
+              return Promise.reject(`fail add medicine data ${data.error}`);
+          }
+          data.target = target;
+          return Promise.resolve(data);
+      })
+      .then(resultAddPrescription)
+      .catch(error => console.log(error))
+}
+
+function resultAddPrescription (result) {
+
+  result.target.removeAttr('id');
+  result.target.attr('prescription-id', result.id);
+
+  if (result.id > 0) {
+
+    getMedicineInPrescription(result.target)
+    $.uiAlert({
+      textHead: '[알림]',
+      text: '처방전 수정이 완료되었습니다.',
+      bgcolor: '#55a9ee',
+      textcolor: '#fff',
+      position: 'top-left',
+      time: 2,
+    })
+  } else {
+
+    getMedicineInPrescription(result.target)
+    $.uiAlert({
+      textHead: '[ERROR-CODE 7002]',
+      text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+      bgcolor: '#F2711C',
+      textcolor: '#fff',
+      position: 'top-center',
+      time: 10,
+    })
+  }
+}
+
+$(document).on('click', '.add-cancel-medicine-in-prescription', (e) => {
+
+  const target = $(e.target).parent().parent();
+  target.remove();
+
+});
+
+$(document).on('click', '.delete-medicine', (e) => {
+
+  const target = $(e.target).parent().parent();
+  const medicine = target.children().eq(0).text();
+  openConfirmModal(target, { confirmMessage: '정말로 ' + medicine + '을(를) 처방전에서 삭제하시겠습니까?' }, deleteMedicineInPrescription)
+});
+
+function deleteMedicineInPrescription(target) {
+
+  const deleteMedicine = {
+      prescriptionId: target.attr('prescription-id')
+  }
+
+  http
+      .postMethod(`/prescription/delete`, deleteMedicine)
+      .then(result => {
+
+          const { code } = result;
+          delete result.headers;
+
+          if (!_.eq(code, resultCode.success)) {
+              return Promise.reject(`fail delete medicine data ${data.error}`);
+          }
+
+          result.target = target;
+          return Promise.resolve(result);
+      })
+      .then(resultDeletePrescription)
+      .catch(error => console.log(error))
+}
+
+function resultDeletePrescription (result) {
+
+  const { target } = result;
+
+  if (result.data === 1) {
+
+    $.uiAlert({
+      textHead: '[알림]',
+      text: '처방전 내 ' + target.children().eq(0).text() + ' 이(가) 삭제되었습니다.',
+      bgcolor: '#55a9ee',
+      textcolor: '#fff',
+      position: 'top-left',
+      time: 2,
+    })
+    target.remove();
+
+  } else {
+
+    $.uiAlert({
+      textHead: '[ERROR-CODE 7003]',
+      text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+      bgcolor: '#F2711C',
+      textcolor: '#fff',
+      position: 'top-center',
+      time: 10,
+    })
+  }
+}
+
+function openConfirmModal (target, message, gotoFunction) {
+
+  $('.ui.mini.modal').modal({
+    closable: false,
+    onShow: () => {
+      $('.confirm-modal-wrap > .content > p').empty();
+      $('.confirm-modal-wrap > .content > p').text(message.confirmMessage);
+    },
+    onApprove: () => {
+      gotoFunction(target)
+    }
+  }).modal('show')
 }
 
 init();

@@ -307,20 +307,20 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
 
 $('#doctorSignedComplete').on('click', function () {
 
-    var prescriptionLength = $('#prescriptionTableBody').children().length - 1;
+    var prescriptionLength = $('#prescription-table-body').children().length - 1;
     var prescription = [];
     var medicine = {};
 
     for (var i = 1; i <= prescriptionLength; i++) {
         medicine = {};
-        medicine.medicine_id = $('#prescriptionTableBody').children().eq(i).attr('id');
+        medicine.medicine_id = $('#prescription-table-body').children().eq(i).attr('id');
         medicine.chartNumber = $('#preChartId').val();
-        medicine.medicineName = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(0).text());
-        medicine.medicineIngredient = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(1).text());
-        medicine.doses = $('#prescriptionTableBody').children().eq(i).children().eq(2).children().val();
-        medicine.dosesCountByDay = $('#prescriptionTableBody').children().eq(i).children().eq(3).children().children().val();
-        medicine.dosesDay = $('#prescriptionTableBody').children().eq(i).children().eq(4).children().val();
-        medicine.remarks = $('#prescriptionTableBody').children().eq(i).children().eq(5).children().val();
+        medicine.medicineName = $.trim($('#prescription-table-body').children().eq(i).children().eq(0).text());
+        medicine.medicineIngredient = $.trim($('#prescription-table-body').children().eq(i).children().eq(1).text());
+        medicine.doses = $('#prescription-table-body').children().eq(i).children().eq(2).children().val();
+        medicine.dosesCountByDay = $('#prescription-table-body').children().eq(i).children().eq(3).children().children().val();
+        medicine.dosesDay = $('#prescription-table-body').children().eq(i).children().eq(4).children().val();
+        medicine.remarks = $('#prescription-table-body').children().eq(i).children().eq(5).children().val();
         prescription.push(medicine);
     }
 
@@ -352,8 +352,8 @@ $('#doctorSignedComplete').on('click', function () {
               $('#originalDiagnosisCCsegment *').remove();
             }
 
-            if ($('#prescriptionTableBody').children().length > 0) {
-                $('#prescriptionTableBody *').remove();
+            if ($('#prescription-table-body').children().length > 0) {
+                $('#prescription-table-body *').remove();
             }
 
             $('#pastDiagnosisRecord').attr('disabled', true);
