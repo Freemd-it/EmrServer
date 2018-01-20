@@ -4,6 +4,20 @@ import 'jquery-validation';
 /**
  * chrtForm 유효성 검사
  */
+ function validateHandler (errorMap, errorList){
+     if(this.numberOfInvalids()) {
+         $.uiAlert({
+             textHead: '[경고]',
+             text: errorList[0].message,
+             bgcolor: '#FF5A5A',
+             textcolor: '#fff',
+             position: 'top-center',
+             time: 2
+         });
+         errorList[0].element.focus();
+     }
+ }
+
 $('#chartForm').validate({
     onkeyup:false,
     onfocusout : function(element){
@@ -61,20 +75,30 @@ $('#chartForm').validate({
             min: "혈당은 음수를 입력할 수 없습니다."
         }
     },
-    showErrors:function(errorMap, errorList){
-        if(this.numberOfInvalids()) {
-            $.uiAlert({
-                textHead: '[경고]',
-                text: errorList[0].message,
-                bgcolor: '#FF5A5A',
-                textcolor: '#fff',
-                position: 'top-center',
-                time: 2
-            });
-            errorList[0].element.focus();
-        }
-    }
+    showErrors:validateHandler
 });
+
+$('#CCform').validate({
+  onkeyup: false,
+  rules: {
+    CC: {
+      maxlength:255
+    },
+    HistoryOfCC:{
+      maxlength:500
+    }
+  },
+  messages: {
+    CC: {
+      maxlength: "C.C는 최대 {0}자 까지 입력 가능합니다."
+    },
+    HistoryOfCC: {
+      maxlength: "History Of CC는 최대 {0}자 까지 가능합니다."
+    }
+  },
+  showErrors: validateHandler
+});
+
 $('#preDiagonosisWaitingList').on('click', () => {
 
     if($('#tableBody').children().length)

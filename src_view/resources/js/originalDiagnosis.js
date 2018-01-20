@@ -8,6 +8,7 @@ import { bb } from "billboard.js";
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
 import moment from 'moment';
+import 'jquery-validation';
 
 /**
  * init
@@ -38,6 +39,62 @@ const showAndHide = (rowsClass, newId) => {
         $(`#${newId}`).show()
     }
 }
+
+//validation
+/**
+*Impression, Present illness / Medication,  Treatment note / Medication -> 300자 이내
+*
+*/
+function validateHandler (errorMap, errorList){
+    if(this.numberOfInvalids()) {
+        $.uiAlert({
+            textHead: '[경고]',
+            text: errorList[0].message,
+            bgcolor: '#FF5A5A',
+            textcolor: '#fff',
+            position: 'top-center',
+            time: 2
+        });
+        errorList[0].element.focus();
+    }
+}
+
+//본진 정보
+$('#diagonosisChartForm').validate({
+  onkeyup: false,
+  rules: {
+    impression: {
+      maxlength:300
+    },
+    presentIllness: {
+      maxlength:300
+    }
+  },
+  messages:{
+    impression:{
+      maxlength: "impression은 최대 {0}자 까지 입력 가능 합니다."
+    },
+    presentIllness:{
+      maxlength: "Present illness / Medication은 최대 {0}자까지 입력 가능합니다."
+    }
+  },
+  showErrors: validateHandler
+});
+
+$('#Treatmentform').validate({
+  onkeyup: false,
+  rules:{
+    treatmentNote:{
+      maxlength: 300
+    }
+  },
+  messages:{
+    treatmentNote:{
+      maxlength: "Treatment note는 최대 {0}자까지 입력 가능합니다."
+    }
+  },
+  showErrors: validateHandler
+});
 
 $('.diagnosisWaitings').on('click', () => {
 
