@@ -58,8 +58,10 @@ OCSModel.findAll = async function (options) {
   return ocs.findAll(options)
 };
 
-OCSModel.count = async function () {
-  return ocs.count();
+OCSModel.count = async function (options) {
+
+  const { where = {} } = options;
+  return ocs.count({ where });
 }
 
 module.exports = OCSModel;

@@ -51,7 +51,7 @@ function postMethod(endpoint, body = {}, isRestricted = false) {
             })
                 .then((resp) => resolve({
                     code: resp.data.code,
-                    data: resp.data.data,
+                    data: typeof resp.data.data !== 'undefined' ? resp.data.data : resp.data,
                     headers: resp.headers
                 }))
                 .catch((errResp) => reject(errResp));
@@ -63,8 +63,9 @@ function postMethod(endpoint, body = {}, isRestricted = false) {
             .then((resp) => {
                 resolve({
                     code: resp.data.code,
-                    data: resp.data.data,
-                    headers: resp.headers
+                    data: typeof resp.data.data !== 'undefined' ? resp.data.data : resp.data,
+                    headers: resp.headers,
+                    status: resp.status
                 })
             })
             .catch((errResp) => reject(errResp));

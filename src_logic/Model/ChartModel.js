@@ -7,13 +7,16 @@ let history = require('../Entity/History');
 const complaintModel = require('./ComplaintModel');
 const ocsModel = require('./OCSModel');
 const prescriptionModel = require('./PrescriptionModel');
+const moment = require('moment');
 
 var ChartModel = function (data) {
     this.data = data;
 }
 
 ChartModel.create = function (data, callback) {
-    const chartDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  
+    const chartDate = moment(new Date()).format('YYYYMMDD')
+
     chart.findAll({
         where: {
             chartNumber: {
@@ -66,7 +69,17 @@ ChartModel.getChartByChartNumber = function (data, callback) {
     })
 }
 
+
+/**
+ * @function updateChartByChartNumber
+ * @description 예진 ~ 약국 종료까지 차트 업데이트하는 로직, 리팩토링 필요함
+ * 상태 업데이트별로 추가로 콜 해야하는 함수들이 다르니 유의 필요
+ * @param  {[type]}   data     update argument
+ * @param  {Function} callback
+ */
 ChartModel.updateChartByChartNumber = function (data, callback) {
+
+    const statusInPharmacy = ['4', '5', '6', '7'];
 
     if (data.updateStatus === '2') {
         chart.update({
@@ -108,6 +121,23 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                   ocsModel.originalDiagnosis(data.chartNumber, callback)
                 });
             })
+    }
+    else if (statusInPharmacy.includes(data.updateStatus)) {
+
+        chart.update({
+            status: data.updateStatus,
+        },
+        {
+          where: {
+            chartNumber: data.chartNumber
+          }
+        })
+        .then(result => {
+          callback(result)
+        })
+        .catch(error => {
+          callback(error)
+        })
     }
 }
 

@@ -62,6 +62,17 @@
     .confirm-modal-wrap .actions .ui.cancel.button {
       margin-left: 0px;
     }
+    .ocs-hover.ocs-warning {
+      box-shadow: 0 0 0 #c9ba9b inset !important;
+    }
+    .ocs-hover.ocs-warning {
+      background: #fffaf3!important;
+      color: #bb8424!important;
+    }
+    .ocs-hover.ocs-warning:hover * {
+      background: #fff4e4!important;
+      color: #905d03!important;
+    }
   </style>
 </head>
 
@@ -173,8 +184,9 @@
 
         <div>
             <button id="pharmaceutical-start" class="huge negative ui button"> 조제 시작 </button>
+            <button id="pharmaceutical-end" class="huge negative ui button"> 조제 완료 </button>
             <button id="inspection-complete" class="huge negative ui button"> 검수 완료 </button>
-            <button id="Prescription-complete" class="huge negative ui button"> 복약지도 완료 </button>
+            <button id="prescription-complete" class="huge negative ui button"> 복약지도 완료 </button>
         </div>
     </div>
   </div>

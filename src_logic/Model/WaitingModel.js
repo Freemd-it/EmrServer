@@ -71,8 +71,10 @@ WaitingModel.Insert = function(data, callback) {
     });
 }
 
-WaitingModel.Count = async function () {
-  return waiting.count();
+WaitingModel.Count = async function (options) {
+
+  const { where = {} } = options;
+  return waiting.count({ where });
 }
 
 module.exports = WaitingModel;
