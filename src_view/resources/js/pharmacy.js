@@ -61,7 +61,6 @@ $('#prescriptionForm').validate({
   onkeyup : false,
   showErrors:function(errorMap, errorList){
       if(this.numberOfInvalids()) {
-        console.log(errorList)
           $.uiAlert({
               textHead: '[경고]',
               text: errorList[0].message,
