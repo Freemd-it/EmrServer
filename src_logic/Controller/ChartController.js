@@ -43,6 +43,7 @@ router.post('/update', function (req, res) {
 
     chartModel.updateChartByChartNumber(req.body, result => {
         waitingModel.Update(data, result => {
+            console.log(result)
             res.send(result);
         });
     })
@@ -84,6 +85,6 @@ router.get('/vitalSign/:patient_id', function (req, res, next) {
         .then(result => respondJson(res, resultCode.success, result))
         .catch((error) => respondOnError(res, resultCode.fail, error))
 
-})
+});
 
 module.exports = router;

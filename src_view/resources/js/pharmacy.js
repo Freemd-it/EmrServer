@@ -18,8 +18,6 @@ function init() {
 
   if ($('#PharmacyOCSTableBody').children().length)
     $('#PharmacyOCSTableBody *').remove();
-
-
 }
 
 $(document).ready(() => {
@@ -281,17 +279,20 @@ console.log(status);
     case 2: return '예진 완료'; break;
     case 3: return '조제 대기'; break;
     case 4: return '조제중'; break;
-    case 5: return '처방 대기'; break;
+    case 5: return '검수 대기'; break;
+    case 6: return '처방 대기'; break;
   }
 }
 
 function getStatusClass(status) {
 
   switch (status) {
-    case 3: return 'ocs-hover negative'; break;
-    case 4: return 'ocs-hover warning'; break;
-    case 5: return 'ocs-hover positive'; break;
-    default : return 'selectable'; break;
+    case 1: return 'disabled'; break;
+    case 2: return 'disabled'; break;
+    case 4: return 'ocs-hover positive'; break;
+    case 5: return 'ocs-hover ocs-warning'; break;
+    case 6: return 'ocs-hover negative'; break;
+    default : return 'ocs-hover selectable'; break;
   }
 }
 
@@ -717,6 +718,176 @@ function openConfirmModal (target, message, gotoFunction) {
       gotoFunction(target)
     }
   }).modal('show')
+}
+
+$(document).on('click', '#pharmaceutical-start', (e) => {
+
+  const params = {};
+  params.chartNumber = $('#pharmacy-chart-id').val();
+  params.name = $('#pharmacy-chart-name').val();
+  params.updateStatus = '4';
+
+  openConfirmModal(params, { confirmMessage: '차트번호 : [' + params.chartNumber + '] \r\n' + params.name + '님의 조제를 시작하시겠습니까?' }, updatePrescriptionStatus)
+});
+
+$(document).on('click', '#pharmaceutical-end', (e) => {
+
+  const params = {};
+  params.chartNumber = $('#pharmacy-chart-id').val();
+  params.name = $('#pharmacy-chart-name').val();
+  params.updateStatus = '5';
+
+  openConfirmModal(params, { confirmMessage: '차트번호 : [' + params.chartNumber + '] \r\n' + params.name + '님의 조제 검수를 요청하시겠습니까?' }, updatePrescriptionStatus)
+});
+
+$(document).on('click', '#inspection-complete', (e) => {
+
+  const params = {};
+  params.chartNumber = $('#pharmacy-chart-id').val();
+  params.name = $('#pharmacy-chart-name').val();
+  params.updateStatus = '6';
+
+  openConfirmModal(params, { confirmMessage: '차트번호 : [' + params.chartNumber + '] \r\n' + params.name + '님의 복약지도를 요청하시겠습니까?' }, updatePrescriptionStatus)
+});
+
+function updatePrescriptionStatus (params) {
+
+  http
+      .postMethod(`/chart/update`, params)
+      .then(result => {
+
+          result.params = params
+          const { data, status } = result
+
+          if (!_.eq(status, 200)) {
+              return Promise.reject(`fail update chart ${data.error}`);
+          }
+
+          return Promise.resolve(result);
+      })
+      .then(resultStartPharmaceutical)
+      .catch(error => console.log(error))
+}
+
+function resultStartPharmaceutical (result) {
+
+  const { params, data } = result
+
+  switch (params.updateStatus) {
+    case '4' :
+      if (data[0] === 1)  {
+        $.uiAlert({
+          textHead: '[알림]',
+          text: '차트번호 [' + params.chartNumber + '] ' + params.name + ' 님의 조제가 할당되었습니다.',
+          bgcolor: '#55a9ee',
+          textcolor: '#fff',
+          position: 'top-left',
+          time: 2,
+        })
+        resetPrescriptionPage();
+        getPharmacyOcsData('now');
+      } else {
+        $.uiAlert({
+          textHead: '[ERROR-CODE 7004]',
+          text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+          bgcolor: '#F2711C',
+          textcolor: '#fff',
+          position: 'top-center',
+          time: 10,
+        })
+        getPharmacyOcsData('now');
+      }
+    break;
+
+    case '5' :
+      if (data[0] === 1)  {
+        $.uiAlert({
+          textHead: '[알림]',
+          text: '차트번호 [' + params.chartNumber + '] ' + params.name + ' 님의 조제가 완료되었습니다.',
+          bgcolor: '#55a9ee',
+          textcolor: '#fff',
+          position: 'top-left',
+          time: 2,
+        })
+        resetPrescriptionPage();
+        getPharmacyOcsData('now');
+      } else {
+        $.uiAlert({
+          textHead: '[ERROR-CODE 7005]',
+          text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+          bgcolor: '#F2711C',
+          textcolor: '#fff',
+          position: 'top-center',
+          time: 10,
+        })
+        getPharmacyOcsData('now');
+      }
+    break;
+
+    case '6' :
+      if (data[0] === 1)  {
+        $.uiAlert({
+          textHead: '[알림]',
+          text: '차트번호 [' + params.chartNumber + '] ' + params.name + ' 님의 검수가 완료되었습니다.',
+          bgcolor: '#55a9ee',
+          textcolor: '#fff',
+          position: 'top-left',
+          time: 2,
+        })
+        resetPrescriptionPage();
+        getPharmacyOcsData('now');
+      } else {
+        $.uiAlert({
+          textHead: '[ERROR-CODE 7006]',
+          text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+          bgcolor: '#F2711C',
+          textcolor: '#fff',
+          position: 'top-center',
+          time: 10,
+        })
+        getPharmacyOcsData('now');
+      }
+    break;
+
+    case '7' :
+      if (data[0] === 1)  {
+        $.uiAlert({
+          textHead: '[알림]',
+          text: '차트번호 [' + params.chartNumber + '] ' + params.name + ' 님의 처방이 완료되었습니다.',
+          bgcolor: '#55a9ee',
+          textcolor: '#fff',
+          position: 'top-left',
+          time: 2,
+        })
+        resetPrescriptionPage();
+        getPharmacyOcsData('now');
+      } else {
+        $.uiAlert({
+          textHead: '[ERROR-CODE 7007]',
+          text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+          bgcolor: '#F2711C',
+          textcolor: '#fff',
+          position: 'top-center',
+          time: 10,
+        })
+        getPharmacyOcsData('now');
+      }
+    break;
+  }
+}
+
+function resetPrescriptionPage () {
+
+  $('#pharmacy-chart-id').val('');
+  $('#pharmacy-chart-name').val('');
+  $('#prescription-table-body').empty().append(
+    `<tr>
+      <td class="defaultPrescriptionTableBody" style="text-align:center;" colspan="7">조제를 시작할 환자를 선택해주세요.</td>
+    </tr>`
+  );
+  $('.pharmacy-impression').val('');
+  $('.pharmacy-present-illness').val('');
+  $('.pharmacy-treatment-note').val('');
 }
 
 init();

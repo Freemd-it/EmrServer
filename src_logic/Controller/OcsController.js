@@ -71,7 +71,7 @@ router.get('/now/:page', function (req, res, next) {
     }
 
     ocsModel
-        .count()
+        .count({ where : { createdAt: {gt: Date.parse(moment('00:00:00', 'hh:mm:ss'))}}})
         .then(tableRange)
         .then((datas) => {
             const result = {};
