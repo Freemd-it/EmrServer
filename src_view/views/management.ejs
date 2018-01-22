@@ -5,28 +5,121 @@
     <meta charset="utf-8">
     <title>Freemed-EMR</title>
     <link href="/vscode.ico" rel="shortcut icon">
-    <link href="/dist/index.css" rel="stylesheet"> 
+    <link href="/dist/index.css" rel="stylesheet">
+    <style>
+      .management-container {
+        padding : 1.5%;
+      }
+      .inline-header {
+        display: inline-block;
+      }
+      .management-search-input {
+        width: 400px;
+      }
+      .management-medicine-search-select {
+        float: right;
+      }
+    </style>
 </head>
 
 <body>
-    <header> 
+    <header>
         <% include ./parts/header.ejs %>
     </header>
 
-    <section class="ui container" style="margin-top:55px">
+    <section class="ui container management-container" style="width:1300px;">
         <div class="ui grid">
             <div class="left floated six wide column" style="margin-left:.1%">
-                <h1>재고관리</h1>
+                <h1>약국 재고관리</h1>
             </div>
+        </div>
 
+        <div class="ui clearing divider"></div>
+
+
+        <div class="ui top attached tabular menu tab-menu-list">
+
+            <a id="pharmacopoeia-management-tab" class="item active">
+              약전
+            </a>
+            <a id="inventory-management-tab" class="item">
+              재고표
+            </a>
+            <a id="history-management-tab" class="item">
+              히스토리
+            </a>
 
         </div>
 
 
+        <div id="pharmacopoeia-management" class="ui bottom attached segment content-list">
+
+          <div class="ui two item stackable tabs menu">
+              <select class="ui search dropdown categoryWidth management-main-category-select">
+                  <option class="default" value="">대분류</option>
+              </select>
+              <select class="ui search dropdown categoryWidth management-small-category-select">
+                  <option class="default" value="">소분류</option>
+              </select>
+          </div>
+
+          <div class="scrolling content">
+              <div class="search-bar-in-management">
+
+                  <button class="ui primary button add-medicine-by-management">
+                      약품 추가
+                  </button>
+
+                  <button class="ui primary button delete-medicine-by-management">
+                      일괄 삭제
+                  </button>
+
+                  <button class="ui primary button management-pharmacy-search-button" style='float:right;'>
+                      검색
+                  </button>
+
+                  <div id="autoCompleteMedicine" class="ui search" style='float:right;'>
+                      <div class="ui icon input management-search-input">
+                          <input class="prompt" name="managementMedicineSearchText" type="text" placeholder="성분 또는 약품명을 적어주세요.">
+                      </div>
+                      <div class="results"></div>
+                  </div>
+
+                  <select class="ui dropdown management-medicine-search-select">
+                      <option value="">검색 구분</option>
+                      <option selected value="1">약품명</option>
+                      <option value="2">성분명</option>
+                  </select>
+              </div>
+              
+              <table class="ui fixed selectable celled table" style="text-align:center;">
+                  <thead>
+                      <tr>
+                          <th width="2.7%"></th>
+                          <th>대분류</th>
+                          <th>소분류</th>
+                          <th>약품명</th>
+                          <th>성분명 및 함량</th>
+                          <th width="60px">재고량</th>
+                          <th>용량/용법</th>
+                          <th>약효</th>
+                          <th width="7%">기타</th>
+                      </tr>
+                  </thead>
+                  <tbody id="medicine-management-table-body">
+
+                  </tbody>
+              </table>
+          </div>
+        </div>
+        <div id="inventory-management" class="ui bottom attached segment content-list">
+          재고표 컨텐츠
+        </div>
+        <div id="history-management" class="ui bottom attached segment content-list">
+          히스토리 컨텐츠
+        </div>
 
     </section>
-
-
     <script src="/dist/index.bundle.js"></script>
 </body>
 

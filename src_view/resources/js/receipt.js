@@ -2,7 +2,7 @@ import $ from 'jquery';
 import 'jquery-validation';
 
 /**
- * patient form 유효성 검사 
+ * patient form 유효성 검사
  */
 $('#patient_form').validate({
     onkeyup:false,
@@ -87,12 +87,12 @@ $('#patient_form').validate({
        $('#btn-name-send').trigger('click');
     }
 });
- 
+
 /**
  * 이름으로 조회
  */
 $('#btn-name-send').on('click', () => {
-    
+
     const name = $.trim($('#nameInput').val());
     let docs;
     let date;
@@ -272,7 +272,7 @@ $('#btn-name-send').on('click', () => {
                 date = new Date(result[i].birth);
                 $('#nameInput').val('');
                 $('#list').append(
-                    '  <div id=' + result[i].id + '  class="item" align="middle">\n' +
+                    '  <div id=' + result[i].id + '  class="item homonym-item" align="middle">\n' +
                     '                    <div id=' + result[i].id + ' class="content">\n' +
                     '                        <div id=' + result[i].id + ' class="header">' + result[i].name +'</div>\n' +
                     '                        ' + date.getFullYear() + ' 년 ' + (date.getMonth()+1) + ' 월 ' + date.getDate() + ' 일 '+
@@ -290,7 +290,7 @@ $('#btn-name-send').on('click', () => {
 /**
  * 동명이인 id로 조회
  */
-$(document).on('click', '.item', (e) => {
+$(document).on('click', '.homonym-item', (e) => {
     let date;
     let idx = 1;
     const docs = {
@@ -453,7 +453,7 @@ $('input[name="pastMedication"]').on('change', () => {
     }
 });
 
-    
+
 
 $('#sendToPart2').on('click', () => {
     let docs;
