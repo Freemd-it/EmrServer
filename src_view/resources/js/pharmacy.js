@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import 'jquery-validation';
 import _ from 'lodash';
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
@@ -47,6 +48,30 @@ $(document).ready(() => {
         source: JSON.parse(window.localStorage.getItem('medicineName'))
       });
   });
+});
+
+
+//약전 validation
+$.extend( $.validator.messages, {
+  min: "1 이상의 수만 입력 가능합니다.",
+  digits: "숫자를 입력해주세요.",
+  maxlength: $.validator.format( " 최대 {0}자까지 입력 가능합니다. " )
+});
+$('#prescriptionForm').validate({
+  onkeyup : false,
+  showErrors:function(errorMap, errorList){
+      if(this.numberOfInvalids()) {
+          $.uiAlert({
+              textHead: '[경고]',
+              text: errorList[0].message,
+              bgcolor: '#FF5A5A',
+              textcolor: '#fff',
+              position: 'top-center',
+              time: 2
+          });
+          errorList[0].element.focus();
+      }
+  }
 });
 
 
@@ -247,7 +272,6 @@ $(document).on('click', '.deleteTargetByIcon', (e) => {
 })
 
 function getStatus(status) {
-
   switch (status) {
     case 1: return '접수 완료'; break;
     case 2: return '예진 완료'; break;
@@ -427,7 +451,7 @@ function transformPrescriptionInput(target) {
   const currentDosesDay = target.children().eq(4).text()
   const currentRemarks = target.children().eq(5).text() === '-' ? '' : target.children().eq(5).text();
 
-  target.children().eq(2).empty().append(`<input value="${currentDoses}" />`)
+  target.children().eq(2).empty().append(`<input value="${currentDoses}" digits="true" min="1" />`)
   target.children().eq(3).empty().append(`
     <select class="prescription-doses-for-day ui search fluid dropdown">
        <option value="qd">qd</option>
@@ -436,8 +460,8 @@ function transformPrescriptionInput(target) {
        <option value="hs">hs</option>
     </select>
     `)
-  target.children().eq(4).empty().append(`<input value="${currentDosesDay}" />`)
-  target.children().eq(5).empty().append(`<input value="${currentRemarks}" />`)
+  target.children().eq(4).empty().append(`<input value="${currentDosesDay}" digits="true" min="1" />`)
+  target.children().eq(5).empty().append(`<input type="text" value="${currentRemarks}" maxlength="100" />`)
   target.children().eq(6).empty().append(`
     <a class="update-medicine-in-prescription">수정완료</a><br />
     <a class="cancel-update-prescription">수정취소</a>
