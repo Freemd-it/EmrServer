@@ -273,7 +273,6 @@ $(document).on('click', '.deleteTargetByIcon', (e) => {
 })
 
 function getStatus(status) {
-console.log(status);
   switch (status) {
     case 1: return '접수 완료'; break;
     case 2: return '예진 완료'; break;
