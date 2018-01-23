@@ -43,7 +43,6 @@ router.post('/update', function (req, res) {
 
     chartModel.updateChartByChartNumber(req.body, result => {
         waitingModel.Update(data, result => {
-            console.log(result)
             res.send(result);
         });
     })

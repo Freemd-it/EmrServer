@@ -8,15 +8,15 @@ import './vendors/js/bootstrap.js';
 import './vendors/js/semantic.js';
 import './vendors/js/semantic.js';
 import './vendors/js/Semantic-UI-Alert.js';
- 
-  
-//css 
+
+
+//css
 import './resources/css/index.scss';
 
-//js 
+//js
 import './resources/js/ocs.js';
 import './resources/js/originalDiagnosis.js';
 import './resources/js/pharmacy.js';
 import './resources/js/prediagnosis.js';
 import './resources/js/receipt.js';
-
+import './resources/js/management.js';

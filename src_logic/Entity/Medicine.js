@@ -10,7 +10,8 @@ const Medicine = dbService.define('medicine', {
     property : { type : sequelize.STRING(255), allowNull : true },
     ingredient : { type : sequelize.STRING(100), allowNull : false },
     amount : { type : sequelize.INTEGER(3), allowNull : false },
-    quantity : { type : sequelize.INTEGER(3), allowNull : false }
+    quantity : { type : sequelize.INTEGER(3), allowNull : false },
+    available : { type : sequelize.TINYINT(1), allowNull : false }
 },
 {
     indexes : [
@@ -20,5 +21,18 @@ const Medicine = dbService.define('medicine', {
       }
     ]
 });
+
+Medicine.afterBulkUpdate(medicine => {
+  console.log(medicine)
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+})
 
 module.exports = Medicine;

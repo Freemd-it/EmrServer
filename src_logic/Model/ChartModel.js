@@ -1,11 +1,13 @@
 const chart = require('../Entity/Chart.js');
 const patient = require('../Entity/Patient.js');
-const prescription = require('../Entity/Prescription.js');
-const complaintEntity = require('../Entity/Complaint.js');
+const complaint = require('../Entity/Complaint.js');
+const _ = require('lodash');
 let history = require('../Entity/History');
+
 
 const complaintModel = require('./ComplaintModel');
 const ocsModel = require('./OCSModel');
+const medicineModel = require('./MedicineModel');
 const prescriptionModel = require('./PrescriptionModel');
 const moment = require('moment');
 
@@ -14,7 +16,7 @@ var ChartModel = function (data) {
 }
 
 ChartModel.create = function (data, callback) {
-  
+
     const chartDate = moment(new Date()).format('YYYYMMDD')
 
     chart.findAll({
@@ -79,7 +81,8 @@ ChartModel.getChartByChartNumber = function (data, callback) {
  */
 ChartModel.updateChartByChartNumber = function (data, callback) {
 
-    const statusInPharmacy = ['4', '5', '6', '7'];
+    const statusInPharmacy = ['4', '5', '6'];
+    // 조제 시작 = 4, 조제 완료 = 5, 파트장 검수 완료 = 6
 
     if (data.updateStatus === '2') {
         chart.update({
@@ -139,6 +142,97 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
           callback(error)
         })
     }
+    else if (data.updateStatus === '7') {
+
+        chart.update({
+            status: data.updateStatus,
+        },
+        {
+          where: {
+            chartNumber: data.chartNumber
+          }
+        })
+        .then(result => {
+
+          const options = {};
+          options.where = { chartNumber: data.chartNumber }
+          options.order = [['id']];
+
+          prescriptionModel
+             .find(options)
+             .then(results => {
+
+               const clearanceParam = _.map(results, result => {
+                  const row = {};
+                  row.medicine_id = result.dataValues.medicine_id;
+                  row.integerToSubstract = (result.dataValues.doses) * statusConvert(result.dataValues.dosesCountByDay) * result.dataValues.dosesDay;
+                  return row
+               });
+
+               function statusConvert (param) {
+                 switch (param) {
+                   case 'qd' : return 1; break;
+                   case 'bid' : return 2; break;
+                   case 'tid' : return 3; break;
+                   case 'hs' : return 4; break;
+                 }
+               }
+
+              /**
+               * @function lastCallback
+               * @description custom update query 세팅 후 실행
+               * sequelize 모듈에 case when 사용 가능한 update 쿼리 모듈이 없음
+               */
+              medicineModel.clearance(setCustomUpdateQuery(clearanceParam))
+                           .then(result => {
+                             console.log(result)
+                             /* status 7일 때 컨트롤러로 최종 콜백하는 부분 */
+                             callback(result)
+                           })
+                           .catch(error => {
+                             callback(error)
+                           })
+
+              function setCustomUpdateQuery (array) {
+
+                  const inArray = [];
+                  const whenArray = [];
+
+                  var query = 'update medicines set amount = case';
+                  var index = 0;
+
+                  array.forEach((data) => {
+                    index = inArray.indexOf(data.medicine_id);
+                    if (index === -1) {
+                      whenArray.push({medicine_id: data.medicine_id, integerToSubstract: data.integerToSubstract});
+                      inArray.push(data.medicine_id);
+                    } else {
+                      whenArray[index].integerToSubstract += data.integerToSubstract;
+                    }
+                  })
+
+                  whenArray.forEach((data) => {
+                    query += ` when id = ` + data.medicine_id + ` then amount - ` + data.integerToSubstract;
+                  })
+
+                  query += ` end where id in (`;
+
+                  inArray.forEach((data, index) => {
+                    if (index === inArray.length - 1) query += data + `)`;
+                    else query += data + `, `;
+                  })
+
+                  return query;
+              }
+             })
+             .catch(error => {
+               callback(error)
+             })
+        })
+        .catch(error => {
+          callback(error)
+        })
+    }
 }
 
 ChartModel.getPastChart = function (data, callback) {
@@ -178,7 +272,7 @@ ChartModel.getOnePastChart = function (data, callback) {
             chartNumber: data.chartNumber,
         },
         include: {
-            model: complaintEntity,
+            model: complaint,
         }
     }).then(result => callback(result));
 

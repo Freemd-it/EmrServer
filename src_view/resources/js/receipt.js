@@ -278,7 +278,7 @@ $('#btn-name-send').on('click', () => {
                 date = new Date(result[i].birth);
                 $('#nameInput').val('');
                 $('#list').append(
-                    '  <div id=' + result[i].id + '  class="item" align="middle">\n' +
+                    '  <div id=' + result[i].id + '  class="item homonym-item" align="middle">\n' +
                     '                    <div id=' + result[i].id + ' class="content">\n' +
                     '                        <div id=' + result[i].id + ' class="header">' + result[i].name +'</div>\n' +
                     '                        ' + date.getFullYear() + ' 년 ' + (date.getMonth()+1) + ' 월 ' + date.getDate() + ' 일 '+
@@ -296,7 +296,7 @@ $('#btn-name-send').on('click', () => {
 /**
  * 동명이인 id로 조회
  */
-$(document).on('click', '.item', (e) => {
+$(document).on('click', '.homonym-item', (e) => {
     let date;
     let idx = 1;
     const docs = {

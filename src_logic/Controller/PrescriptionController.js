@@ -83,8 +83,6 @@ router.post('/update', (req, res) => {
 router.post('/delete', (req, res) => {
 
   const { prescriptionId } = req.body;
-  console.log(req.body)
-  console.log(prescriptionId)
 
   const options = {};
   options.where = { id: prescriptionId }
@@ -95,7 +93,6 @@ router.post('/delete', (req, res) => {
         respondJson(res, resultCode.success, result);
       })
       .catch((error) =>{
-        console.log(error)
         respondOnError(res, resultCode.fail, error)
       })
 });
