@@ -307,6 +307,8 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
 
 $('#doctorSignedComplete').on('click', function () {
 
+    if(!$('#diagonosisChartForm').valid() || !$('#Treatmentform').valid()) return;
+    
     var prescriptionLength = $('#prescription-table-body').children().length - 1;
     var prescription = [];
     var medicine = {};

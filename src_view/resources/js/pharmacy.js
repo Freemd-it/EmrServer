@@ -52,13 +52,34 @@ $(document).ready(() => {
 
 
 //약전 validation
-$.extend( $.validator.messages, {
-  min: "1 이상의 수만 입력 가능합니다.",
-  digits: "숫자를 입력해주세요.",
-  maxlength: $.validator.format( " 최대 {0}자까지 입력 가능합니다. " )
-});
-$('#prescriptionForm').validate({
+var validator = $('#prescriptionForm').validate({
   onkeyup : false,
+  rules: {
+    currentDoses:{
+      digits: true,
+      min: 1
+    },
+    currentDosesDay:{
+      digits: true,
+      min: 1
+    },
+    currentRemarks:{
+      maxlength: 100
+    }
+  },
+  messages: {
+    currentDoses: {
+      digits: "1회 투약량은 1이상의 정수만 입력 가능합니다.",
+      min: "1회 투약량은 1이상의 정수만 입력 가능합니다."
+    },
+    currentDosesDay: {
+      digits: "복용 일수는 1이상의 정수만 입력 가능합니다.",
+      min: "복용 일수는 1이상의 정수만 입력 가능합니다."
+    },
+    currentRemarks:{
+      maxlength: "비고란은 최대 {0}자까지 입력 가능합니다."
+    }
+  },
   showErrors:function(errorMap, errorList){
       if(this.numberOfInvalids()) {
           $.uiAlert({
@@ -73,7 +94,6 @@ $('#prescriptionForm').validate({
       }
   }
 });
-
 
 $('.medicineSearchSelect').change(() => {
 
@@ -451,7 +471,7 @@ function transformPrescriptionInput(target) {
   const currentDosesDay = target.children().eq(4).text()
   const currentRemarks = target.children().eq(5).text() === '-' ? '' : target.children().eq(5).text();
 
-  target.children().eq(2).empty().append(`<input value="${currentDoses}" digits="true" min="1" />`)
+  target.children().eq(2).empty().append(`<input value="${currentDoses}" name="currentDoses" />`)
   target.children().eq(3).empty().append(`
     <select class="prescription-doses-for-day ui search fluid dropdown">
        <option value="qd">qd</option>
@@ -460,8 +480,8 @@ function transformPrescriptionInput(target) {
        <option value="hs">hs</option>
     </select>
     `)
-  target.children().eq(4).empty().append(`<input value="${currentDosesDay}" digits="true" min="1" />`)
-  target.children().eq(5).empty().append(`<input type="text" value="${currentRemarks}" maxlength="100" />`)
+  target.children().eq(4).empty().append(`<input value="${currentDosesDay}" name="currentDosesDay"  />`)
+  target.children().eq(5).empty().append(`<input type="text" value="${currentRemarks}" name="currentRemarks" />`)
   target.children().eq(6).empty().append(`
     <a class="update-medicine-in-prescription">수정완료</a><br />
     <a class="cancel-update-prescription">수정취소</a>
@@ -477,6 +497,8 @@ function transformPrescriptionInput(target) {
 }
 
 $(document).on('click', '.update-medicine-in-prescription', (e) => {
+
+  if(!$('#prescriptionForm').valid()) return;
 
   const target = $(e.target).parent().parent();
   openConfirmModal(target, { confirmMessage: '정말로 처방전을 수정하시겠습니까?' }, updateMedicineInPrescription)

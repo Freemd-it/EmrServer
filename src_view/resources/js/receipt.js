@@ -2,7 +2,7 @@ import $ from 'jquery';
 import 'jquery-validation';
 
 /**
- * patient form 유효성 검사 
+ * patient form 유효성 검사
  */
 $('#patient_form').validate({
     onkeyup:false,
@@ -14,7 +14,10 @@ $('#patient_form').validate({
             required: true,
             rangelength: [2, 10]
         },
-        birth: "date",
+        birth: {
+          required: true,
+          dateISO: true
+        },
         height: {
             digits: true
         },
@@ -41,7 +44,10 @@ $('#patient_form').validate({
             required: "이름을 입력해주세요",
             rangelength: "이름을 2자에서 10자 사이로 입력해주세요"
         },
-        birth: "생년월일을 다시 확인해주세요",
+        birth: {
+          required: "생년월일을 정확히 입력해주세요",
+          dateISO: "생년월일을 정확히 입력해주세요"
+        },
         height: {
             digits: "신장을 양의 정수 형식으로 입력해주세요"
         },
@@ -50,14 +56,14 @@ $('#patient_form').validate({
         },
         smoking: {
             number: "흡연량을 숫자 형식으로 입력해주세요",
-            min: "흡연량은 음수를 입력할 수 없습니다."
+            min: "흡연량은 음수를 입력할 수 없습니다"
         },
         smokingPeriod: {
             digits: "흡연경력을 양의 정수 형식으로 입력해주세요"
         },
         drinking: {
             number: "음주량을 숫자 형식으로 입력해주세요",
-            min: "음주량은 음수를 입력할 수 없습니다."
+            min: "음주량은 음수를 입력할 수 없습니다"
         },
         drinkingPeriod: {
             digits: "음주경력을 양의 정수 형식으로 입력해주세요"
@@ -87,12 +93,12 @@ $('#patient_form').validate({
        $('#btn-name-send').trigger('click');
     }
 });
- 
+
 /**
  * 이름으로 조회
  */
 $('#btn-name-send').on('click', () => {
-    
+
     const name = $.trim($('#nameInput').val());
     let docs;
     let date;
@@ -453,9 +459,14 @@ $('input[name="pastMedication"]').on('change', () => {
     }
 });
 
-    
+
 
 $('#sendToPart2').on('click', () => {
+
+    if(!$('#patient_form').valid()){
+      return;
+    }
+
     let docs;
 
     const name = $('#name').val();
