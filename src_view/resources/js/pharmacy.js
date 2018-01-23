@@ -279,6 +279,7 @@ function getStatus(status) {
     case 4: return '조제중'; break;
     case 5: return '검수 대기'; break;
     case 6: return '처방 대기'; break;
+    case 7: return '처방 완료'; break;
   }
 }
 
@@ -748,6 +749,16 @@ $(document).on('click', '#inspection-complete', (e) => {
   openConfirmModal(params, { confirmMessage: '차트번호 : [' + params.chartNumber + '] \r\n' + params.name + '님의 복약지도를 요청하시겠습니까?' }, updatePrescriptionStatus)
 });
 
+$(document).on('click', '#prescription-complete', (e) => {
+
+  const params = {};
+  params.chartNumber = $('#pharmacy-chart-id').val();
+  params.name = $('#pharmacy-chart-name').val();
+  params.updateStatus = '7';
+
+  openConfirmModal(params, { confirmMessage: '차트번호 : [' + params.chartNumber + '] \r\n' + params.name + '님의 복약지도를 완료하시겠습니까?' }, updatePrescriptionStatus)
+});
+
 function updatePrescriptionStatus (params) {
 
   http
@@ -851,7 +862,7 @@ function resultStartPharmaceutical (result) {
       if (data[0] === 1)  {
         $.uiAlert({
           textHead: '[알림]',
-          text: '차트번호 [' + params.chartNumber + '] ' + params.name + ' 님의 처방이 완료되었습니다.',
+          text: '차트번호 [' + params.chartNumber + '] ' + params.name + ' 님의 복약지도가 완료되었습니다.',
           bgcolor: '#55a9ee',
           textcolor: '#fff',
           position: 'top-left',

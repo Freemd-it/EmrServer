@@ -22,4 +22,17 @@ const Medicine = dbService.define('medicine', {
     ]
 });
 
+Medicine.afterBulkUpdate(medicine => {
+  console.log(medicine)
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+  console.log('after bulk update');
+})
+
 module.exports = Medicine;

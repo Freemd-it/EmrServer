@@ -57,5 +57,10 @@ MedicineModel.search = function(data, callback){
     }
 }
 
+MedicineModel.clearance = async function (query) {
+
+   return await dbService.query(query, {model: medicine})
+}
+
 
 module.exports = MedicineModel;
