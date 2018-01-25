@@ -237,4 +237,41 @@ $('.management-medicine-search-select').change(() => {
   $('.search.ui').search({ source: sourceTarget })
 });
 
+/**
+  * 약품 추가 클릭시
+  */
+$('.add-medicine-by-management').on('click', () => {
+
+    if ($('.main-category-select > select').children().length) {
+        $('.main-category-select > select *').remove();
+        $('.main-category-select > select').append(
+            `<option class='' value=''>대분류</option>`
+        )
+    }
+
+    if ($('.small-category-select > select').children().length) {
+        $('.small-category-select > select *').remove();
+        $('.small-category-select > select').append(
+            `<option class='default' value=''>소분류</option>`
+        )
+    }
+
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/medicine/category/main',
+        dataType: 'json',
+        cache: false,
+    }).done(results => {
+        /**
+         * 데이터 추가 후 modal
+         */
+        $('.main-category-select > select').append(
+            _.map(results, result => `<option value='${result.primaryCategory}'> ${result.primaryCategory} </option>`)
+        );
+    });
+
+    $('.ui.longer.modal.pharmacopoeia-add').modal('show')
+    $('.dropdown').dropdown()
+});
+
 init();

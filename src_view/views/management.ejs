@@ -91,7 +91,7 @@
                       <option value="2">성분명</option>
                   </select>
               </div>
-              
+
               <table class="ui fixed selectable celled table" style="text-align:center;">
                   <thead>
                       <tr>
@@ -120,6 +120,45 @@
         </div>
 
     </section>
+
+    <div class="ui longer modal pharmacopoeia-add">
+        <div class="ui two item stackable tabs menu">
+            <select class="ui search dropdown categoryWidth main-category-select">
+                <option class="default" value="">대분류</option>
+            </select>
+            <select class="ui search dropdown categoryWidth small-category-select">
+                <option class="default" value="">소분류</option>
+            </select>
+        </div>
+
+        <div class="scrolling content pharmacyModal">
+            <div>
+                <div id="autoCompleteMedicine" class="ui search">
+                    <div class="ui icon input pharmacySearchInput">
+                        <input class="prompt" name="medicineSearchText" type="text" placeholder="성분 또는 약품명을 적어주세요.">
+                    </div>
+                    <div class="results"></div>
+                </div>
+
+                <button class="ui primary button pharmacySearchButton">
+                    검색
+                </button>
+            </div>
+            <table class="ui fixed selectable celled table pharmacopoeia-table">
+                <thead>
+                    <tr>
+                        <th width="13%">약품명</th>
+                        <th width="22%">성분명 및 함량</th>
+                        <th width="30%">용량/용법</th>
+                        <th>약효</th>
+                    </tr>
+                </thead>
+                <tbody id="medicineTableBody">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
     <script src="/dist/index.bundle.js"></script>
 </body>
 
