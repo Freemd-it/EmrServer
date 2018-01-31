@@ -2,34 +2,71 @@ import _ from 'lodash';
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
 import $ from 'jquery';
+import { F_OK } from 'constants';
+
 
 
 function init() {
     if (!_.eq(location.pathname, '/ocs')) return;
-    getOcsData('now');
+    getOcsData();
 }
 
+function dataInit(startTimeDom, endTimeDom) {
+    const date = new Date();
+    if (!startTimeDom.value) {
+        startTimeDom.value = date.toISOString().slice(0, 10);
+    }
+    if (!endTimeDom.value) {
+        endTimeDom.value = date.toISOString().slice(0, 10);
+    }
+}
+
+function dateValidationCheck(startTimeDom, endTimeDom) {
+    const { value: startTime } = startTimeDom;
+    const { value: endTime } = endTimeDom;
+    try {
+        if (!startTime || !endTime) {
+            throw new Error('날짜를 지정해주세요.')
+        }
+        if (startTime > endTime) {
+            throw new Error('시작 날짜가 더 작아야합니다.')
+        }
+    } catch (error) {
+        return { isCheck: false, message: error.message };
+    }
+    return { isCheck: true };
+}
 
 /**
- *
- * @param {string} nowData now or before
+ * 
  * @param {number} page page index
  * @description
  * 이전 OCS, 현재 OCS 데이터 불러오기
  */
-function getOcsData(nowData = "now", page = 1) {
-
+function getOcsData(page = 1, btn = false) {
     /**
      * 기존 데이터 제거
      */
     $('table tbody').empty();
     $('.ocs-table').empty();
 
+    const startTimeDom = document.getElementById('startTime');
+    const endTimeDom = document.getElementById('endTime');
+
+    dataInit(startTimeDom, endTimeDom);
+
+    const { isCheck, message } = dateValidationCheck(startTimeDom, endTimeDom);
+    const { value: startTime } = startTimeDom;
+    const { value: endTime } = endTimeDom;
+
+    if (!isCheck) {
+        return alert(message);
+    }
+
     http
-        .getMethod(`/ocs/${nowData}/${page}`)
+        .getMethod(`/ocs/index/${page}?startTime=${startTime}&endTime=${endTime}`)
         .then(result => {
             const { data, code } = result;
-            data.nowData = nowData;
 
             if (!_.eq(code, resultCode.success)) {
                 return Promise.reject(`fail ocs data ${data.error}`);
@@ -48,11 +85,12 @@ window.getOcsData = getOcsData;
  * OCS 테이블 데이터
  */
 function ocsTableDataSetting(result) {
-    const { endPage, startPage, totalPage, max,
-        page, pageSize, datas, nowData } = result;
+    const {
+        endPage, startPage, totalPage, max, page, pageSize, datas
+    } = result;
     const changeToHangle = ['접수 완료', '예진 완료', '조제 대기', '조제중', '처방 대기', '완료'];
     const START_NUM = 1;
-    const footEle = [];
+    const footEle = []; 
     /**
      * table row data setting
      */
@@ -75,7 +113,7 @@ function ocsTableDataSetting(result) {
     // LEFT
     if (page > pageSize) {
         footEle.push(`
-        <a class="icon item ocs-paging" style="text-decoreation:none" onclick="this.getOcsData(${nowData},${startPage - 1})">
+        <a class="icon item ocs-paging" style="text-decoreation:none" onclick="this.getOcsData(${startPage - 1})">
             <i class="left chevron icon"></i>
         </a>`)
     } else {
@@ -89,14 +127,14 @@ function ocsTableDataSetting(result) {
         if (_.eq(num, page)) {
             return `<a class="item">${num}</a>`
         } else {
-            return `<a class="item ocs-paging" style="text-decoreation:none" onclick="javascript:getOcsData('${nowData}',${num})">${num}</a>`
+            return `<a class="item ocs-paging" style="text-decoreation:none" onclick="javascript:getOcsData(${num})">${num}</a>`
 
         }
     }))
     // Right
     if (endPage < totalPage) {
         footEle.push(`
-        <a class="icon item ocs-paging"  style="text-decoreation:none"  onclick="this.getOcsData('${nowData}',${endPage + 1})">
+        <a class="icon item ocs-paging"  style="text-decoreation:none"  onclick="this.getOcsData(${endPage + 1})">
           <i class="right chevron icon"></i>
         </a>`)
     } else {
@@ -114,23 +152,25 @@ function ocsTableDataSetting(result) {
  */
 $('.ocs-reload__btn ').click((e) => {
     const $target = $(e.target);
-
-    /**
-     * reload
-     */
-    if ($target.hasClass('now')) {
-        getOcsData();
-    } else {
-        getOcsData('before');
-    }
+    const page = 1;
+    const btnClick = true;
+    getOcsData(page, btnClick);
 })
 
 
 /**
  * Excel Download
- * 금일 OCS 자료만 뽑아가도록.
  */
 $('.ocs-excel').click((e) => {
-    location.href = '/ocs/excel';
+    const startTimeDom = document.getElementById('startTime');
+    const endTimeDom = document.getElementById('endTime');
+    const { isCheck, message } = dateValidationCheck(startTimeDom, endTimeDom);
+    const { value: startTime } = startTimeDom;
+    const { value: endTime } = endTimeDom;
+
+    if (!isCheck) {
+        return alert(message);
+    }
+    location.href = `/ocs/excel?startTime=${startTime}&endTime=${endTime}`;
 })
 init();

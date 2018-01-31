@@ -31,15 +31,17 @@ router.get('/', (req, res, next) => {
 /**
  * 금일 OCS 환자 목록 보기
  */
-router.get('/now/:page', function (req, res, next) {
+router.get('/index/:page', function (req, res, next) {
     let { page = 1 } = req.params;
+    const { startTime, endTime } = req.query;
+    const formatedStartTime = Date.parse(moment(startTime).format());
+    const formatedEndTime = Date.parse(moment(endTime).add(1, 'day').format());
+
     page = parseInt(page, 10);
 
     const SIZE = 10; // 한번에 보여줄 글의 수
     const PAGE_SIZE = 10; // 보여주는 링크 수
     const BEGIN = (page - 1) * 10; //시작 글
-    const nowTime = moment(new Date());
-    const nowDay = moment('00:00:00', 'hh:mm:ss');
 
     let totalPage;
     let startPage;
@@ -64,14 +66,14 @@ router.get('/now/:page', function (req, res, next) {
 
         const options = {};
         options.order = [['id', 'DESC']];
-        options.where = { createdAt: { gt: Date.parse(nowDay) } }
+        options.where = { createdAt: { gte: formatedStartTime, lt: formatedEndTime } }
         options.offset = BEGIN;
         options.limit = SIZE;
         return ocsModel.find(options);
     }
 
     ocsModel
-        .count({ where : { createdAt: {gt: Date.parse(moment('00:00:00', 'hh:mm:ss'))}}})
+        .count({ where: { createdAt: { gte: formatedStartTime, lt: formatedEndTime } } })
         .then(tableRange)
         .then((datas) => {
             const result = {};
@@ -96,8 +98,12 @@ router.get('/excel', function (req, res, next) {
      * 금일 것만 전달 하도록 할 예정
      */
     const conf = {};
-    const nowTime = moment(new Date());
-    const nowDay = nowTime.format('YYYY-MM-DD');
+
+    const { startTime, endTime } = req.query;
+
+    const formatedStartTime = Date.parse(moment(startTime).format());
+    const formatedEndTime = Date.parse(moment(endTime).add(1, 'day').format());
+
     const STATUS = ['', '처방대기', '처방중', '완료'];
     conf.name = "OCS";
 
@@ -115,7 +121,7 @@ router.get('/excel', function (req, res, next) {
     const options = {};
     options.attributes = ['chartNumber', 'name', 'gender', 'birth', 'status', 'createdAt']
     options.order = [['id', 'DESC']];
-    options.where = { createdAt: { gt: Date.parse(nowDay) } }
+    options.where = { createdAt: { gte: formatedStartTime, lt: formatedEndTime } }
 
     ocsModel
         .findAll(options)
@@ -128,7 +134,7 @@ router.get('/excel', function (req, res, next) {
             const excelFile = require('excel-export').execute(conf);
 
             res.setHeader('Content-Type', 'application/vnd.openxmlformats');
-            res.setHeader("Content-Disposition", `attachment; filename=OCS-${nowDay}.xlsx`);
+            res.setHeader("Content-Disposition", `attachment; filename=OCS-${startTime}_${endTime}.xlsx`);
             res.end(excelFile, 'binary');
         })
 })
