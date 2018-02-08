@@ -30,16 +30,16 @@ EntityService.Init = function(){
       환자 : 차트 = 1 : N
     */
 
-    chart.hasMany( complaint, { foreignKey : 'chart_id', onUpdate : 'CASCADE', hooks: true});
-    chart.hasMany( ocs, { foreignKey : 'chart_id', onUpdate : 'CASCADE', hooks: true});
-    chart.belongsTo(patient, { foreignKey : 'patient_id', hooks: true});
+    chart.hasMany( complaint, { foreignKey : 'chart_id', onUpdate : 'CASCADE'});
+    chart.hasMany( ocs, { foreignKey : 'chart_id', onUpdate : 'CASCADE'});
+    chart.belongsTo(patient, { foreignKey : 'patient_id'});
     /*
       차트 : CC = 1 : N
       차트 : OCS = 1 : N
       차트 : 처방 = 1 : 1
     */
 
-    medicine.hasMany( prescription, { foreignKey : 'medicine_id', onUpdate : 'CASCADE', hooks: true});
+    medicine.hasMany( prescription, { foreignKey : 'medicine_id', onUpdate : 'CASCADE'});
 
     permission.sync().then(() => {
 
@@ -59,7 +59,6 @@ EntityService.Init = function(){
     medicine.sync().then(() => {
 
       prescription.sync();
-
       const trigger = `create trigger medicine_disable
                        before update on medicines
                        for each row

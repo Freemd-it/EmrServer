@@ -193,6 +193,12 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                              callback(error)
                            })
 
+              /**
+               * @function setCustomUpdateQuery
+               * @param {Array} array 업데이트될 내용을 담고 있는 배열 (id가 42일 때 amount 컬럼을 -30 한다.)
+               * @description update medicines set amount = case when id = 42 then amount - 30 when id = 43 then amount - 20 end where id in (42, 43);
+               * 위와 같은 형식의 다중 조건 쿼리를 문자열로 만들어줌
+               */
               function setCustomUpdateQuery (array) {
 
                   const inArray = [];
