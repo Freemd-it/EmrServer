@@ -2,6 +2,7 @@ import _ from 'lodash';
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
 import $ from 'jquery';
+import 'jquery-validation';
 
 var tableRenderMedicineManagement = [];
 
@@ -13,6 +14,82 @@ function init() {
     showAndHide('content-list', 'pharmacopoeia-management');
     getPharmacopoeia();
 }
+
+$('#add-medicine-form').validate({
+  onkeyup:false,
+  onfocusout : function(element){
+      $(element).valid();
+  },
+  rules:{
+    name:{
+      required: true,
+      maxlength:40
+    },
+    ingredient:{
+      required: true,
+      maxlength: 100
+    },
+    amount:{
+      required: true,
+      digits: true,
+      min: 0,
+      max: 999
+    },
+    quantity:{
+      required: true,
+      digits: true,
+      min: 0,
+      max: 999
+    },
+    property:{
+      maxlength: 255
+    },
+    medication:{
+      maxlength: 255
+    }
+  },
+  messages:{
+    name:{
+      required: "약품명을 입력해 주세요",
+      maxlength: "약품명은 최대 40자까지 입력 가능합니다"
+    },
+    ingredient:{
+      required: "성분명 및 함량을 입력해 주세요",
+      maxlength: "성분명 및 함량은 최대 100자까지 입력 가능합니다"
+    },
+    amount:{
+      required: "통당 약정 수를 입력해 주세요",
+      digits: "약정 수를 정수 형식으로 입력해 주세요",
+      min: "재고량은 0 이상의 수만 입력 가능합니다",
+      max: "재고량은 최대 999까지 입력 가능합니다"
+    },
+    quantity:{
+      required: "재고량을 입력해 주세요",
+      digits: "재고량을 정수 형식으로 입력해 주세요",
+      min: "재고량은 0 이상의 수만 입력 가능합니다",
+      max: "재고량은 최대 999까지 입력 가능합니다"
+    },
+    property:{
+      maxlength: "약효는 최대 255자까지 입력 가능합니다"
+    },
+    medication:{
+      maxlength: "용량/용법은 최대 255자까지 입력 가능합니다"
+    }
+  },
+  showErrors:function(errorMap, errorList){
+      if(this.numberOfInvalids()) {
+          $.uiAlert({
+              textHead: '[경고]',
+              text: errorList[0].message,
+              bgcolor: '#FF5A5A',
+              textcolor: '#fff',
+              position: 'top-center',
+              time: 2
+          });
+          errorList[0].element.focus();
+      }
+  }
+});
 
 $('.tab-menu-list > .item').on('click', (e) => {
 
@@ -240,18 +317,21 @@ $('.management-medicine-search-select').change(() => {
 /**
   * 약품 추가 클릭시
   */
+  var add_main_category_value='';
+  var add_small_category_value='';
+
 $('.add-medicine-by-management').on('click', () => {
 
-    if ($('.main-category-select > select').children().length) {
-        $('.main-category-select > select *').remove();
-        $('.main-category-select > select').append(
+    if ($('.main-category-select2 > select').children().length) {
+        $('.main-category-select2 > select *').remove();
+        $('.main-category-select2 > select').append(
             `<option class='' value=''>대분류</option>`
         )
     }
 
-    if ($('.small-category-select > select').children().length) {
-        $('.small-category-select > select *').remove();
-        $('.small-category-select > select').append(
+    if ($('.small-category-select2 > select').children().length) {
+        $('.small-category-select2 > select *').remove();
+        $('.small-category-select2 > select').append(
             `<option class='default' value=''>소분류</option>`
         )
     }
@@ -265,7 +345,7 @@ $('.add-medicine-by-management').on('click', () => {
         /**
          * 데이터 추가 후 modal
          */
-        $('.main-category-select > select').append(
+        $('.main-category-select2 > select').append(
             _.map(results, result => `<option value='${result.primaryCategory}'> ${result.primaryCategory} </option>`)
         );
     });
@@ -273,5 +353,139 @@ $('.add-medicine-by-management').on('click', () => {
     $('.ui.longer.modal.pharmacopoeia-add').modal('show')
     $('.dropdown').dropdown()
 });
+
+$('.main-category-select2').change(() => {
+  add_main_category_value = $('.main-category-select2 option:selected').attr('value');
+  var param = {
+    primaryCategory: add_main_category_value
+  }
+
+  if ($('.small-category-select2 > select').children().length) {
+    $('.small-category-select2 > select *').remove();
+    $('.small-category-select2 > select').append(
+      `<option class='default' value=''>소분류</option>`
+    )
+  }
+
+  $.ajax({
+    type: 'GET',
+    url: 'http://localhost:3000/medicine/category/small',
+    data: param,
+    dataType: 'json',
+    cache: false,
+  }).done(result => {
+    console.log(result);
+    for (var i in result) {
+      if (i === '0') {
+        $('.small-category-select2 > select').nextAll('div.text').text(`${result[i].secondaryCategory}`);
+
+        $('.small-category-select2 > select').append(
+          `<option selected value='${result[i].secondaryCategory}'> ${result[i].secondaryCategory} </option>`
+        )
+        add_small_category_value = `${result[i].secondaryCategory}`;
+      }
+      else {
+        $('.small-category-select2 > select').append(
+          `<option value='${result[i].secondaryCategory}'> ${result[i].secondaryCategory} </option>`
+        )
+      }
+    }
+  });
+})
+
+$('.small-category-select2').change(() => {
+  add_small_category_value = $('.small-category-select2 option:selected').attr('value');
+  alert(add_small_category_value);
+});
+
+$('#add-medicine-btn').click(function(){
+    if(!$('#add-medicine-form').valid()) return false;
+
+    if(!add_main_category_value || add_main_category_value === ""){
+      $.uiAlert({
+        textHead: '[경고]',
+        text: '대분류를 선택해주세요!',
+        bgcolor: '#FF5A5A',
+        textcolor: '#fff',
+        position: 'top-left',
+        time: 2,
+      });
+
+      return false;
+    }
+    if(!add_small_category_value || add_small_category_value === ""){
+      $.uiAlert({
+        textHead: '[경고]',
+        text: '소분류를 선택해주세요!',
+        bgcolor: '#FF5A5A',
+        textcolor: '#fff',
+        position: 'top-left',
+        time: 2,
+      });
+
+      return false;
+    }
+
+    let docs = {};
+    let v = $('#add-medicine-form').serializeArray();
+    for(var i in v){
+      docs[v[i].name] = v[i].value;
+    }
+    docs["primaryCategory"] = add_main_category_value;
+    docs["secondaryCategory"] = add_small_category_value;
+// alert(JSON.stringify(docs));
+    insertMedicine(docs);
+
+});
+// function updateLocalStorage(data){
+//   var localMedicine = JSON.parse(window.localStorage.getItem('medicine'));
+//   var localMedicineName = JSON.parse(window.localStorage.getItem('medicineName'));
+//   var localMedicineIngredient = JSON.parse(window.localStorage.getItem('medicineIngredient'));
+//
+//   localMedicine.push(data['dataValues']);
+//   localMedicineName.push({ title: data['dataValues'].name});
+//   localMedicineIngredient.push({title: data['dataValues'].ingredient.replace(/<br>/g, " ")});
+//
+//   window.localStorage.setItem('medicine', JSON.stringify(localMedicine));
+//   window.localStorage.setItem('medicineName', JSON.stringify(localMedicineName));
+//   window.localStorage.setItem('medicineIngredient', JSON.stringify(localMedicineIngredient));
+// }
+
+function insertMedicine (data) {
+    http
+      .postMethod(`/medicine/insert`, data)
+      .then(result => {
+          const { data, code } = result;
+
+          if (!_.eq(code, resultCode.success)) {
+              return Promise.reject(`insert fail new medicine data ${data.error}`);
+          }
+
+          return Promise.resolve(data);
+      })
+      .then(function(){
+        console.log('나니');
+        $.uiAlert({
+          textHead: '[알림]',
+          text: '약정보 추가 완료',
+          bgcolor: '#55a9ee',
+          textcolor: '#fff',
+          position: 'top-left',
+          time: 2,
+        });
+      })
+      .catch(error => {
+        console.log(error);
+        $.uiAlert({
+          textHead: '[ERROR-CODE 7008]',
+          text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+          bgcolor: '#F2711C',
+          textcolor: '#fff',
+          position: 'top-center',
+          time: 10,
+        });
+      })
+}
+
 
 init();

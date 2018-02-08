@@ -19,6 +19,16 @@
       .management-medicine-search-select {
         float: right;
       }
+
+      .ui.table.pharmacopoeia-add-table thead th {
+        padding: 0.8% 1.5% 0.8% 1.5%;
+        vertical-align: middle;
+        text-align: center;
+      }
+      .ui.table.pharmacopoeia-add-table tbody td {
+        vertical-align: center;
+        text-align: center;
+      }
     </style>
 </head>
 
@@ -123,41 +133,45 @@
 
     <div class="ui longer modal pharmacopoeia-add">
         <div class="ui two item stackable tabs menu">
-            <select class="ui search dropdown categoryWidth main-category-select">
-                <option class="default" value="">대분류</option>
+            <select class="ui search dropdown categoryWidth main-category-select2" id="mainCategory" name="mainCategory">
+                <option class="default" value="pp">대분류</option>
             </select>
-            <select class="ui search dropdown categoryWidth small-category-select">
-                <option class="default" value="">소분류</option>
+            <select class="ui search dropdown categoryWidth small-category-select2" id="smallCategory" name="smallCategory">
+                <option class="default" value="qq">소분류</option>
             </select>
         </div>
-
+        <form id="add-medicine-form">
         <div class="scrolling content pharmacyModal">
-            <div>
-                <div id="autoCompleteMedicine" class="ui search">
-                    <div class="ui icon input pharmacySearchInput">
-                        <input class="prompt" name="medicineSearchText" type="text" placeholder="성분 또는 약품명을 적어주세요.">
-                    </div>
-                    <div class="results"></div>
-                </div>
-
-                <button class="ui primary button pharmacySearchButton">
-                    검색
-                </button>
-            </div>
-            <table class="ui fixed selectable celled table pharmacopoeia-table">
+            <div class="ui fluid input">
+            <table class="ui fixed selectable celled table pharmacopoeia-add-table" >
                 <thead>
                     <tr>
-                        <th width="13%">약품명</th>
-                        <th width="22%">성분명 및 함량</th>
-                        <th width="30%">용량/용법</th>
-                        <th>약효</th>
+                      <th >약품명</th>
+                      <th>성분명 및 함량</th>
+                      <th width="70px">정/개</th>
+                      <th width="70px">재고량</th>
+                      <th>용량/용법</th>
+                      <th>약효</th>
                     </tr>
                 </thead>
-                <tbody id="medicineTableBody">
-
+                <tbody id="medicineAddTableBody">
+                  <tr>
+                    <td><input type="text" id="name" name="name"></td>
+                    <td><input type="text" id="ingredient" name="ingredient"></td>
+                    <td><input type="text" id="amount" name="amount"></td>
+                    <td><input type="text" id="amount" name="quantity"></td>
+                    <td><input type="text" id="medication" name="medication"></td>
+                    <td><input type="text" id="property" name="property"></td>
+                  </tr>
                 </tbody>
             </table>
         </div>
+      </br>
+        <button class="ui primary button add-medicine-by-management"  id='add-medicine-btn' style='float:right;'>
+            추가
+        </button>
+        </div>
+      </form>
     </div>
     <script src="/dist/index.bundle.js"></script>
 </body>
