@@ -186,12 +186,13 @@ $('.management-main-category-select').change(() => {
         for (var i = 0; i < tableRenderMedicineManagement.length; i++) {
           $('#medicine-management-table-body').append(
             `<tr id=${tableRenderMedicineManagement[i].id}>
-                       <td><input type="checkbox" /></td>
+                       <td><input type="checkbox" name="checkMedicine" value="${tableRenderMedicineManagement[i].id}"/></td>
                        <td>${tableRenderMedicineManagement[i].primaryCategory}</td>
                        <td>${tableRenderMedicineManagement[i].secondaryCategory}</td>
                        <td>${tableRenderMedicineManagement[i].name}</td>
                        <td>${tableRenderMedicineManagement[i].ingredient}</td>
                        <td>${tableRenderMedicineManagement[i].amount}</td>
+                       <td>${tableRenderMedicineManagement[i].quantity}</td>
                        <td>${tableRenderMedicineManagement[i].medication}</td>
                        <td>${tableRenderMedicineManagement[i].property}</td>
                        <td>
@@ -230,12 +231,13 @@ $('.management-small-category-select').change(() => {
   for (var i = 0; i < tableRenderMedicineManagement.length; i++) {
     $('#medicine-management-table-body').append(
       `<tr id=${tableRenderMedicineManagement[i].id}>
-          <td><input type="checkbox" /></td>
+          <td><input type="checkbox" name="checkMedicine" value="${tableRenderMedicineManagement[i].id}"/></td>
           <td>${tableRenderMedicineManagement[i].primaryCategory}</td>
           <td>${tableRenderMedicineManagement[i].secondaryCategory}</td>
           <td>${tableRenderMedicineManagement[i].name}</td>
           <td>${tableRenderMedicineManagement[i].ingredient}</td>
           <td>${tableRenderMedicineManagement[i].amount}</td>
+          <td>${tableRenderMedicineManagement[i].quantity}</td>
           <td>${tableRenderMedicineManagement[i].medication}</td>
           <td>${tableRenderMedicineManagement[i].property}</td>
           <td>
@@ -282,12 +284,13 @@ $('.management-pharmacy-search-button').on('click', () => {
     for (var i in result) {
       $('#medicine-management-table-body').append(
         `<tr id=${result[i].id}>
-            <td><input type="checkbox" /></td>
+            <td><input type="checkbox" name="checkMedicine" value="${result[i].id}"/></td>
             <td>${result[i].primaryCategory}</td>
             <td>${result[i].secondaryCategory}</td>
             <td>${result[i].name}</td>
             <td>${result[i].ingredient}</td>
             <td>${result[i].amount}</td>
+            <td>${result[i].quantity}</td>
             <td>${result[i].medication}</td>
             <td>${result[i].property}</td>
             <td>
@@ -437,19 +440,7 @@ $('#add-medicine-btn').click(function(){
     insertMedicine(docs);
 
 });
-// function updateLocalStorage(data){
-//   var localMedicine = JSON.parse(window.localStorage.getItem('medicine'));
-//   var localMedicineName = JSON.parse(window.localStorage.getItem('medicineName'));
-//   var localMedicineIngredient = JSON.parse(window.localStorage.getItem('medicineIngredient'));
-//
-//   localMedicine.push(data['dataValues']);
-//   localMedicineName.push({ title: data['dataValues'].name});
-//   localMedicineIngredient.push({title: data['dataValues'].ingredient.replace(/<br>/g, " ")});
-//
-//   window.localStorage.setItem('medicine', JSON.stringify(localMedicine));
-//   window.localStorage.setItem('medicineName', JSON.stringify(localMedicineName));
-//   window.localStorage.setItem('medicineIngredient', JSON.stringify(localMedicineIngredient));
-// }
+
 
 function insertMedicine (data) {
     http
@@ -484,8 +475,70 @@ function insertMedicine (data) {
           position: 'top-center',
           time: 10,
         });
-      })
+      });
 }
 
+//약 일괄삭제
+$('.delete-medicine-by-management').on('click', () => {
+  let medicineIds = [];
+  $(":checkbox[name='checkMedicine']:checked").each(function() {
+    medicineIds.push($(this).val());
+  });
+
+  // alert(JSON.stringify(medicineIds));
+  let target = {"medicineIds" : JSON.stringify(medicineIds)};
+  openConfirmModal(target, { confirmMessage: '선택한 약들을 일괄 삭제 삭제하시겠습니까?' }, deleteMedicines);
+});
+
+function deleteMedicines (data) {
+    http
+      .postMethod(`/medicine/delete`, data)
+      .then(result => {
+          const { data, code } = result;
+
+          if (!_.eq(code, resultCode.success)) {
+              return Promise.reject(`delete fail medicine data ${data.error}`);
+          }
+
+          return Promise.resolve(data);
+      })
+      .then(function(){
+        console.log('나니');
+        $.uiAlert({
+          textHead: '[알림]',
+          text: '약정보 일괄 삭제 완료',
+          bgcolor: '#55a9ee',
+          textcolor: '#fff',
+          position: 'top-center',
+          time: 2,
+        });
+        location.reload();
+      })
+      .catch(error => {
+        console.log(error);
+        $.uiAlert({
+          textHead: '[ERROR-CODE 7008]',
+          text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+          bgcolor: '#F2711C',
+          textcolor: '#fff',
+          position: 'top-center',
+          time: 10,
+        });
+      });
+}
+
+function openConfirmModal (target, message, gotoFunction) {
+
+  $('.ui.mini.modal').modal({
+    closable: false,
+    onShow: () => {
+      $('.confirm-modal-wrap > .content > p').empty();
+      $('.confirm-modal-wrap > .content > p').text(message.confirmMessage);
+    },
+    onApprove: () => {
+      gotoFunction(target)
+    }
+  }).modal('show')
+}
 
 init();
