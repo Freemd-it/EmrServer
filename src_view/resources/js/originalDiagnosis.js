@@ -8,6 +8,7 @@ import { bb } from "billboard.js";
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
 import moment from 'moment';
+import 'jquery-validation';
 
 /**
  * init
@@ -38,6 +39,62 @@ const showAndHide = (rowsClass, newId) => {
         $(`#${newId}`).show()
     }
 }
+
+//validation
+/**
+*Impression, Present illness / Medication,  Treatment note / Medication -> 300자 이내
+*
+*/
+function validateHandler (errorMap, errorList){
+    if(this.numberOfInvalids()) {
+        $.uiAlert({
+            textHead: '[경고]',
+            text: errorList[0].message,
+            bgcolor: '#FF5A5A',
+            textcolor: '#fff',
+            position: 'top-center',
+            time: 2
+        });
+        errorList[0].element.focus();
+    }
+}
+
+//본진 정보
+$('#diagonosisChartForm').validate({
+  onkeyup: false,
+  rules: {
+    impression: {
+      maxlength:300
+    },
+    presentIllness: {
+      maxlength:300
+    }
+  },
+  messages:{
+    impression:{
+      maxlength: "impression은 최대 {0}자 까지 입력 가능 합니다."
+    },
+    presentIllness:{
+      maxlength: "Present illness / Medication은 최대 {0}자까지 입력 가능합니다."
+    }
+  },
+  showErrors: validateHandler
+});
+
+$('#Treatmentform').validate({
+  onkeyup: false,
+  rules:{
+    treatmentNote:{
+      maxlength: 300
+    }
+  },
+  messages:{
+    treatmentNote:{
+      maxlength: "Treatment note는 최대 {0}자까지 입력 가능합니다."
+    }
+  },
+  showErrors: validateHandler
+});
 
 $('.diagnosisWaitings').on('click', () => {
 
@@ -250,20 +307,22 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
 
 $('#doctorSignedComplete').on('click', function () {
 
-    var prescriptionLength = $('#prescriptionTableBody').children().length - 1;
+    if(!$('#diagonosisChartForm').valid() || !$('#Treatmentform').valid()) return;
+
+    var prescriptionLength = $('#prescription-table-body').children().length - 1;
     var prescription = [];
     var medicine = {};
 
     for (var i = 1; i <= prescriptionLength; i++) {
         medicine = {};
-        medicine.medicine_id = $('#prescriptionTableBody').children().eq(i).attr('id');
+        medicine.medicine_id = $('#prescription-table-body').children().eq(i).attr('id');
         medicine.chartNumber = $('#preChartId').val();
-        medicine.medicineName = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(0).text());
-        medicine.medicineIngredient = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(1).text());
-        medicine.doses = $('#prescriptionTableBody').children().eq(i).children().eq(2).children().val();
-        medicine.dosesCountByDay = $('#prescriptionTableBody').children().eq(i).children().eq(3).children().children().val();
-        medicine.dosesDay = $('#prescriptionTableBody').children().eq(i).children().eq(4).children().val();
-        medicine.remarks = $('#prescriptionTableBody').children().eq(i).children().eq(5).children().val();
+        medicine.medicineName = $.trim($('#prescription-table-body').children().eq(i).children().eq(0).text());
+        medicine.medicineIngredient = $.trim($('#prescription-table-body').children().eq(i).children().eq(1).text());
+        medicine.doses = $('#prescription-table-body').children().eq(i).children().eq(2).children().val();
+        medicine.dosesCountByDay = $('#prescription-table-body').children().eq(i).children().eq(3).children().children().val();
+        medicine.dosesDay = $('#prescription-table-body').children().eq(i).children().eq(4).children().val();
+        medicine.remarks = $('#prescription-table-body').children().eq(i).children().eq(5).children().val();
         prescription.push(medicine);
     }
 
@@ -295,8 +354,8 @@ $('#doctorSignedComplete').on('click', function () {
               $('#originalDiagnosisCCsegment *').remove();
             }
 
-            if ($('#prescriptionTableBody').children().length > 0) {
-                $('#prescriptionTableBody *').remove();
+            if ($('#prescription-table-body').children().length > 0) {
+                $('#prescription-table-body *').remove();
             }
 
             $('#pastDiagnosisRecord').attr('disabled', true);

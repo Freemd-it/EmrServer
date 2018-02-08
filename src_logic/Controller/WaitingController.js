@@ -54,7 +54,7 @@ router.get('/pharmacy/now/:page', (req, res) => {
 
     const options = {};
     options.order = [['chartNumber', 'ASC']];
-    options.where = { createdAt: {gt: Date.parse(nowDay)}}
+    options.where = { createdAt: {gt: Date.parse(nowDay)} }
     options.offset = BEGIN;
     options.limit = SIZE;
 
@@ -62,7 +62,7 @@ router.get('/pharmacy/now/:page', (req, res) => {
   }
 
   waitingModel
-          .Count()
+          .Count({ where : { createdAt: {gt: Date.parse(moment('00:00:00', 'hh:mm:ss'))}}})
           .then(tableRange)
           .then((datas) => {
             const result = {

@@ -23,9 +23,9 @@
       vertical-align: center;
       text-align: center;
     }
-    .ui.segment.ocs-pharmacy-segment {
+    /*.ui.segment.ocs-pharmacy-segment {
       height: 89%;
-    }
+    }*/
     .header-tbody td{
       border-bottom: 1px solid rgba(34, 36, 38, 0.1);
     }
@@ -44,6 +44,35 @@
     .ocs-hover:hover {
       cursor: pointer;
     }
+    .update-medicine-in-prescription:hover, .cancel-update-prescription:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .add-medicine-in-prescription:hover, .add-cancel-medicine-in-prescription:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .confirm-modal-wrap {
+      margin-top: -150px;
+      height: 215px;
+    }
+    .confirm-modal-wrap .content{
+      height: 90px;
+    }
+    .confirm-modal-wrap .actions .ui.cancel.button {
+      margin-left: 0px;
+    }
+    .ocs-hover.ocs-warning {
+      box-shadow: 0 0 0 #c9ba9b inset !important;
+    }
+    .ocs-hover.ocs-warning {
+      background: #fffaf3!important;
+      color: #bb8424!important;
+    }
+    .ocs-hover.ocs-warning:hover * {
+      background: #fff4e4!important;
+      color: #905d03!important;
+    }
   </style>
 </head>
 
@@ -51,7 +80,7 @@
   <header>
       <% include ./parts/header.ejs %>
   </header>
-  <div class="pharmacy-container">
+  <section class="pharmacy-container container" style="width:1300px;">
     <div class="ui grid">
         <div class="left floated six wide column" style="margin-left:.1%">
             <h1>약국</h1>
@@ -107,7 +136,8 @@
               </div>
             </div>
             <h3 class="ui dividing header">처방전</scan></h3>
-            <table class="ui celled table" style="text-align:center;">
+            <form id="prescriptionForm">
+            <table class="ui celled table form" style="text-align:center;">
               <thead>
                 <tr>
                   <th>약품명</th>
@@ -119,12 +149,13 @@
                   <th width="10%">기타</th>
                 </tr>
               </thead>
-              <tbody class="prescription-table-body">
+              <tbody id="prescription-table-body">
                 <tr>
-                    <td class="defaultPrescriptionTableBody" style="text-align:center;" colspan="7">조제를 시작할 환자를 선택해주세요.</td>
+                  <td class="defaultPrescriptionTableBody" style="text-align:center;" colspan="7">조제를 시작할 환자를 선택해주세요.</td>
                 </tr>
               </tbody>
             </table>
+          </form>
             <h3 class="ui dividing header">진료 내용</scan></h3>
             <div class="ui form">
               <form id="pharmacy-chart">
@@ -155,11 +186,12 @@
 
         <div>
             <button id="pharmaceutical-start" class="huge negative ui button"> 조제 시작 </button>
-            <button id="inspection-complete" class="huge negative ui button"> 검토 완료 </button>
-            <button id="Prescription-complete" class="huge negative ui button"> 처방 완료 </button>
+            <button id="pharmaceutical-end" class="huge negative ui button"> 조제 완료 </button>
+            <button id="inspection-complete" class="huge negative ui button"> 검수 완료 </button>
+            <button id="prescription-complete" class="huge negative ui button"> 복약지도 완료 </button>
         </div>
     </div>
-  </div>
+  </section>
 
   <div class="ui longer modal pharmacopoeia">
       <div class="ui two item stackable tabs menu">
@@ -205,6 +237,18 @@
           </table>
       </div>
   </div>
+
+  <div class="ui mini modal confirm-modal-wrap">
+      <div class="header">알림</div>
+      <div class="content">
+          <p></p>
+      </div>
+      <div class="actions">
+          <div class="ui approve button">확인</div>
+          <div class="ui cancel button">취소</div>
+      </div>
+  </div>
+
   <script src="/dist/index.bundle.js"></script>
 </body>
 

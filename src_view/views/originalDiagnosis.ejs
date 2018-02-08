@@ -14,7 +14,7 @@
         <% include ./parts/header.ejs %>
     </header>
 
-    <section class="ui container" style="margin-top:55px">
+    <section class="ui container" style="margin-top:55px;">
         <div class="ui grid">
             <div class="left floated six wide column" style="margin-left:.1%">
                 <h1>본진</h1>
@@ -385,12 +385,12 @@
                       <div class="two fields">
                           <div class="field">
                               <label>HR <scan style="font-size : 10px;">(Heart Rate , 심박수)</scan></label>
-                              <input type="text" id="heartRate">
+                              <input type="text" id="heartRate" name="heartRate">
                           </div>
 
                           <div class="field">
                               <label>PR <scan style="font-size : 10px;">(Pulse Rate , 맥박수)</scan></label>
-                              <input type="text" id="pulseRate">
+                              <input type="text" id="pulseRate" name="pulseRate">
                           </div>
                       </div>
 
@@ -398,18 +398,18 @@
                       <div class="two fields">
                           <div class="field">
                               <label>BT <scan style="font-size : 10px;">(Body Temporature , 체온)</scan></label>
-                              <input type="text" id="bodyTemporature">
+                              <input type="text" id="bodyTemporature" name="bodyTemporature">
                           </div>
 
                           <div class="field">
                               <label>BP <scan style="font-size : 10px;">(Blood Pressure , 혈압)</scan></label>
                               <div class="two fields">
                                   <div class="field">
-                                      <input type="number" placeholder="수축기" id="systoleBloodPressure">
+                                      <input type="number" placeholder="수축기" id="systoleBloodPressure" name="systoleBloodPressure">
                                   </div>
 
                                   <div class="field">
-                                      <input type="number" placeholder="이완기" id="diastoleBloodPressure">
+                                      <input type="number" placeholder="이완기" id="diastoleBloodPressure" name="diastoleBloodPressure">
                                   </div>
                               </div>
                           </div>
@@ -419,12 +419,12 @@
                       <div class="two fields">
                           <div class="field">
                               <label>Glucose <scan style="font-size : 10px;">(혈당)</scan></label>
-                              <input type="number" id="bloodGlucose">
+                              <input type="number" id="bloodGlucose" name="bloodGlucose">
                           </div>
 
                           <div class="field">
                               <label>식후</label>
-                              <input type="text" id="mealTerm">
+                              <input type="text" id="mealTerm" name="mealTerm">
                           </div>
                       </div>
 
@@ -460,7 +460,7 @@
 
                         <div class="field">
                             <label>Present illness / Medication</label>
-                            <textarea class="presentIllness" name="impression" rows="3"></textarea>
+                            <textarea class="presentIllness" name="presentIllness" rows="3"></textarea>
                         </div>
                     </form>
 
@@ -482,7 +482,7 @@
                                     <th width="6%">삭제</th>
                                 </tr>
                             </thead>
-                            <tbody id="prescriptionTableBody">
+                            <tbody id="prescription-table-body">
                                 <tr>
                                     <td class="defaultPrescriptionTableBody" style="text-align:center;" colspan="6">약전 탭에서 처방하실 약을 추가해주세요.</td>
                                 </tr>
@@ -490,8 +490,10 @@
                         </table>
                     </div>
                     <div class="ui segment">
+                      <form id="Treatmentform">
                         <label>Treatment note / Medication</label>
-                        <textarea class="treatmentNote" name="impression" rows="5"></textarea>
+                        <textarea class="treatmentNote" name="treatmentNote" rows="5"></textarea>
+                      </form>
                     </div>
                 </div>
             </div>

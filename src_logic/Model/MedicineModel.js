@@ -11,7 +11,7 @@ MedicineModel.list = function(data, callback){
 
     medicine.findAll({
       attributes: [
-        'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient'
+        'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity'
       ]
     })
     .then(result => {
@@ -27,7 +27,7 @@ MedicineModel.search = function(data, callback){
     if (data.option === '1') {
       medicine.findAll({
         attributes: [
-          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient'
+          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity'
         ],
         where: {
           name: { like: '%'+data.searchText+'%' }
@@ -42,7 +42,7 @@ MedicineModel.search = function(data, callback){
     } else {
       medicine.findAll({
         attributes: [
-          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient'
+          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity'
         ],
         where: {
           ingredient: { like: '%'+data.searchText+'%' }
@@ -55,6 +55,11 @@ MedicineModel.search = function(data, callback){
         callback(error);
       });
     }
+}
+
+MedicineModel.clearance = async function (query) {
+
+   return await dbService.query(query, {model: medicine})
 }
 
 
