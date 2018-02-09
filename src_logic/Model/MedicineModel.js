@@ -92,4 +92,20 @@ MedicineModel.delete = async function(options){
   });
 }
 
+MedicineModel.update = async function(options){
+  const { id, name, ingredient, amount, quantity, medication, property} = options;
+  
+  return await medicine.update({
+    name: name,
+    ingredient: ingredient,
+    amount: amount,
+    quantity: quantity,
+    medication: medication,
+    property: property
+  },{
+    where : { id: id }
+  });
+
+}
+
 module.exports = MedicineModel;

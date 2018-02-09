@@ -90,7 +90,7 @@
                       약품 추가
                   </button>
 
-                  <button class="ui primary button delete-medicine-by-management">
+                  <button class="ui primary button delete-medicine-by-management" id="delete-medicine-by-management">
                       일괄 삭제
                   </button>
 
@@ -112,7 +112,8 @@
                   </select>
               </div>
 
-              <table class="ui fixed selectable celled table" style="text-align:center;">
+              <form id="medicine-management-form">
+              <table class="ui fixed selectable celled table form" style="text-align:center;">
                   <thead>
                       <tr>
                           <th width="2.7%"></th>
@@ -127,10 +128,28 @@
                           <th width="7%">기타</th>
                       </tr>
                   </thead>
+
                   <tbody id="medicine-management-table-body">
 
                   </tbody>
+
+                  <tfoot>
+                      <tr>
+                          <th colspan="10">
+                              <div class="ui right floated pagination menu medicine-management-table">
+                                  <!-- <a class="icon item">
+                                      <i class="left chevron icon"></i>
+                                  </a> -->
+                                  <!-- <a class="item">1</a>  -->
+                                  <!-- <a class="icon item">
+                                      <i class="right chevron icon"></i>
+                                  </a> -->
+                              </div>
+                          </th>
+                      </tr>
+                  </tfoot>
               </table>
+              </form>
           </div>
         </div>
         <div id="inventory-management" class="ui bottom attached segment content-list">

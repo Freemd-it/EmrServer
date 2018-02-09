@@ -14,82 +14,87 @@ function init() {
     showAndHide('content-list', 'pharmacopoeia-management');
     getPharmacopoeia();
 }
-
-$('#add-medicine-form').validate({
-  onkeyup:false,
-  onfocusout : function(element){
-      $(element).valid();
-  },
-  rules:{
-    name:{
-      required: true,
-      maxlength:40
+// $(`form[name="medicine-management-form"]`).validate({
+function setValidate(formId){
+  $(formId).validate({
+    onkeyup:false,
+    onfocusout : function(element){
+        $(element).valid();
     },
-    ingredient:{
-      required: true,
-      maxlength: 100
-    },
-    amount:{
-      required: true,
-      digits: true,
-      min: 0,
-      max: 999
-    },
-    quantity:{
-      required: true,
-      digits: true,
-      min: 0,
-      max: 999
-    },
-    property:{
-      maxlength: 255
-    },
-    medication:{
-      maxlength: 255
-    }
-  },
-  messages:{
-    name:{
-      required: "약품명을 입력해 주세요",
-      maxlength: "약품명은 최대 40자까지 입력 가능합니다"
-    },
-    ingredient:{
-      required: "성분명 및 함량을 입력해 주세요",
-      maxlength: "성분명 및 함량은 최대 100자까지 입력 가능합니다"
-    },
-    amount:{
-      required: "통당 약정 수를 입력해 주세요",
-      digits: "약정 수를 정수 형식으로 입력해 주세요",
-      min: "재고량은 0 이상의 수만 입력 가능합니다",
-      max: "재고량은 최대 999까지 입력 가능합니다"
-    },
-    quantity:{
-      required: "재고량을 입력해 주세요",
-      digits: "재고량을 정수 형식으로 입력해 주세요",
-      min: "재고량은 0 이상의 수만 입력 가능합니다",
-      max: "재고량은 최대 999까지 입력 가능합니다"
-    },
-    property:{
-      maxlength: "약효는 최대 255자까지 입력 가능합니다"
-    },
-    medication:{
-      maxlength: "용량/용법은 최대 255자까지 입력 가능합니다"
-    }
-  },
-  showErrors:function(errorMap, errorList){
-      if(this.numberOfInvalids()) {
-          $.uiAlert({
-              textHead: '[경고]',
-              text: errorList[0].message,
-              bgcolor: '#FF5A5A',
-              textcolor: '#fff',
-              position: 'top-center',
-              time: 2
-          });
-          errorList[0].element.focus();
+    rules:{
+      name:{
+        required: true,
+        maxlength:40
+      },
+      ingredient:{
+        required: true,
+        maxlength: 100
+      },
+      amount:{
+        required: true,
+        digits: true,
+        min: 0,
+        max: 999
+      },
+      quantity:{
+        required: true,
+        digits: true,
+        min: 0,
+        max: 999
+      },
+      property:{
+        maxlength: 255
+      },
+      medication:{
+        maxlength: 255
       }
-  }
-});
+    },
+    messages:{
+      name:{
+        required: "약품명을 입력해 주세요",
+        maxlength: "약품명은 최대 40자까지 입력 가능합니다"
+      },
+      ingredient:{
+        required: "성분명 및 함량을 입력해 주세요",
+        maxlength: "성분명 및 함량은 최대 100자까지 입력 가능합니다"
+      },
+      amount:{
+        required: "통당 약정 수를 입력해 주세요",
+        digits: "약정 수를 정수 형식으로 입력해 주세요",
+        min: "재고량은 0 이상의 수만 입력 가능합니다",
+        max: "재고량은 최대 999까지 입력 가능합니다"
+      },
+      quantity:{
+        required: "재고량을 입력해 주세요",
+        digits: "재고량을 정수 형식으로 입력해 주세요",
+        min: "재고량은 0 이상의 수만 입력 가능합니다",
+        max: "재고량은 최대 999까지 입력 가능합니다"
+      },
+      property:{
+        maxlength: "약효는 최대 255자까지 입력 가능합니다"
+      },
+      medication:{
+        maxlength: "용량/용법은 최대 255자까지 입력 가능합니다"
+      }
+    },
+    showErrors:function(errorMap, errorList){
+        if(this.numberOfInvalids()) {
+            $.uiAlert({
+                textHead: '[경고]',
+                text: errorList[0].message,
+                bgcolor: '#FF5A5A',
+                textcolor: '#fff',
+                position: 'top-center',
+                time: 2
+            });
+            errorList[0].element.focus();
+        }
+    }
+  });
+}
+
+setValidate('#add-medicine-form');
+setValidate('#medicine-management-form');
 
 $('.tab-menu-list > .item').on('click', (e) => {
 
@@ -317,6 +322,126 @@ $('.management-medicine-search-select').change(() => {
   $('.search.ui').search({ source: sourceTarget })
 });
 
+
+/**
+  * 약품 정보 수정
+  */
+$(document).on('click', '.configure-medicine-by-management', (e) => {
+  console.log(e.target);
+    const target = $(e.target).parent().parent();
+    transformMedicineInput(target)
+});
+
+function transformMedicineInput(target) {
+
+  const name = target.children().eq(3).text()
+  const ingredient = target.children().eq(4).text()
+  const amount = target.children().eq(5).text()
+  const quantity = target.children().eq(6).text()
+  const medication = target.children().eq(7).text()
+  const property = target.children().eq(8).text()
+
+  target.children().eq(3).empty().append(`<input value="${name}" name="name" />`)
+  target.children().eq(4).empty().append(`<input value="${ingredient}" name="ingredient" />`)
+  target.children().eq(5).empty().append(`<input value="${amount}" name="amount"  />`)
+  target.children().eq(6).empty().append(`<input type="text" value="${quantity}" name="quantity" />`)
+  target.children().eq(7).empty().append(`<input type="text" value="${medication}" name="medication" />`)
+  target.children().eq(8).empty().append(`<input type="text" value="${property}" name="property" />`)
+  target.children().eq(9).empty().append(`
+    <a class="update-medicine-in-management">수정완료</a><br />
+    <a class="cancel-update-medicine">수정취소</a>
+    `)
+}
+
+//수정완료
+$(document).on('click', '.update-medicine-in-management', (e) => {
+  if(!$('#medicine-management-form').valid()) return;
+
+  const target = $(e.target).parent().parent();
+  openConfirmModal(target, { confirmMessage: '약 정보 수정을 완료하시겠습니까?' }, updateMedicineInManagement);
+});
+
+function updateMedicineInManagement(target){
+  let id = target.attr('id');
+  let docs = {};
+
+  docs.id = id;
+  let v = $('#medicine-management-form').serializeArray();
+  for(var i in v){
+    docs[v[i].name] = v[i].value;
+  }
+
+  http
+    .postMethod(`/medicine/update`, docs)
+    .then(result => {
+        const { data, code } = result;
+
+        if (!_.eq(code, resultCode.success)) {
+            return Promise.reject(`update fail medicine data ${data.error}`);
+        }
+
+        return Promise.resolve(data);
+    })
+    .then(function(){
+      console.log('나니');
+      $.uiAlert({
+        textHead: '[알림]',
+        text: '약정보 갱신 완료',
+        bgcolor: '#55a9ee',
+        textcolor: '#fff',
+        position: 'top-left',
+        time: 2,
+      });
+    })
+    .catch(error => {
+      console.log(error);
+      $.uiAlert({
+        textHead: '[ERROR-CODE 7008]',
+        text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+        bgcolor: '#F2711C',
+        textcolor: '#fff',
+        position: 'top-center',
+        time: 10,
+      });
+    });
+}
+
+
+//수정 취소
+$(document).on('click', '.cancel-update-medicine', (e) => {
+  const target = $(e.target).parent().parent();
+  let id = target.attr('id');
+  let medicines = JSON.parse(window.localStorage.getItem('medicine'));
+
+  cancelUpdateMedicine(target, _.filter(medicines, 'id', id)[0]);
+});
+
+function cancelUpdateMedicine(target, data) {
+  const {name, ingredient, amount, quantity, medication, property } = data;
+
+  target.children().eq(3).empty().append(name)
+  target.children().eq(4).empty().append(ingredient)
+  target.children().eq(5).empty().append(amount)
+  target.children().eq(6).empty().append(quantity)
+  target.children().eq(7).empty().append(medication)
+  target.children().eq(8).empty().append(property)
+  target.children().eq(9).empty().append(`
+      <i class="configure-medicine configure link icon"></i>
+      <i class="delete-medicine trash link icon"></i>`)
+}
+
+/**
+  * 약품 정보 삭제
+  */
+$(document).on('click', '.delete-medicine-by-management', (e) => {
+  const medicineId = [];
+  medicineId.push($(e.target).parent().parent().attr('id'));
+  console.log($(e.target).parent().parent().attr('id'));
+alert(JSON.stringify(medicineId))
+  let target = {"medicineIds" : JSON.stringify(medicineId)};
+  openConfirmModal(target, { confirmMessage: '선택한 약을 삭제 삭제하시겠습니까?' }, deleteMedicines);
+});
+
 /**
   * 약품 추가 클릭시
   */
@@ -468,7 +593,7 @@ function insertMedicine (data) {
       .catch(error => {
         console.log(error);
         $.uiAlert({
-          textHead: '[ERROR-CODE 7008]',
+          textHead: '[ERROR-CODE 7009]',
           text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
           bgcolor: '#F2711C',
           textcolor: '#fff',
@@ -479,7 +604,7 @@ function insertMedicine (data) {
 }
 
 //약 일괄삭제
-$('.delete-medicine-by-management').on('click', () => {
+$('#delete-medicine-by-management').on('click', () => {
   let medicineIds = [];
   $(":checkbox[name='checkMedicine']:checked").each(function() {
     medicineIds.push($(this).val());
@@ -506,7 +631,7 @@ function deleteMedicines (data) {
         console.log('나니');
         $.uiAlert({
           textHead: '[알림]',
-          text: '약정보 일괄 삭제 완료',
+          text: '약정보 삭제 완료',
           bgcolor: '#55a9ee',
           textcolor: '#fff',
           position: 'top-center',
@@ -517,7 +642,7 @@ function deleteMedicines (data) {
       .catch(error => {
         console.log(error);
         $.uiAlert({
-          textHead: '[ERROR-CODE 7008]',
+          textHead: '[ERROR-CODE 7010]',
           text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
           bgcolor: '#F2711C',
           textcolor: '#fff',
@@ -539,6 +664,77 @@ function openConfirmModal (target, message, gotoFunction) {
       gotoFunction(target)
     }
   }).modal('show')
+}
+
+
+function medicineTableDataSetting(result) {
+    const {
+        endPage, startPage, totalPage, max, page, pageSize, datas
+    } = result;
+    const START_NUM = 1;
+    const footEle = [];
+    /**
+     * table row data setting
+     */
+    $('#medicine-management-table-body').append(
+        _.map(datas, data => {
+            const { id, primaryCategory, secondaryCategory, name, ingredient, amount, quantity, medication, property } = data;
+            return `<tr id=${id}>
+                <td><input type="checkbox" name="checkMedicine" value="${id}"/></td>
+                <td>${primaryCategory}</td>
+                <td>${secondaryCategory}</td>
+                <td>${name}</td>
+                <td>${ingredient}</td>
+                <td>${amount}</td>
+                <td>${quantity}</td>
+                <td>${medication}</td>
+                <td>${property}</td>
+                <td>
+                  <i class="configure-medicine-by-management configure link icon"></i>
+                  <i class="delete-medicine-by-management trash link icon"></i>
+                </td>
+              </tr>`
+        })
+    );
+
+    /**
+     * index data setting
+     */
+    // LEFT
+    if (page > pageSize) {
+        footEle.push(`
+        <a class="icon item ocs-paging" style="text-decoreation:none" onclick="this.getOcsData(${startPage - 1})">
+            <i class="left chevron icon"></i>
+        </a>`)
+    } else {
+        footEle.push(`
+        <a class="icon item">
+            <i class="left chevron icon"></i>
+        </a>`)
+    }
+    // Center
+    footEle.push(_.map(_.range(startPage, endPage + 1), (num) => {
+        if (_.eq(num, page)) {
+            return `<a class="item">${num}</a>`
+        } else {
+            return `<a class="item ocs-paging" style="text-decoreation:none" onclick="javascript:getOcsData(${num})">${num}</a>`
+
+        }
+    }))
+    // Right
+    if (endPage < totalPage) {
+        footEle.push(`
+        <a class="icon item ocs-paging"  style="text-decoreation:none"  onclick="this.getOcsData(${endPage + 1})">
+          <i class="right chevron icon"></i>
+        </a>`)
+    } else {
+        footEle.push(`
+        <a class="icon item">
+          <i class="right chevron icon"></i>
+        </a>`)
+    }
+    $('.medicine-management-table').append(_.flatten(footEle));
+
 }
 
 init();

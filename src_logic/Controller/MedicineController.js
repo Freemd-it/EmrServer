@@ -75,6 +75,16 @@ router.post('/delete', (req, res)=>{
 
 router.post('/update', (req, res)=>{
 
+  medicineModel
+    .update(req.body)
+    .then(result =>{
+      respondJson(res, resultCode.success, result);
+    })
+    .catch(err =>{
+      console.log(err);
+      respondOnError(res, resultCode.fail, err);
+    });
+
 });
 
 
