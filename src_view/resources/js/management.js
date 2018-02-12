@@ -59,15 +59,13 @@ function setValidate(formId){
         maxlength: "성분명 및 함량은 최대 100자까지 입력 가능합니다"
       },
       amount:{
-        required: "통당 약정 수를 입력해 주세요",
-        digits: "약정 수를 정수 형식으로 입력해 주세요",
-        min: "재고량은 0 이상의 수만 입력 가능합니다",
-        max: "재고량은 최대 999까지 입력 가능합니다"
+        required: "약품 1통당 개수를 입력해 주세요",
+        digits: "약품 1통당 개수를 0 이상의 정수로 입력해 주세요",
+        max: "약품 1통당 개수는 최대 999까지 입력 가능합니다"
       },
       quantity:{
         required: "재고량을 입력해 주세요",
-        digits: "재고량을 정수 형식으로 입력해 주세요",
-        min: "재고량은 0 이상의 수만 입력 가능합니다",
+        digits: "재고량을 0 이상의 정수로 입력해 주세요",
         max: "재고량은 최대 999까지 입력 가능합니다"
       },
       property:{
@@ -147,9 +145,12 @@ function getPharmacopoeia () {
     $('.dropdown').dropdown()
 }
 
+var management_main_category_value = '';
+var management_small_category_value = '';
 $('.management-main-category-select').change(() => {
+  management_main_category_value = $('.management-main-category-select option:selected').attr('value');
   var param = {
-    primaryCategory: $('.management-main-category-select option:selected').attr('value')
+    primaryCategory: management_main_category_value
   }
 
   if ($('.management-small-category-select > select').children().length) {
@@ -166,7 +167,7 @@ $('.management-main-category-select').change(() => {
     dataType: 'json',
     cache: false,
   }).done(result => {
-    for (i in result) {
+    for (var i in result) {
       if (i === '0') {
 
         $('.management-small-category-select > select').nextAll('div.text').text(`${result[i].secondaryCategory}`);
@@ -188,25 +189,7 @@ $('.management-main-category-select').change(() => {
         if ($('#medicine-management-table-body').children().length)
           $('#medicine-management-table-body *').remove();
 
-        for (var i = 0; i < tableRenderMedicineManagement.length; i++) {
-          $('#medicine-management-table-body').append(
-            `<tr id=${tableRenderMedicineManagement[i].id}>
-                       <td><input type="checkbox" name="checkMedicine" value="${tableRenderMedicineManagement[i].id}"/></td>
-                       <td>${tableRenderMedicineManagement[i].primaryCategory}</td>
-                       <td>${tableRenderMedicineManagement[i].secondaryCategory}</td>
-                       <td>${tableRenderMedicineManagement[i].name}</td>
-                       <td>${tableRenderMedicineManagement[i].ingredient}</td>
-                       <td>${tableRenderMedicineManagement[i].amount}</td>
-                       <td>${tableRenderMedicineManagement[i].quantity}</td>
-                       <td>${tableRenderMedicineManagement[i].medication}</td>
-                       <td>${tableRenderMedicineManagement[i].property}</td>
-                       <td>
-                         <i class="configure-medicine-by-management configure link icon"></i>
-                         <i class="delete-medicine-by-management trash link icon"></i>
-                       </td>
-                </tr>`
-          )
-        }
+        setMedicineTableBody(tableRenderMedicineManagement);
       }
       else {
         $('.management-small-category-select > select').append(
@@ -220,12 +203,12 @@ $('.management-main-category-select').change(() => {
 $('.management-small-category-select').change(() => {
 
   var medicine = JSON.parse(window.localStorage.getItem('medicine'));
-  var categoryMain = $('.management-main-category-select option:selected').text();
-  var categorySmall = $('.management-small-category-select option:selected').text();
+  management_main_category_value = $('.management-main-category-select option:selected').text();
+  management_small_category_value = $('.management-small-category-select option:selected').text();
   tableRenderMedicineManagement = [];
 
   medicine.find(function (x) {
-    if ($.trim(x.primaryCategory) === $.trim(categoryMain) && $.trim(x.secondaryCategory) === $.trim(categorySmall)) {
+    if ($.trim(x.primaryCategory) === $.trim(management_main_category_value) && $.trim(x.secondaryCategory) === $.trim(management_small_category_value)) {
       tableRenderMedicineManagement.push(x);
     }
   });
@@ -233,25 +216,7 @@ $('.management-small-category-select').change(() => {
   if ($('#medicine-management-table-body').children().length)
     $('#medicine-management-table-body *').remove();
 
-  for (var i = 0; i < tableRenderMedicineManagement.length; i++) {
-    $('#medicine-management-table-body').append(
-      `<tr id=${tableRenderMedicineManagement[i].id}>
-          <td><input type="checkbox" name="checkMedicine" value="${tableRenderMedicineManagement[i].id}"/></td>
-          <td>${tableRenderMedicineManagement[i].primaryCategory}</td>
-          <td>${tableRenderMedicineManagement[i].secondaryCategory}</td>
-          <td>${tableRenderMedicineManagement[i].name}</td>
-          <td>${tableRenderMedicineManagement[i].ingredient}</td>
-          <td>${tableRenderMedicineManagement[i].amount}</td>
-          <td>${tableRenderMedicineManagement[i].quantity}</td>
-          <td>${tableRenderMedicineManagement[i].medication}</td>
-          <td>${tableRenderMedicineManagement[i].property}</td>
-          <td>
-            <i class="configure-medicine-by-management configure link icon"></i>
-            <i class="delete-medicine-by-management trash link icon"></i>
-          </td>
-      </tr>`
-    )
-  }
+  setMedicineTableBody(tableRenderMedicineManagement);
 })
 
 $('.management-pharmacy-search-button').on('click', () => {
@@ -286,27 +251,34 @@ $('.management-pharmacy-search-button').on('click', () => {
     if ($('#medicine-management-table-body').children().length)
       $('#medicine-management-table-body *').remove();
 
-    for (var i in result) {
-      $('#medicine-management-table-body').append(
-        `<tr id=${result[i].id}>
-            <td><input type="checkbox" name="checkMedicine" value="${result[i].id}"/></td>
-            <td>${result[i].primaryCategory}</td>
-            <td>${result[i].secondaryCategory}</td>
-            <td>${result[i].name}</td>
-            <td>${result[i].ingredient}</td>
-            <td>${result[i].amount}</td>
-            <td>${result[i].quantity}</td>
-            <td>${result[i].medication}</td>
-            <td>${result[i].property}</td>
-            <td>
-              <i class="configure-medicine-by-management configure link icon"></i>
-              <i class="delete-medicine-by-management trash link icon"></i>
-            </td>
-          </tr>`
-      )
-    }
+    setMedicineTableBody(result);
   });
 });
+
+function setMedicineTableBody(datas){
+  $('#medicine-management-table-body').append(
+      _.map(datas, data => {
+          const { id, primaryCategory, secondaryCategory, name, ingredient, amount, quantity, medication, property, available } = data;
+          console.log(available);
+          return `<tr id=${id} class="ui fluid">
+              <td><input type="checkbox" name="checkMedicine" value="${id}"/></td>
+              <td>${primaryCategory}</td>
+              <td>${secondaryCategory}</td>
+              <td>${name}</td>
+              <td>${ingredient}</td>
+              <td>${amount}</td>
+              <td>${quantity}</td>
+              <td>${medication}</td>
+              <td>${property}</td>
+              <td style="overflow:visible;">${available == "1" ? "활성" : "비활성"}</td>
+              <td>
+                <i class="configure-medicine-by-management configure link icon"></i>
+                <i class="delete-medicine-by-management trash link icon"></i>
+              </td>
+            </tr>`
+      })
+  );
+}
 
 $('.management-medicine-search-select').change(() => {
 
@@ -340,6 +312,7 @@ function transformMedicineInput(target) {
   const quantity = target.children().eq(6).text()
   const medication = target.children().eq(7).text()
   const property = target.children().eq(8).text()
+  const available = target.children().eq(9).text()
 
   target.children().eq(3).empty().append(`<input value="${name}" name="name" />`)
   target.children().eq(4).empty().append(`<input value="${ingredient}" name="ingredient" />`)
@@ -348,9 +321,18 @@ function transformMedicineInput(target) {
   target.children().eq(7).empty().append(`<input type="text" value="${medication}" name="medication" />`)
   target.children().eq(8).empty().append(`<input type="text" value="${property}" name="property" />`)
   target.children().eq(9).empty().append(`
+    <select class="select-available ui search fluid dropdown">
+     <option value="1">활성</option>
+     <option value="0">비활성</option>
+    </select>`)
+  target.children().eq(10).empty().append(`
     <a class="update-medicine-in-management">수정완료</a><br />
     <a class="cancel-update-medicine">수정취소</a>
     `)
+
+    $('.select-available').dropdown();
+    target.children().eq(9).children().dropdown('set selected', available);
+
 }
 
 //수정완료
@@ -370,7 +352,8 @@ function updateMedicineInManagement(target){
   for(var i in v){
     docs[v[i].name] = v[i].value;
   }
-
+  docs.available = target.children().eq(9).children().children().val();
+console.log(JSON.stringify(docs))
   http
     .postMethod(`/medicine/update`, docs)
     .then(result => {
@@ -383,7 +366,6 @@ function updateMedicineInManagement(target){
         return Promise.resolve(data);
     })
     .then(function(){
-      console.log('나니');
       $.uiAlert({
         textHead: '[알림]',
         text: '약정보 갱신 완료',
@@ -392,6 +374,7 @@ function updateMedicineInManagement(target){
         position: 'top-left',
         time: 2,
       });
+      location.reload();
     })
     .catch(error => {
       console.log(error);
@@ -412,12 +395,12 @@ $(document).on('click', '.cancel-update-medicine', (e) => {
   const target = $(e.target).parent().parent();
   let id = target.attr('id');
   let medicines = JSON.parse(window.localStorage.getItem('medicine'));
-
-  cancelUpdateMedicine(target, _.filter(medicines, 'id', id)[0]);
+console.log(id);
+  cancelUpdateMedicine(target, _.filter(medicines, ['id', parseInt(id)])[0]);
 });
 
 function cancelUpdateMedicine(target, data) {
-  const {name, ingredient, amount, quantity, medication, property } = data;
+  const {name, ingredient, amount, quantity, medication, property, available } = data;
 
   target.children().eq(3).empty().append(name)
   target.children().eq(4).empty().append(ingredient)
@@ -425,9 +408,10 @@ function cancelUpdateMedicine(target, data) {
   target.children().eq(6).empty().append(quantity)
   target.children().eq(7).empty().append(medication)
   target.children().eq(8).empty().append(property)
-  target.children().eq(9).empty().append(`
-      <i class="configure-medicine configure link icon"></i>
-      <i class="delete-medicine trash link icon"></i>`)
+  target.children().eq(9).empty().append(available == "1" ? '활성' : '비활성')
+  target.children().eq(10).empty().append(`
+    <i class="configure-medicine-by-management configure link icon"></i>
+    <i class="delete-medicine-by-management trash link icon"></i>`)
 }
 
 /**
@@ -437,9 +421,9 @@ $(document).on('click', '.delete-medicine-by-management', (e) => {
   const medicineId = [];
   medicineId.push($(e.target).parent().parent().attr('id'));
   console.log($(e.target).parent().parent().attr('id'));
-alert(JSON.stringify(medicineId))
+  let name = $(e.target).parent().parent().children().eq(3).text()
   let target = {"medicineIds" : JSON.stringify(medicineId)};
-  openConfirmModal(target, { confirmMessage: '선택한 약을 삭제 삭제하시겠습니까?' }, deleteMedicines);
+  openConfirmModal(target, { confirmMessage: `'${name}'을(를) 삭제하시겠습니까?` }, deleteMedicines);
 });
 
 /**
@@ -523,7 +507,6 @@ $('.main-category-select2').change(() => {
 
 $('.small-category-select2').change(() => {
   add_small_category_value = $('.small-category-select2 option:selected').attr('value');
-  alert(add_small_category_value);
 });
 
 $('#add-medicine-btn').click(function(){
@@ -610,6 +593,19 @@ $('#delete-medicine-by-management').on('click', () => {
     medicineIds.push($(this).val());
   });
 
+  if(medicineIds.length === 0){
+    $.uiAlert({
+        textHead: '[경고]',
+        text: '삭제할 약들을 선택해 주세요!',
+        bgcolor: '#FF5A5A',
+        textcolor: '#fff',
+        position: 'top-center',
+        time: 2
+    });
+
+    return false;
+  }
+
   // alert(JSON.stringify(medicineIds));
   let target = {"medicineIds" : JSON.stringify(medicineIds)};
   openConfirmModal(target, { confirmMessage: '선택한 약들을 일괄 삭제 삭제하시겠습니까?' }, deleteMedicines);
@@ -629,6 +625,11 @@ function deleteMedicines (data) {
       })
       .then(function(){
         console.log('나니');
+
+        $('#management-small-category-select')
+          .val(management_small_category_value)
+          .trigger('change');
+
         $.uiAlert({
           textHead: '[알림]',
           text: '약정보 삭제 완료',
@@ -638,6 +639,7 @@ function deleteMedicines (data) {
           time: 2,
         });
         location.reload();
+
       })
       .catch(error => {
         console.log(error);
@@ -666,75 +668,13 @@ function openConfirmModal (target, message, gotoFunction) {
   }).modal('show')
 }
 
+$('#select-all-medicine-button').click(function(){
 
-function medicineTableDataSetting(result) {
-    const {
-        endPage, startPage, totalPage, max, page, pageSize, datas
-    } = result;
-    const START_NUM = 1;
-    const footEle = [];
-    /**
-     * table row data setting
-     */
-    $('#medicine-management-table-body').append(
-        _.map(datas, data => {
-            const { id, primaryCategory, secondaryCategory, name, ingredient, amount, quantity, medication, property } = data;
-            return `<tr id=${id}>
-                <td><input type="checkbox" name="checkMedicine" value="${id}"/></td>
-                <td>${primaryCategory}</td>
-                <td>${secondaryCategory}</td>
-                <td>${name}</td>
-                <td>${ingredient}</td>
-                <td>${amount}</td>
-                <td>${quantity}</td>
-                <td>${medication}</td>
-                <td>${property}</td>
-                <td>
-                  <i class="configure-medicine-by-management configure link icon"></i>
-                  <i class="delete-medicine-by-management trash link icon"></i>
-                </td>
-              </tr>`
-        })
-    );
+  let medicines = JSON.parse(window.localStorage.getItem('medicine'));
 
-    /**
-     * index data setting
-     */
-    // LEFT
-    if (page > pageSize) {
-        footEle.push(`
-        <a class="icon item ocs-paging" style="text-decoreation:none" onclick="this.getOcsData(${startPage - 1})">
-            <i class="left chevron icon"></i>
-        </a>`)
-    } else {
-        footEle.push(`
-        <a class="icon item">
-            <i class="left chevron icon"></i>
-        </a>`)
-    }
-    // Center
-    footEle.push(_.map(_.range(startPage, endPage + 1), (num) => {
-        if (_.eq(num, page)) {
-            return `<a class="item">${num}</a>`
-        } else {
-            return `<a class="item ocs-paging" style="text-decoreation:none" onclick="javascript:getOcsData(${num})">${num}</a>`
+  if ($('#medicine-management-table-body').children().length)
+    $('#medicine-management-table-body *').remove();
 
-        }
-    }))
-    // Right
-    if (endPage < totalPage) {
-        footEle.push(`
-        <a class="icon item ocs-paging"  style="text-decoreation:none"  onclick="this.getOcsData(${endPage + 1})">
-          <i class="right chevron icon"></i>
-        </a>`)
-    } else {
-        footEle.push(`
-        <a class="icon item">
-          <i class="right chevron icon"></i>
-        </a>`)
-    }
-    $('.medicine-management-table').append(_.flatten(footEle));
-
-}
-
+  setMedicineTableBody(medicines);
+})
 init();

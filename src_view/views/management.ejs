@@ -75,10 +75,10 @@
         <div id="pharmacopoeia-management" class="ui bottom attached segment content-list">
 
           <div class="ui two item stackable tabs menu">
-              <select class="ui search dropdown categoryWidth management-main-category-select">
+              <select class="ui search dropdown categoryWidth management-main-category-select" id="management-main-category-select">
                   <option class="default" value="">대분류</option>
               </select>
-              <select class="ui search dropdown categoryWidth management-small-category-select">
+              <select class="ui search dropdown categoryWidth management-small-category-select" id="management-small-category-select">
                   <option class="default" value="">소분류</option>
               </select>
           </div>
@@ -92,6 +92,10 @@
 
                   <button class="ui primary button delete-medicine-by-management" id="delete-medicine-by-management">
                       일괄 삭제
+                  </button>
+
+                  <button class="ui primary button select-all-medicine-button" id="select-all-medicine-button">
+                      전체 조회
                   </button>
 
                   <button class="ui primary button management-pharmacy-search-button" style='float:right;'>
@@ -113,7 +117,7 @@
               </div>
 
               <form id="medicine-management-form">
-              <table class="ui fixed selectable celled table form" style="text-align:center;">
+              <table class="ui fixed selectable celled table form" style="text-align:center;" id="medicine-management-table">
                   <thead>
                       <tr>
                           <th width="2.7%"></th>
@@ -125,6 +129,7 @@
                           <th width="60px">재고량</th>
                           <th>용량/용법</th>
                           <th>약효</th>
+                          <th>활성</th>
                           <th width="7%">기타</th>
                       </tr>
                   </thead>
@@ -132,22 +137,6 @@
                   <tbody id="medicine-management-table-body">
 
                   </tbody>
-
-                  <tfoot>
-                      <tr>
-                          <th colspan="10">
-                              <div class="ui right floated pagination menu medicine-management-table">
-                                  <!-- <a class="icon item">
-                                      <i class="left chevron icon"></i>
-                                  </a> -->
-                                  <!-- <a class="item">1</a>  -->
-                                  <!-- <a class="icon item">
-                                      <i class="right chevron icon"></i>
-                                  </a> -->
-                              </div>
-                          </th>
-                      </tr>
-                  </tfoot>
               </table>
               </form>
           </div>
@@ -172,8 +161,7 @@
         </div>
         <form id="add-medicine-form">
         <div class="scrolling content pharmacyModal">
-            <div class="ui fluid input">
-            <table class="ui fixed selectable celled table pharmacopoeia-add-table" >
+            <table class="ui fixed selectable celled table form pharmacopoeia-add-table" >
                 <thead>
                     <tr>
                       <th >약품명</th>
@@ -195,7 +183,6 @@
                   </tr>
                 </tbody>
             </table>
-        </div>
       </br>
         <button class="ui primary button add-medicine-by-management"  id='add-medicine-btn' style='float:right;'>
             추가

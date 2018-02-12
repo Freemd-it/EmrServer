@@ -12,7 +12,7 @@ MedicineModel.list = function(data, callback){
 
     medicine.findAll({
       attributes: [
-        'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity'
+        'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity', 'available'
       ]
     })
     .then(result => {
@@ -28,7 +28,7 @@ MedicineModel.search = function(data, callback){
     if (data.option === '1') {
       medicine.findAll({
         attributes: [
-          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity'
+          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity', 'available'
         ],
         where: {
           name: { like: '%'+data.searchText+'%' }
@@ -43,7 +43,7 @@ MedicineModel.search = function(data, callback){
     } else {
       medicine.findAll({
         attributes: [
-          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity'
+          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity', 'available'
         ],
         where: {
           ingredient: { like: '%'+data.searchText+'%' }
@@ -93,15 +93,16 @@ MedicineModel.delete = async function(options){
 }
 
 MedicineModel.update = async function(options){
-  const { id, name, ingredient, amount, quantity, medication, property} = options;
-  
+  const { id, name, ingredient, amount, quantity, medication, property, available} = options;
+
   return await medicine.update({
     name: name,
     ingredient: ingredient,
     amount: amount,
     quantity: quantity,
     medication: medication,
-    property: property
+    property: property,
+    available: available
   },{
     where : { id: id }
   });
