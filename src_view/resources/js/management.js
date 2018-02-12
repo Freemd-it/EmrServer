@@ -318,8 +318,8 @@ function transformMedicineInput(target) {
   target.children().eq(4).empty().append(`<input value="${ingredient}" name="ingredient" />`)
   target.children().eq(5).empty().append(`<input value="${amount}" name="amount"  />`)
   target.children().eq(6).empty().append(`<input type="text" value="${quantity}" name="quantity" />`)
-  target.children().eq(7).empty().append(`<input type="text" value="${medication}" name="medication" />`)
-  target.children().eq(8).empty().append(`<input type="text" value="${property}" name="property" />`)
+  target.children().eq(7).empty().append(`<textarea name="medication" style="resize: none; overflow-x:hidden;">${medication}</textarea>`)
+  target.children().eq(8).empty().append(`<textarea name="property" style="resize: none; overflow-x:hidden;">${property}</textarea>`)
   target.children().eq(9).empty().append(`
     <select class="select-available ui search fluid dropdown">
      <option value="1">활성</option>
