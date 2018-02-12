@@ -587,7 +587,7 @@ function insertMedicine (data) {
 }
 
 //약 일괄삭제
-$('#delete-medicine-by-management').on('click', () => {
+$('#delete-medicines-by-management').on('click', () => {
   let medicineIds = [];
   $(":checkbox[name='checkMedicine']:checked").each(function() {
     medicineIds.push($(this).val());
@@ -606,9 +606,9 @@ $('#delete-medicine-by-management').on('click', () => {
     return false;
   }
 
-  // alert(JSON.stringify(medicineIds));
+  alert(JSON.stringify(medicineIds));
   let target = {"medicineIds" : JSON.stringify(medicineIds)};
-  openConfirmModal(target, { confirmMessage: '선택한 약들을 일괄 삭제 삭제하시겠습니까?' }, deleteMedicines);
+  openConfirmModal(target, { confirmMessage: '선택한 약들을 일괄 삭제하시겠습니까?' }, deleteMedicines);
 });
 
 function deleteMedicines (data) {
