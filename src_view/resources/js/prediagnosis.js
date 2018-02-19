@@ -1,5 +1,7 @@
 import $ from 'jquery';
 import 'jquery-validation';
+import { resultCode } from '../utils/constant';
+import _ from 'lodash';
 
 /**
  * chrtForm 유효성 검사
@@ -116,20 +118,26 @@ $('#preDiagonosisWaitingList').on('click', () => {
         cache: false,
     }).done(result => {
 
-        for(let i = 0; i < result.length; i++) {
-            $('#tableBody').append(
-                `<tr id=${result[i].chartNumber} class="pre-diagnosis-table-content">
-                       <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
-                       <td id=${result[i].chartNumber}>${result[i].name}</td>
-                       <td id=${result[i].chartNumber}>${result[i].birth}</td>
-                </tr>`
+        const { data, code } = result;
+        if (!_.eq(code, resultCode.success)) {
+            return Promise.reject(`get fail waiting list data ${data.error}`);
+        }
 
-            )}
-    });
+    }).then((result) => {
+
+      const { data } = result;
+      for(let i = 0; i < data.length; i++) {
+          $('#tableBody').append(
+              `<tr id=${data[i].chartNumber} class="pre-diagnosis-table-content">
+                     <td id=${data[i].chartNumber}>${data[i].chartNumber}</td>
+                     <td id=${data[i].chartNumber}>${data[i].name}</td>
+                     <td id=${data[i].chartNumber}>${data[i].birth}</td>
+              </tr>`
+          )}
+    }).catch(error => console.log(error))
 
     $('.ui.longer.modal')
         .modal('show');
-
 });
 
 $(document).on('click', '.pre-diagnosis-table-content', (e) => {

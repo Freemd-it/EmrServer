@@ -14,15 +14,27 @@ router.use(function log(req, res, next) {
 
 router.get('/', (req, res) => {
 
-  if (typeof req.query.status === 'undefined') {
+  const nowDay = moment('00:00:00', 'hh:mm:ss');
+  const status = req.query.status
+
+  if (typeof status === 'undefined') {
     waitingModel.FindAll(result => {
       res.send(result);
     });
   } else {
-    waitingModel.FindByStatus(req.query.status, result => {
-      // console.log(result);
-      res.send(result);
-    });
+
+    const options = {};
+    options.order = [['chartNumber', 'ASC']];
+    options.attributes = ['chartNumber', 'name', 'birth', 'status'];
+    options.where = { status: status , createdAt: {gt: Date.parse(nowDay)} }
+    waitingModel
+        .FindByStatus(options)
+        .then(result => {
+          respondJson(res, resultCode.success, result);
+        })
+        .catch(error => {
+          respondOnError(res, resultCode.fail, error);
+        })
   }
 });
 
@@ -54,7 +66,7 @@ router.get('/pharmacy/now/:page', (req, res) => {
 
     const options = {};
     options.order = [['chartNumber', 'ASC']];
-    options.where = { createdAt: {gt: Date.parse(nowDay)} }
+    options.where = { createdAt: {gt: Date.parse(nowDay)}, status: {ne: 7} } // 조건 : 오늘 날짜이고, 상태가 7이 아닌
     options.offset = BEGIN;
     options.limit = SIZE;
 
