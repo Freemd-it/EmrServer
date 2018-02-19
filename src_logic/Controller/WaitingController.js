@@ -66,7 +66,8 @@ router.get('/pharmacy/now/:page', (req, res) => {
 
     const options = {};
     options.order = [['chartNumber', 'ASC']];
-    options.where = { createdAt: {gt: Date.parse(nowDay)}, status: {ne: 7} } // 조건 : 오늘 날짜이고, 상태가 7이 아닌
+    // options.where = { createdAt: {gt: Date.parse(nowDay)}, status: {ne: 7} } // 조건 : 오늘 날짜이고, 상태가 7이 아닌
+    options.where = { createdAt: {gt: Date.parse(nowDay)} } // 개발 모드, 완료 후 삭제 및 윗 라인 조건으로 변경 예정
     options.offset = BEGIN;
     options.limit = SIZE;
 
