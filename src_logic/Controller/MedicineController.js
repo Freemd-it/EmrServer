@@ -45,6 +45,7 @@ router.get('/search', (req, res) => {
 
 router.post('/insert', (req, res)=>{
   console.log('###Insert Medicine###');
+  console.log(req.body);
   medicineModel
   .create(req.body)
   .then(result =>{

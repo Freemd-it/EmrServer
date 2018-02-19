@@ -259,7 +259,6 @@ function setMedicineTableBody(datas){
   $('#medicine-management-table-body').append(
       _.map(datas, data => {
           const { id, primaryCategory, secondaryCategory, name, ingredient, amount, quantity, medication, property, available } = data;
-          console.log(available);
           return `<tr id=${id} class="ui fluid">
               <td><input type="checkbox" name="checkMedicine" value="${id}"/></td>
               <td>${primaryCategory}</td>
@@ -290,7 +289,6 @@ $('.management-medicine-search-select').change(() => {
   } else {
     sourceTarget = JSON.parse(window.localStorage.getItem('medicineIngredient'));
   }
-  console.log(sourceTarget);
   $('.search.ui').search({ source: sourceTarget })
 });
 
@@ -299,7 +297,6 @@ $('.management-medicine-search-select').change(() => {
   * 약품 정보 수정
   */
 $(document).on('click', '.configure-medicine-by-management', (e) => {
-  console.log(e.target);
     const target = $(e.target).parent().parent();
     transformMedicineInput(target)
 });
@@ -353,7 +350,8 @@ function updateMedicineInManagement(target){
     docs[v[i].name] = v[i].value;
   }
   docs.available = target.children().eq(9).children().children().val();
-console.log(JSON.stringify(docs))
+  // console.log(JSON.stringify(docs))
+  console.log(docs);
   http
     .postMethod(`/medicine/update`, docs)
     .then(result => {
@@ -368,13 +366,13 @@ console.log(JSON.stringify(docs))
     .then(function(){
       $.uiAlert({
         textHead: '[알림]',
-        text: '약정보 갱신 완료',
+        text:  + ' 정보 수정 완료',
         bgcolor: '#55a9ee',
         textcolor: '#fff',
         position: 'top-left',
         time: 2,
       });
-      location.reload();
+      // location.reload();
     })
     .catch(error => {
       console.log(error);
@@ -395,7 +393,6 @@ $(document).on('click', '.cancel-update-medicine', (e) => {
   const target = $(e.target).parent().parent();
   let id = target.attr('id');
   let medicines = JSON.parse(window.localStorage.getItem('medicine'));
-console.log(id);
   cancelUpdateMedicine(target, _.filter(medicines, ['id', parseInt(id)])[0]);
 });
 
@@ -563,7 +560,6 @@ function insertMedicine (data) {
           return Promise.resolve(data);
       })
       .then(function(){
-        console.log('나니');
         $.uiAlert({
           textHead: '[알림]',
           text: '약정보 추가 완료',
@@ -606,7 +602,6 @@ $('#delete-medicines-by-management').on('click', () => {
     return false;
   }
 
-  alert(JSON.stringify(medicineIds));
   let target = {"medicineIds" : JSON.stringify(medicineIds)};
   openConfirmModal(target, { confirmMessage: '선택한 약들을 일괄 삭제하시겠습니까?' }, deleteMedicines);
 });
@@ -638,7 +633,7 @@ function deleteMedicines (data) {
           position: 'top-center',
           time: 2,
         });
-        location.reload();
+        // location.reload();
 
       })
       .catch(error => {
