@@ -3,12 +3,24 @@ import http from '../utils/http';
 import { resultCode } from '../utils/constant';
 import $ from 'jquery';
 import { F_OK } from 'constants';
-
-
+import moment from 'moment';
 
 function init() {
     if (!_.eq(location.pathname, '/ocs')) return;
     getOcsData();
+    setDatePicker();
+    // $('#startTime').val(moment().format(''))
+}
+
+function setDatePicker () {
+  $('#ocsRangeStart').calendar({
+    type: 'date',
+    endCalendar: $('#ocsRangeEnd')
+  });
+  $('#ocsRangeEnd').calendar({
+    type: 'date',
+    startCalendar: $('#ocsRangeStart')
+  });
 }
 
 function dataInit(startTimeDom, endTimeDom) {
@@ -22,8 +34,12 @@ function dataInit(startTimeDom, endTimeDom) {
 }
 
 function dateValidationCheck(startTimeDom, endTimeDom) {
-    const { value: startTime } = startTimeDom;
-    const { value: endTime } = endTimeDom;
+    let { value: startTime } = startTimeDom;
+    let { value: endTime } = endTimeDom;
+
+    startTime = moment(startTime).format('YYYY-MM-DD')
+    endTime = moment(endTime).format('YYYY-MM-DD')
+
     try {
         if (!startTime || !endTime) {
             throw new Error('날짜를 지정해주세요.')
@@ -38,7 +54,7 @@ function dateValidationCheck(startTimeDom, endTimeDom) {
 }
 
 /**
- * 
+ *
  * @param {number} page page index
  * @description
  * 이전 OCS, 현재 OCS 데이터 불러오기
@@ -56,8 +72,11 @@ function getOcsData(page = 1, btn = false) {
     dataInit(startTimeDom, endTimeDom);
 
     const { isCheck, message } = dateValidationCheck(startTimeDom, endTimeDom);
-    const { value: startTime } = startTimeDom;
-    const { value: endTime } = endTimeDom;
+    var { value: startTime } = startTimeDom;
+    var { value: endTime } = endTimeDom;
+
+    startTime = moment(startTime).format('YYYY-MM-DD')
+    endTime = moment(endTime).format('YYYY-MM-DD')
 
     if (!isCheck) {
         return alert(message);
@@ -90,7 +109,7 @@ function ocsTableDataSetting(result) {
     } = result;
     const changeToHangle = ['접수 완료', '예진 완료', '조제 대기', '조제중', '처방 대기', '완료'];
     const START_NUM = 1;
-    const footEle = []; 
+    const footEle = [];
     /**
      * table row data setting
      */
@@ -165,8 +184,11 @@ $('.ocs-excel').click((e) => {
     const startTimeDom = document.getElementById('startTime');
     const endTimeDom = document.getElementById('endTime');
     const { isCheck, message } = dateValidationCheck(startTimeDom, endTimeDom);
-    const { value: startTime } = startTimeDom;
-    const { value: endTime } = endTimeDom;
+    let { value: startTime } = startTimeDom;
+    let { value: endTime } = endTimeDom;
+
+    startTime = moment(startTime).format('YYYY-MM-DD')
+    endTime = moment(endTime).format('YYYY-MM-DD')
 
     if (!isCheck) {
         return alert(message);

@@ -19,6 +19,33 @@
       .management-medicine-search-select {
         float: right;
       }
+
+      .ui.table.pharmacopoeia-add-table thead th {
+        padding: 0.8% 1.5% 0.8% 1.5%;
+        vertical-align: middle;
+        text-align: center;
+      }
+      .ui.table.pharmacopoeia-add-table tbody td {
+        vertical-align: center;
+        text-align: center;
+      }
+      .confirm-modal-wrap {
+        margin-top: -150px;
+        height: 215px;
+      }
+      .confirm-modal-wrap .content{
+        height: 90px;
+      }
+      .confirm-modal-wrap .actions .ui.cancel.button {
+        margin-left: 0px;
+      }
+      #medicine-management-form {
+        margin-top: 15px;
+      }
+      .update-medicine-in-management:hover, .cancel-update-medicine:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     </style>
 </head>
 
@@ -55,10 +82,10 @@
         <div id="pharmacopoeia-management" class="ui bottom attached segment content-list">
 
           <div class="ui two item stackable tabs menu">
-              <select class="ui search dropdown categoryWidth management-main-category-select">
+              <select class="ui search dropdown categoryWidth management-main-category-select" id="management-main-category-select">
                   <option class="default" value="">대분류</option>
               </select>
-              <select class="ui search dropdown categoryWidth management-small-category-select">
+              <select class="ui search dropdown categoryWidth management-small-category-select" id="management-small-category-select">
                   <option class="default" value="">소분류</option>
               </select>
           </div>
@@ -70,8 +97,12 @@
                       약품 추가
                   </button>
 
-                  <button class="ui primary button delete-medicine-by-management">
+                  <button class="ui primary button delete-medicines-by-management" id="delete-medicines-by-management">
                       일괄 삭제
+                  </button>
+
+                  <button class="ui primary button select-all-medicine-button" id="select-all-medicine-button">
+                      전체 조회
                   </button>
 
                   <button class="ui primary button management-pharmacy-search-button" style='float:right;'>
@@ -91,8 +122,9 @@
                       <option value="2">성분명</option>
                   </select>
               </div>
-              
-              <table class="ui fixed selectable celled table" style="text-align:center;">
+
+              <form id="medicine-management-form">
+              <table class="ui fixed selectable celled table form" style="text-align:center;" id="medicine-management-table">
                   <thead>
                       <tr>
                           <th width="2.7%"></th>
@@ -100,26 +132,144 @@
                           <th>소분류</th>
                           <th>약품명</th>
                           <th>성분명 및 함량</th>
+                          <th width="60px">정/개</th>
                           <th width="60px">재고량</th>
                           <th>용량/용법</th>
                           <th>약효</th>
+                          <th width="10%">활성</th>
                           <th width="7%">기타</th>
                       </tr>
                   </thead>
+
                   <tbody id="medicine-management-table-body">
 
                   </tbody>
               </table>
+              </form>
           </div>
         </div>
+
         <div id="inventory-management" class="ui bottom attached segment content-list">
           재고표 컨텐츠
         </div>
+
         <div id="history-management" class="ui bottom attached segment content-list">
-          히스토리 컨텐츠
+          <div class="scrolling content">
+              <div class="search-bar-in-management">
+
+                  <button class="ui primary button management-medicine-history-search-button" style='float:right; margin-bottom: 19px; width:95px;'>
+                      검색
+                  </button>
+
+                  <div class="ui calendar" id="ocsRangeEnd" style="float: right; margin-right: 5px; width: 250px;">
+                    <div class="ui input left icon">
+                      <i class="calendar icon"></i>
+                      <input id="endTime" type="text" placeholder="검색 종료 날짜" style="width: 250px;">
+                    </div>
+                  </div>
+
+                  <div class="ui calendar" id="ocsRangeStart" style="float: right; margin-right: 5px; width: 250px;">
+                    <div class="ui input left icon">
+                      <i class="calendar icon"></i>
+                      <input id="startTime" type="text" placeholder="검색 시작 날짜" style="width:250px;">
+                    </div>
+                  </div>
+
+                  <div id="autoCompleteMedicine" class="ui search" style='float:right; margin-right: 5px;'>
+                      <div class="ui icon input management-search-input">
+                          <input class="prompt" name="managementMedicineSearchText" type="text" placeholder="성분 또는 약품명을 적어주세요.">
+                      </div>
+                      <div class="results"></div>
+                  </div>
+
+                  <div style='float:right; margin-right: 5px;'>
+                    <select class="ui dropdown management-medicine-search-select">
+                        <option value="">검색 구분</option>
+                        <option value="1">약품명</option>
+                        <option value="2">성분명</option>
+                    </select>
+                  </div>
+              </div>
+
+              <div class="ui clearing divider"></div>
+
+              <form id="history-management-form">
+              <table class="ui fixed celled table form" style="text-align:center;" id="history-management-table">
+                  <thead>
+                      <tr>
+                          <th>약품명</th>
+                          <th>성분명 및 함량</th>
+                          <th>기간 내 사용 개수</th>
+                          <th>현재 남은 정(개)수</th>
+                          <th>남은 약통 수</th>
+                      </tr>
+                  </thead>
+
+                  <tbody id="history-management-table-body">
+                    <tr>
+                        <td class="defaultHistoryForManagementTableBody" style="text-align:center;" colspan="5">
+                          날짜를 지정한 뒤 약품 또는 성분명을 입력하지 않고 검색 버튼을 누르면 해당 기간 내 사용한 전체 약품 데이터가 조회됩니다.
+                        </td>
+                    </tr>
+                  </tbody>
+              </table>
+              </form>
+          </div>
         </div>
 
     </section>
+
+    <div class="ui longer modal pharmacopoeia-add">
+        <div class="ui two item stackable tabs menu">
+            <select class="ui search dropdown categoryWidth main-category-select2" id="mainCategory" name="mainCategory">
+                <option class="default" value="pp">대분류</option>
+            </select>
+            <select class="ui search dropdown categoryWidth small-category-select2" id="smallCategory" name="smallCategory">
+                <option class="default" value="qq">소분류</option>
+            </select>
+        </div>
+        <form id="add-medicine-form">
+        <div class="scrolling content pharmacyModal">
+            <table class="ui fixed selectable celled table form pharmacopoeia-add-table" >
+                <thead>
+                    <tr>
+                      <th >약품명</th>
+                      <th>성분명 및 함량</th>
+                      <th width="70px">정/개</th>
+                      <th width="70px">재고량</th>
+                      <th>용량/용법</th>
+                      <th>약효</th>
+                    </tr>
+                </thead>
+                <tbody id="medicineAddTableBody">
+                  <tr>
+                    <td><input type="text" id="name" name="name"></td>
+                    <td><input type="text" id="ingredient" name="ingredient"></td>
+                    <td><input type="text" id="amount" name="amount"></td>
+                    <td><input type="text" id="amount" name="quantity"></td>
+                    <td><input type="text" id="medication" name="medication"></td>
+                    <td><input type="text" id="property" name="property"></td>
+                  </tr>
+                </tbody>
+            </table>
+      </br>
+        <button class="ui primary button add-medicine-by-management"  id='add-medicine-btn' style='float:right;'>
+            추가
+        </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="ui mini modal confirm-modal-wrap">
+        <div class="header">알림</div>
+        <div class="content">
+            <p></p>
+        </div>
+        <div class="actions">
+            <div class="ui approve button">확인</div>
+            <div class="ui cancel button">취소</div>
+        </div>
+    </div>
     <script src="/dist/index.bundle.js"></script>
 </body>
 

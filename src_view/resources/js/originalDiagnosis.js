@@ -113,18 +113,23 @@ $('.diagnosisWaitings').on('click', () => {
         cache: false,
     }).done(result => {
 
-        // console.log(result);
-        for (let i = 0; i < result.length; i++) {
-            $('#tableBody').append(
-                `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
-                    <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
-                    <td id=${result[i].chartNumber}>${result[i].name}</td>
-                    <td id=${result[i].chartNumber}>${result[i].birth}</td>
-                </tr>`
-
-            )
+        const { data, code } = result;
+        if (!_.eq(code, resultCode.success)) {
+            return Promise.reject(`get fail waiting list data ${data.error}`);
         }
-    });
+
+    }).then((result) => {
+
+      const { data } = result;
+      for(let i = 0; i < data.length; i++) {
+          $('#tableBody').append(
+              `<tr id=${data[i].chartNumber} class="diagnosis-table-content">
+                     <td id=${data[i].chartNumber}>${data[i].chartNumber}</td>
+                     <td id=${data[i].chartNumber}>${data[i].name}</td>
+                     <td id=${data[i].chartNumber}>${data[i].birth}</td>
+              </tr>`
+          )}
+    }).catch(error => console.log(error));
 
     $('.ui.longer.modal.waitingPatientList').modal('show');
     $(".completeTab").removeClass("active");
@@ -147,17 +152,23 @@ $('.waitingTab').on('click', () => {
         cache: false,
     }).done(result => {
 
-        for (let i = 0; i < result.length; i++) {
-            $('#tableBody').append(
-                `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
-                       <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
-                       <td id=${result[i].chartNumber}>${result[i].name}</td>
-                       <td id=${result[i].chartNumber}>${result[i].birth}</td>
-                </tr>`
-
-            )
+        const { data, code } = result;
+        if (!_.eq(code, resultCode.success)) {
+            return Promise.reject(`get fail waiting list data ${data.error}`);
         }
-    });
+
+    }).then((result) => {
+
+      const { data } = result;
+      for(let i = 0; i < data.length; i++) {
+          $('#tableBody').append(
+              `<tr id=${data[i].chartNumber} class="diagnosis-table-content">
+                     <td id=${data[i].chartNumber}>${data[i].chartNumber}</td>
+                     <td id=${data[i].chartNumber}>${data[i].name}</td>
+                     <td id=${data[i].chartNumber}>${data[i].birth}</td>
+              </tr>`
+          )}
+    }).catch(error => console.log(error));
 
     $(".completeTab").removeClass("active");
     $(".waitingTab").addClass("active");
@@ -302,6 +313,9 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
     $('#vitalSign').attr('disabled', false);
     $('#pharmacopoeia').attr('disabled', false);
     $('#pastDiagnosisRecord').attr('disabled', false);
+    $('#diagonosis').attr('disabled', false);
+    $('#preDiagonosis').attr('disabled', false);
+    $('#patientInfo').attr('disabled', false);
     $('.ui.longer.modal').modal('hide');
 });
 
@@ -361,6 +375,9 @@ $('#doctorSignedComplete').on('click', function () {
             $('#pastDiagnosisRecord').attr('disabled', true);
             $('#vitalSign').attr('disabled', true);
             $('#pharmacopoeia').attr('disabled', true);
+            $('#diagonosis').attr('disabled', true);
+            $('#preDiagonosis').attr('disabled', true);
+            $('#patientInfo').attr('disabled', true);
 
             $.uiAlert({
                 textHead: '[알림]',

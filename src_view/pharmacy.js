@@ -8,11 +8,11 @@ import './vendors/js/bootstrap.js';
 import './vendors/js/semantic.js';
 import './vendors/js/semantic.js';
 import './vendors/js/Semantic-UI-Alert.js';
- 
-  
- 
-//css 
+
+
+
+//css
 import './resources/css/index.scss';
 
-//접수 
+//접수
 import './resources/js/prediagnosis.js' 

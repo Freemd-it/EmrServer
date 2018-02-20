@@ -204,7 +204,8 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                   const inArray = [];
                   const whenArray = [];
 
-                  var query = 'update medicines set amount = case';
+                  var now = moment().format('YYYY-MM-DD HH:mm:ss');
+                  var query = `update medicines set updatedAt = '${now}', amount = case`;
                   var index = 0;
 
                   array.forEach((data) => {

@@ -5,23 +5,9 @@ const WaitingModel = function(data) {
 }
 
 /* Find */
-WaitingModel.FindByStatus = function(status, callback) {
+WaitingModel.FindByStatus = async function(options) {
 
-  waiting.findAll({
-      where: {
-        status,
-      },
-      attributes: ['chartNumber', 'name', 'birth', 'status'],
-      order: [
-        ['chartNumber', 'ASC']
-      ]
-    })
-    .then(result => {
-      callback(result);
-    })
-    .catch(error => {
-      callback(error);
-    });
+  return await waiting.findAll(options)
 }
 
 WaitingModel.FindByPharmacy = async function (options) {
