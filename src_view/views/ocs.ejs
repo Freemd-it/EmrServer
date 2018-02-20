@@ -15,12 +15,33 @@
 
     <section class="ui container ocs-session" style="margin-top:55px">
         <div class="ui grid">
-            <div class="left floated six wide column" style="margin-left:.1%">
+            <div class="left floated ten wide column" style="margin-left:.1%">
 
                 <h1>OCS</h1>
                 <div>
-                    <input type="date" id="startTime" />
-                    <input type="date" id="endTime" />
+                    <div class="ui form">
+                      <div class="three fields" style="margin-bottom: 0px; margin-left: 5px;">
+                        <div class="field" style="margin-right: -160px;">
+                          <h4 style="padding-top: 10px;">날짜 지정 </h4>
+                        </div>
+                        <div class="field">
+                          <div class="ui calendar" id="ocsRangeStart">
+                            <div class="ui input left icon">
+                              <i class="calendar icon"></i>
+                              <input id="startTime" type="text" placeholder="시작 날짜">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="field">
+                          <div class="ui calendar" id="ocsRangeEnd">
+                            <div class="ui input left icon">
+                              <i class="calendar icon"></i>
+                              <input id="endTime" type="text" placeholder="종료 날짜">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
             </div>
             <div style="padding-right: 1px !important;">

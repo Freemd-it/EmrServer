@@ -148,11 +148,73 @@
               </form>
           </div>
         </div>
+
         <div id="inventory-management" class="ui bottom attached segment content-list">
           재고표 컨텐츠
         </div>
+
         <div id="history-management" class="ui bottom attached segment content-list">
-          히스토리 컨텐츠
+          <div class="scrolling content">
+              <div class="search-bar-in-management">
+
+                  <button class="ui primary button management-medicine-history-search-button" style='float:right; margin-bottom: 19px; width:95px;'>
+                      검색
+                  </button>
+
+                  <div class="ui calendar" id="ocsRangeEnd" style="float: right; margin-right: 5px; width: 250px;">
+                    <div class="ui input left icon">
+                      <i class="calendar icon"></i>
+                      <input id="endTime" type="text" placeholder="검색 종료 날짜" style="width: 250px;">
+                    </div>
+                  </div>
+
+                  <div class="ui calendar" id="ocsRangeStart" style="float: right; margin-right: 5px; width: 250px;">
+                    <div class="ui input left icon">
+                      <i class="calendar icon"></i>
+                      <input id="startTime" type="text" placeholder="검색 시작 날짜" style="width:250px;">
+                    </div>
+                  </div>
+
+                  <div id="autoCompleteMedicine" class="ui search" style='float:right; margin-right: 5px;'>
+                      <div class="ui icon input management-search-input">
+                          <input class="prompt" name="managementMedicineSearchText" type="text" placeholder="성분 또는 약품명을 적어주세요.">
+                      </div>
+                      <div class="results"></div>
+                  </div>
+
+                  <div style='float:right; margin-right: 5px;'>
+                    <select class="ui dropdown management-medicine-search-select">
+                        <option value="">검색 구분</option>
+                        <option value="1">약품명</option>
+                        <option value="2">성분명</option>
+                    </select>
+                  </div>
+              </div>
+
+              <div class="ui clearing divider"></div>
+
+              <form id="history-management-form">
+              <table class="ui fixed celled table form" style="text-align:center;" id="history-management-table">
+                  <thead>
+                      <tr>
+                          <th>약품명</th>
+                          <th>성분명 및 함량</th>
+                          <th>기간 내 사용 개수</th>
+                          <th>현재 남은 정(개)수</th>
+                          <th>남은 약통 수</th>
+                      </tr>
+                  </thead>
+
+                  <tbody id="history-management-table-body">
+                    <tr>
+                        <td class="defaultHistoryForManagementTableBody" style="text-align:center;" colspan="5">
+                          날짜를 지정한 뒤 약품 또는 성분명을 입력하지 않고 검색 버튼을 누르면 해당 기간 내 사용한 전체 약품 데이터가 조회됩니다.
+                        </td>
+                    </tr>
+                  </tbody>
+              </table>
+              </form>
+          </div>
         </div>
 
     </section>
