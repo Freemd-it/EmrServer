@@ -16,8 +16,6 @@ const chart = require('../Entity/Chart.js');
 const patient = require('../Entity/Patient.js');
 const complaintEntity = require('../Entity/Complaint.js');
 
-
-
 const router = express.Router();
 
 router.use(function log(req, res, next) {

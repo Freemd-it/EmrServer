@@ -120,6 +120,16 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                     chartNumber: data.chartNumber
                 }
             }).then(result => {
+
+                /**
+                 * @description 약 총 사용 수 계산 : 1회 투약량 * 1일 복용횟수(ex. qd, bid, tid, hs) * 복용일수 = 약 총 사용량
+                 */
+                var totalSum = JSON.parse(data.prescription)
+                totalSum.forEach((record) => {
+                  record.useTotal = record.doses * statusConvert(record.dosesCountByDay) * record.dosesDay
+                })
+                data.prescription = JSON.stringify(totalSum)
+
                 prescriptionModel.createAll(data, result => {
                   ocsModel.originalDiagnosis(data.chartNumber, callback)
                 });
@@ -159,39 +169,42 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
           options.order = [['id']];
 
           prescriptionModel
-             .find(options)
-             .then(results => {
+              .find(options)
+              .then(results => {
 
-               const clearanceParam = _.map(results, result => {
-                  const row = {};
-                  row.medicine_id = result.dataValues.medicine_id;
-                  row.integerToSubstract = (result.dataValues.doses) * statusConvert(result.dataValues.dosesCountByDay) * result.dataValues.dosesDay;
-                  return row
-               });
+              const flagUpdateOptions = {}
+              flagUpdateOptions.update = { useFlag: 1 }
+              flagUpdateOptions.where = { id: _.map(results, result => { return result.id}) }
 
-               function statusConvert (param) {
-                 switch (param) {
-                   case 'qd' : return 1; break;
-                   case 'bid' : return 2; break;
-                   case 'tid' : return 3; break;
-                   case 'hs' : return 4; break;
-                 }
-               }
+              const clearanceParam = _.map(results, result => {
+                const row = {};
+                row.medicine_id = result.dataValues.medicine_id;
+                row.integerToSubstract = (result.dataValues.doses) * statusConvert(result.dataValues.dosesCountByDay) * result.dataValues.dosesDay;
+                return row
+              });
 
               /**
-               * @function lastCallback
-               * @description custom update query 세팅 후 실행
-               * sequelize 모듈에 case when 사용 가능한 update 쿼리 모듈이 없음
+               * @description prescriptions 테이블 내 useFlag 업데이트 후 medicines 테이블에서 남은 약 갯수 차감
                */
-              medicineModel.clearance(setCustomUpdateQuery(clearanceParam))
-                           .then(result => {
-                             console.log(result)
-                             /* status 7일 때 컨트롤러로 최종 콜백하는 부분 */
-                             callback(result)
-                           })
-                           .catch(error => {
-                             callback(error)
-                           })
+              prescriptionModel
+              .update(flagUpdateOptions)
+              .then(result => {
+
+                   /**
+                    * @function lastCallback
+                    * @description custom update query 세팅 후 실행
+                    * sequelize 모듈에 case when 사용 가능한 update 쿼리 모듈이 없음
+                    */
+                   medicineModel
+                   .clearance(setCustomUpdateQuery(clearanceParam))
+                   .then(result => {
+                   /* status 7일 때 컨트롤러로 최종 콜백하는 부분 */
+                     callback(result)
+                   })
+                   .catch(error => {
+                     callback(error)
+                   })
+               })
 
               /**
                * @function setCustomUpdateQuery
@@ -316,6 +329,15 @@ ChartModel.findAll = async function (options) {
         include: include,
         order: order
     })
+}
+
+function statusConvert (param) {
+  switch (param) {
+    case 'qd' : return 1; break;
+    case 'bid' : return 2; break;
+    case 'tid' : return 3; break;
+    case 'hs' : return 4; break;
+  }
 }
 
 module.exports = ChartModel;
