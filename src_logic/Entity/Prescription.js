@@ -10,6 +10,8 @@ const Prescription = dbService.define('prescription', {
   doses : { type : sequelize.INTEGER(5), allowNull : true },
   dosesCountByDay : { type : sequelize.CHAR(3), allowNull : true },
   dosesDay : { type : sequelize.INTEGER(5), allowNull : true },
+  useTotal : { type : sequelize.INTEGER(5), allowNull : false },
+  useFlag : { type : sequelize.TINYINT(1), allowNull : false, defaultValue : 0 },
   remarks : { type : sequelize.STRING(100), allowNull : true }
 });
 

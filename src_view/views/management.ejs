@@ -157,7 +157,7 @@
           <div class="scrolling content">
               <div class="search-bar-in-management">
 
-                  <button class="ui primary button management-medicine-history-search-button" style='float:right; margin-bottom: 19px; width:95px;'>
+                  <button class="ui primary button management-medicine-history-search-button" style='float:right; margin-bottom: 19px; width:6%;'>
                       검색
                   </button>
 
@@ -175,19 +175,19 @@
                     </div>
                   </div>
 
-                  <div id="autoCompleteMedicine" class="ui search" style='float:right; margin-right: 5px;'>
+                  <div style='float:left; margin-right: 5px;'>
+                    <select class="ui dropdown history-medicine-search-select">
+                        <option value="">검색 구분</option>
+                        <option selected value="1">약품명</option>
+                        <option value="2">성분명</option>
+                    </select>
+                  </div>
+
+                  <div id="autoCompleteMedicine" class="ui search" style='float:left; margin-right: 5px;'>
                       <div class="ui icon input management-search-input">
                           <input class="prompt" name="managementMedicineSearchText" type="text" placeholder="성분 또는 약품명을 적어주세요.">
                       </div>
                       <div class="results"></div>
-                  </div>
-
-                  <div style='float:right; margin-right: 5px;'>
-                    <select class="ui dropdown management-medicine-search-select">
-                        <option value="">검색 구분</option>
-                        <option value="1">약품명</option>
-                        <option value="2">성분명</option>
-                    </select>
                   </div>
               </div>
 
