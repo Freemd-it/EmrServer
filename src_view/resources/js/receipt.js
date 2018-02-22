@@ -185,8 +185,6 @@ $('#btn-name-send').on('click', () => {
 
         if(result.length == 1) {
 
-            console.log(result[0]);
-
             $('#nameMessage').html('[ ' + result[0].name + ' ]' + ' 님이 조회됐습니다.');
 
             $('#message').attr({

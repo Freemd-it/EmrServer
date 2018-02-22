@@ -257,7 +257,7 @@ $(document).on('click', '.pharmacopoeia-hover', (e) => {
         `<tr id=${x.id}>
                <td>${x.name}</td>
                <td>${x.ingredient}</td>
-               <td><input /></td>
+               <td><input name="currentDoses"/></td>
                <td width="10%">
                  <select class="doses-for-day">
                     <option selected value="qd">qd</option>
@@ -266,8 +266,8 @@ $(document).on('click', '.pharmacopoeia-hover', (e) => {
                     <option value="hs">hs</option>
                  </select>
                </td>
-               <td><input /></td>
-               <td><input /></td>
+               <td><input name="currentDosesDay"/></td>
+               <td><input name="currentRemarks"/></td>
                ${icon}
          </tr>`
       )

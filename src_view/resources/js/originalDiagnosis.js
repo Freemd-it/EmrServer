@@ -96,6 +96,39 @@ $('#Treatmentform').validate({
   showErrors: validateHandler
 });
 
+//약전 validation
+$('#prescriptionForm').validate({
+  onkeyup : false,
+  rules: {
+    currentDoses:{
+      digits: true,
+      min: 1
+    },
+    currentDosesDay:{
+      digits: true,
+      min: 1
+    },
+    currentRemarks:{
+      maxlength: 100
+    }
+  },
+  messages: {
+    currentDoses: {
+      digits: "1회 투약량은 1이상의 정수만 입력 가능합니다.",
+      min: "1회 투약량은 1이상의 정수만 입력 가능합니다."
+    },
+    currentDosesDay: {
+      digits: "복용 일수는 1이상의 정수만 입력 가능합니다.",
+      min: "복용 일수는 1이상의 정수만 입력 가능합니다."
+    },
+    currentRemarks:{
+      maxlength: "비고란은 최대 {0}자까지 입력 가능합니다."
+    }
+  },
+  showErrors:validateHandler
+});
+
+
 $('.diagnosisWaitings').on('click', () => {
 
     if ($('#tableBody').children().length)
@@ -321,7 +354,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
 
 $('#doctorSignedComplete').on('click', function () {
 
-    if(!$('#diagonosisChartForm').valid() || !$('#Treatmentform').valid()) return;
+    if(!$('#diagonosisChartForm').valid() || !$('#Treatmentform').valid() || !$('#prescriptionForm').valid()) return false;
 
     var prescriptionLength = $('#prescription-table-body').children().length - 1;
     var prescription = [];
