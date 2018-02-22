@@ -507,7 +507,7 @@ $('.small-category-select2').change(() => {
   add_small_category_value = $('.small-category-select2 option:selected').attr('value');
 });
 
-$('#add-medicine-btn').click(function(){
+$('#add-medicine-btn').click(function(e){
     if(!$('#add-medicine-form').valid()) return false;
 
     if(!add_main_category_value || add_main_category_value === ""){
@@ -519,9 +519,9 @@ $('#add-medicine-btn').click(function(){
         position: 'top-left',
         time: 2,
       });
-
       return false;
     }
+
     if(!add_small_category_value || add_small_category_value === ""){
       $.uiAlert({
         textHead: '[경고]',
@@ -531,7 +531,6 @@ $('#add-medicine-btn').click(function(){
         position: 'top-left',
         time: 2,
       });
-
       return false;
     }
 
