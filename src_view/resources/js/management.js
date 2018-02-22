@@ -14,7 +14,7 @@ function init() {
     showAndHide('content-list', 'pharmacopoeia-management');
     getPharmacopoeia();
 }
-// $(`form[name="medicine-management-form"]`).validate({
+
 function setValidate(formId){
   $(formId).validate({
     onkeyup:false,
@@ -350,8 +350,6 @@ function updateMedicineInManagement(target){
     docs[v[i].name] = v[i].value;
   }
   docs.available = target.children().eq(9).children().children().val();
-  // console.log(JSON.stringify(docs))
-  console.log(docs);
   http
     .postMethod(`/medicine/update`, docs)
     .then(result => {
@@ -364,15 +362,20 @@ function updateMedicineInManagement(target){
         return Promise.resolve(data);
     })
     .then(function(){
+      console.log('나니');
       $.uiAlert({
         textHead: '[알림]',
-        text:  + ' 정보 수정 완료',
+        text:  docs.name + ' 정보 수정 완료',
         bgcolor: '#55a9ee',
         textcolor: '#fff',
         position: 'top-left',
         time: 2,
       });
-      // location.reload();
+      updateLocalStorage(function(target){
+        let id = target.attr('id');
+        let medicines = JSON.parse(window.localStorage.getItem('medicine'));
+        cancelUpdateMedicine(target, _.filter(medicines, ['id', parseInt(id)])[0]);
+      }, target);
     })
     .catch(error => {
       console.log(error);
@@ -417,9 +420,8 @@ function cancelUpdateMedicine(target, data) {
 $(document).on('click', '.delete-medicine-by-management', (e) => {
   const medicineId = [];
   medicineId.push($(e.target).parent().parent().attr('id'));
-  console.log($(e.target).parent().parent().attr('id'));
   let name = $(e.target).parent().parent().children().eq(3).text()
-  let target = {"medicineIds" : JSON.stringify(medicineId)};
+  let target = {"medicineIds" : JSON.stringify(medicineId) };
   openConfirmModal(target, { confirmMessage: `'${name}'을(를) 삭제하시겠습니까?` }, deleteMedicines);
 });
 
@@ -483,7 +485,6 @@ $('.main-category-select2').change(() => {
     dataType: 'json',
     cache: false,
   }).done(result => {
-    console.log(result);
     for (var i in result) {
       if (i === '0') {
         $('.small-category-select2 > select').nextAll('div.text').text(`${result[i].secondaryCategory}`);
@@ -541,7 +542,6 @@ $('#add-medicine-btn').click(function(){
     }
     docs["primaryCategory"] = add_main_category_value;
     docs["secondaryCategory"] = add_small_category_value;
-// alert(JSON.stringify(docs));
     insertMedicine(docs);
 
 });
@@ -560,6 +560,7 @@ function insertMedicine (data) {
           return Promise.resolve(data);
       })
       .then(function(){
+        console.log('11');
         $.uiAlert({
           textHead: '[알림]',
           text: '약정보 추가 완료',
@@ -619,11 +620,10 @@ function deleteMedicines (data) {
           return Promise.resolve(data);
       })
       .then(function(){
-        console.log('나니');
-
-        $('#management-small-category-select')
-          .val(management_small_category_value)
-          .trigger('change');
+        let ids = JSON.parse(data.medicineIds);
+        for(var key in ids){
+          $('#'+ids[key]).remove();
+        }
 
         $.uiAlert({
           textHead: '[알림]',
@@ -633,7 +633,8 @@ function deleteMedicines (data) {
           position: 'top-center',
           time: 2,
         });
-        // location.reload();
+
+        updateLocalStorage();
 
       })
       .catch(error => {
@@ -672,4 +673,35 @@ $('#select-all-medicine-button').click(function(){
 
   setMedicineTableBody(medicines);
 })
+
+function updateLocalStorage(callback, target){
+  $.ajax({
+    type: 'GET',
+    url: 'http://localhost:3000/medicine/list',
+    dataType: 'json',
+    cache: false,
+  }).done(result => {
+
+    window.localStorage.setItem('medicine', JSON.stringify(result));
+
+    var getAutoCompleteNameObject = [];
+    var getAutoCompleteIngredientObject = [];
+    result.find((x) => {
+      getAutoCompleteNameObject.push({ 'title': x.name });
+      getAutoCompleteIngredientObject.push({ 'title': x.ingredient.replace(/<br>/g, " ") });
+    });
+
+    window.localStorage.setItem('medicineName', JSON.stringify(getAutoCompleteNameObject));
+    window.localStorage.setItem('medicineIngredient', JSON.stringify(getAutoCompleteIngredientObject));
+
+    $('.search.ui')
+      .search({
+        source: JSON.parse(window.localStorage.getItem('medicineName'))
+      });
+      if(callback){
+        callback(target);
+      }
+  });
+}
+
 init();
