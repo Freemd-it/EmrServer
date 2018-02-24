@@ -77,15 +77,18 @@ docker exec -it emr-web bash
 
 
 ## TODO
-[ ] verision 관리
+- [ ] verision 관리
 
 # Docker
 해당 이미지
 
 ### docker hub 확인한다.
 url :  https://hub.docker.com/
+
 nodejs : https://hub.docker.com/_/node/
+
 nginx : https://hub.docker.com/_/nginx/
+
 mariadb : https://hub.docker.com/_/mariadb/
 
 ### docker image pull
