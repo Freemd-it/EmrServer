@@ -400,6 +400,7 @@ $(document).on('click', '.cancel-update-medicine', (e) => {
 });
 
 function cancelUpdateMedicine(target, data) {
+  // console.log(data)
   const {name, ingredient, amount, quantity, medication, property, available } = data;
 
   target.children().eq(3).empty().append(name)
@@ -676,7 +677,7 @@ $('#select-all-medicine-button').click(function(){
 function updateLocalStorage(callback, target){
   $.ajax({
     type: 'GET',
-    url: 'http://localhost:3000/medicine/list',
+    url: 'http://localhost:3000/medicine/list/management',
     dataType: 'json',
     cache: false,
   }).done(result => {

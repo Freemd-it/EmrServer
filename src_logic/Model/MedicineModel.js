@@ -23,6 +23,11 @@ MedicineModel.list = function(data, callback){
     });
 }
 
+MedicineModel.listTwo = async function(options){
+
+    return await medicine.findAll(options)
+}
+
 MedicineModel.search = function(data, callback){
 
     if (data.option === '1') {

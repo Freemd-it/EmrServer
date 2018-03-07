@@ -1,10 +1,14 @@
+import _ from 'lodash';
+import http from '../utils/http';
+import { resultCode } from '../utils/constant';
 import moment from 'moment'
 
 function init() {
     if (!_.eq(location.pathname, '/management')) return;
     setDatePicker();
-    wow();
-    // $('#startTime').val(moment().format(''))
+    const startTimeDom = document.getElementById('startTime');
+    const endTimeDom = document.getElementById('endTime');
+    dataInit(startTimeDom, endTimeDom);
 }
 
 $('.history-medicine-search-select').change(() => {
@@ -19,6 +23,88 @@ $('.history-medicine-search-select').change(() => {
   }
   $('.search.ui').search({ source: sourceTarget })
 });
+
+$('.management-medicine-history-search-button').on('click', () => {
+
+  const startTimeDom = document.getElementById('startTime');
+  const endTimeDom = document.getElementById('endTime');
+  const medicineCategory = $('.history-medicine-search-select option:selected').val();
+  const searchWord = $.trim($('input[name=historyMedicineSearchText]').val());
+
+  const { isCheck, message } = dateValidationCheck(startTimeDom, endTimeDom);
+  var { value: startTime } = startTimeDom;
+  var { value: endTime } = endTimeDom;
+
+  startTime = moment(startTime).format('YYYY-MM-DD')
+  endTime = moment(endTime).format('YYYY-MM-DD')
+
+  if (!isCheck) {
+      return alert(message);
+  }
+
+  if (endTime === 'Invalid date') {
+    return $.uiAlert({
+      textHead: '[경고]',
+      text: '검색 종료 날짜를 다시 확인해주세요!',
+      bgcolor: '#FF5A5A',
+      textcolor: '#fff',
+      position: 'top-left',
+      time: 2
+    })
+  } else {
+
+    http
+        .getMethod(`/prescription/history/${startTime}/${endTime}/${medicineCategory}?word=${searchWord}`)
+        .then(result => {
+
+            const { code } = result;
+
+            if (!_.eq(code, resultCode.success)) {
+                return Promise.reject(`fail get use medicine history ${data.error}`);
+            }
+            return Promise.resolve(result);
+        })
+        .then(setHistoryTable)
+        .catch(error => console.log(error))
+  }
+})
+
+function setHistoryTable (result) {
+
+  const { data } = result
+  if (data.length === 0) {
+    return $.uiAlert({
+      textHead: '[알림]',
+      text: '검색 결과가 없습니다. 약품명 또는 성분명을 다시 확인해주세요.',
+      bgcolor: '#FF5A5A',
+      textcolor: '#fff',
+      position: 'top-left',
+      time: 2
+    })
+
+    $('#history-management-table-body').append(
+      `<tr>
+        <td class="defaultHistoryForManagementTableBody" style="text-align:center;" colspan="5">
+        날짜를 지정한 뒤 약품 또는 성분명을 입력하지 않고 검색 버튼을 누르면 해당 기간 내 사용한 전체 약품 데이터가 조회됩니다.
+        </td>
+      </tr>`
+    );
+  }
+
+  $('#history-management-table-body').empty()
+  $('#history-management-table-body').append(
+    _.map(data, data => {
+        const { medicineName, medicineIngredient, total, medicine } = data;
+        return ` <tr>
+            <td>${medicineName}</td>
+            <td>${medicineIngredient}</td>
+            <td>${total}</td>
+            <td>${medicine.amount}</td>
+            <td>${medicine.quantity}</td>
+        </tr>`
+    })
+  );
+}
 
 function setDatePicker () {
   $('#ocsRangeStart').calendar({
@@ -59,34 +145,6 @@ function dataInit(startTimeDom, endTimeDom) {
     if (!endTimeDom.value) {
         endTimeDom.value = date.toISOString().slice(0, 10);
     }
-}
-
-function wow() {
-  var arr = '[{"medicine_id":"8","chartNumber":"2018022203","medicineName":"트리돌서방정","medicineIngredient":"Tramadol HCl 100mg","doses":"1","dosesCountByDay":"qd","dosesDay":"1","remarks":""},{"medicine_id":"9","chartNumber":"2018022203","medicineName":"벤자민정","medicineIngredient":"Cyclobenzaprine HCl 10mg","doses":"2","dosesCountByDay":"bid","dosesDay":"2","remarks":""},{"medicine_id":"10","chartNumber":"2018022203","medicineName":"손페리정","medicineIngredient":"Eperisone HCl 50mg","doses":"3","dosesCountByDay":"tid","dosesDay":"3","remarks":""},{"medicine_id":"10","chartNumber":"2018022203","medicineName":"손페리정","medicineIngredient":"Eperisone HCl 50mg","doses":"4","dosesCountByDay":"hs","dosesDay":"4","remarks":""}]';
-  console.log(arr)
-  var arr2 = JSON.parse(arr)
-  // console.log(arr2)
-  // console.log(JSON.stringify(arr2))
-  // console.log(arr)
-  arr2.forEach((data) => {
-    data.useTotal = data.doses * statusConvert(data.dosesCountByDay) * data.dosesDay
-  })
-  var arr = JSON.stringify(arr2)
-  console.log(arr)
-
-  // for (var i in arr) {
-  //   arr[i].useTotal = arr[i].doses * statusConvert(arr[i].dosesCountByDay) * arr[i].dosesDay
-  // }
-  // console.log(arr)
-}
-
-function statusConvert (param) {
-  switch (param) {
-    case 'qd' : return 1; break;
-    case 'bid' : return 2; break;
-    case 'tid' : return 3; break;
-    case 'hs' : return 4; break;
-  }
 }
 
 init();
