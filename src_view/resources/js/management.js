@@ -809,7 +809,7 @@ $('#select-all-medicine-button').click(function(){
 function updateLocalStorage(callback, target){
   $.ajax({
     type: 'GET',
-    url: 'http://localhost:3000/medicine/list',
+    url: 'http://localhost:3000/medicine/list/management',
     dataType: 'json',
     cache: false,
   }).done(result => {

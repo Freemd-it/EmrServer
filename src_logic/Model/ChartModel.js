@@ -193,7 +193,7 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                    /**
                     * @function lastCallback
                     * @description custom update query 세팅 후 실행
-                    * sequelize 모듈에 case when 사용 가능한 update 쿼리 모듈이 없음
+                    * # sequelize 모듈에 case when 사용 가능한 update 쿼리 모듈이 없음
                     */
                    medicineModel
                    .clearance(setCustomUpdateQuery(clearanceParam))

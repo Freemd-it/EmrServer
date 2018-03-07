@@ -4,7 +4,9 @@ const prescriptionModel = require('../Model/PrescriptionModel.js');
 const chartModel = require('../Model/ChartModel.js');
 const chart = require('../Entity/Chart');
 const patient = require('../Entity/Patient');
+const medicine = require('../Entity/Medicine');
 const resultCode = require('../Common/ResultCode');
+const sequelize = require('sequelize');
 const { respondJson, respondOnError, respondHtml } = require('../Utils/respond');
 const _ = require('lodash');
 const router = express.Router();
@@ -109,6 +111,33 @@ router.post('/create', (req, res) => {
       .catch((error) =>{
         respondOnError(res, resultCode.fail, error)
       })
+});
+
+router.get('/history/:startTime/:endTime/:category', (req, res)=>{
+
+  var { category, startTime, endTime } = req.params
+  const { word } = req.query
+  startTime += ' 00:00:00'
+  endTime += ' 23:59:59'
+
+  const options = {}
+  options.include = { model: medicine, attributes: ['amount', 'quantity'] }
+  options.where = { useFlag: '1', createdAt: {between: [startTime, endTime]} }
+  options.attributes = ['medicineName', 'medicineIngredient', [sequelize.fn('SUM', sequelize.col('prescription.useTotal')), 'total'], 'createdAt']
+  options.group = ['prescription.medicine_id']
+
+  if (word.length > 0) {
+    (category === '1') ? options.where.medicineName = { like: `%` + word + `%` } : options.where.medicineIngredient = { like: `%` + word + `%` }
+  }
+
+  prescriptionModel
+    .history(options)
+    .then(result => {
+      respondJson(res, resultCode.success, result)
+    })
+    .catch(error => {
+      respondOnError(res, resultCode.fail, error)
+    })
 });
 
 module.exports = router;

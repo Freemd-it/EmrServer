@@ -26,7 +26,7 @@ $(document).ready(() => {
 
   $.ajax({
     type: 'GET',
-    url: 'http://localhost:3000/medicine/list',
+    url: window.location.pathname === '/management' ? '/medicine/list/management' : '/medicine/list',
     dataType: 'json',
     cache: false,
   }).done(result => {
@@ -298,7 +298,7 @@ function getStatus(status) {
     case 3: return '조제 대기'; break;
     case 4: return '조제중'; break;
     case 5: return '검수 대기'; break;
-    case 6: return '처방 대기'; break;
+    case 6: return '검수 완료'; break;
     case 7: return '처방 완료'; break;
   }
 }

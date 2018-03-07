@@ -49,4 +49,10 @@ PrescriptionModel.delete = async function (options) {
     })
 }
 
+
+PrescriptionModel.history = async function(options) {
+
+  return await prescription.findAll(options)
+}
+
 module.exports = PrescriptionModel;

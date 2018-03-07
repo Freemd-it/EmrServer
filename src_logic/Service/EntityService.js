@@ -40,6 +40,7 @@ EntityService.Init = function(){
     */
 
     medicine.hasMany( prescription, { foreignKey : 'medicine_id', onUpdate : 'CASCADE'});
+    prescription.belongsTo(medicine, { foreignKey : 'medicine_id'});
 
     permission.sync().then(() => {
 
