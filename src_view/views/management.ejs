@@ -19,14 +19,11 @@
       .management-medicine-search-select {
         float: right;
       }
-
-      .ui.table.pharmacopoeia-add-table thead th {
-        padding: 0.8% 1.5% 0.8% 1.5%;
-        vertical-align: middle;
-        text-align: center;
+      .ui.table.pharmacopoeia-add-table {
+        margin-top: 20px;
       }
       .ui.table.pharmacopoeia-add-table tbody td {
-        vertical-align: center;
+        vertical-align: middle;
         text-align: center;
       }
       .confirm-modal-wrap {
@@ -45,6 +42,22 @@
       .update-medicine-in-management:hover, .cancel-update-medicine:hover {
         cursor: pointer;
         text-decoration: underline;
+      }
+      .updateCategoryWidth{
+        width: 20%;
+      }
+      .add-medicine-table-col{
+        cursor: auto;
+        background: #F9FAFB;
+        text-align: inherit;
+        color: rgba(0, 0, 0, 0.87);
+        padding: 0.92857143em 0.78571429em;
+        vertical-align: inherit;
+        font-style: none;
+        font-weight: bold;
+        text-transform: none;
+        border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+        border-left: none;
       }
     </style>
 </head>
@@ -219,7 +232,7 @@
 
     </section>
 
-    <div class="ui longer modal pharmacopoeia-add">
+    <div class="ui longer modal pharmacopoeia-add"  style="height: 650px">
         <div class="ui two item stackable tabs menu">
             <select class="ui search dropdown categoryWidth main-category-select2" id="mainCategory" name="mainCategory">
                 <option class="default" value="pp">대분류</option>
@@ -231,31 +244,46 @@
         <form id="add-medicine-form">
         <div class="scrolling content pharmacyModal">
             <table class="ui fixed selectable celled table form pharmacopoeia-add-table" >
-                <thead>
-                    <tr>
-                      <th >약품명</th>
-                      <th>성분명 및 함량</th>
-                      <th width="70px">정/개</th>
-                      <th width="70px">재고량</th>
-                      <th>용량/용법</th>
-                      <th>약효</th>
-                    </tr>
-                </thead>
+              <colgroup>
+                <col class="add-medicine-table-col"/>
+                <col />
+              </colgroup>
                 <tbody id="medicineAddTableBody">
                   <tr>
-                    <td><input type="text" id="name" name="name"></td>
-                    <td><input type="text" id="ingredient" name="ingredient"></td>
+                    <td width="30%">약품명</td>
+                    <td width="70%"><input type="text" id="name" name="name"></td>
+                  </tr>
+                  <tr height="100px">
+                    <td>성분명 및 함량</td>
+                    <td><textarea id="ingredient" name="ingredient" rows="3" style="overflow-x:hidden;"></textarea></td>
+                  </tr>
+                  <tr>
+                    <td>정/개</td>
                     <td><input type="text" id="amount" name="amount"></td>
+                  </tr>
+                  <tr >
+                    <td>재고량</td>
                     <td><input type="text" id="amount" name="quantity"></td>
-                    <td><input type="text" id="medication" name="medication"></td>
-                    <td><input type="text" id="property" name="property"></td>
+                  </tr>
+                  <tr height="100px">
+                    <td>용량/용법</td>
+                    <td><textarea id="medication" name="medication" rows="3" style="overflow-x:hidden;"></textarea></td>
+                  </tr>
+                  <tr height="100px">
+                    <td>약효</td>
+                    <td><textarea id="property" name="property" rows="3" style="overflow-x:hidden;"></textarea></td>
                   </tr>
                 </tbody>
             </table>
       </br>
-        <button class="ui primary button add-medicine-by-management"  id='add-medicine-btn' style='float:right;'>
-            추가
-        </button>
+      <center>
+      <button type="button" class="ui primary button add-medicine-by-management"  id='add-medicine-btn' >
+          추가
+      </button>
+      <button type="button" class="ui primary button add-medicine-by-management"  id='add-medicine-cancel-btn' >
+          취소
+      </button>
+    </center>
         </div>
       </form>
     </div>

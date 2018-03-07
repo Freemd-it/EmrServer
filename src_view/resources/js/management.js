@@ -261,8 +261,8 @@ function setMedicineTableBody(datas){
           const { id, primaryCategory, secondaryCategory, name, ingredient, amount, quantity, medication, property, available } = data;
           return `<tr id=${id} class="ui fluid">
               <td><input type="checkbox" name="checkMedicine" value="${id}"/></td>
-              <td>${primaryCategory}</td>
-              <td>${secondaryCategory}</td>
+              <td style="overflow:visible;">${primaryCategory}</td>
+              <td style="overflow:visible;">${secondaryCategory}</td>
               <td>${name}</td>
               <td>${ingredient}</td>
               <td>${amount}</td>
@@ -303,6 +303,8 @@ $(document).on('click', '.configure-medicine-by-management', (e) => {
 
 function transformMedicineInput(target) {
 
+  const primaryCategory = target.children().eq(1).text()
+  const secondaryCategory = target.children().eq(2).text()
   const name = target.children().eq(3).text()
   const ingredient = target.children().eq(4).text()
   const amount = target.children().eq(5).text()
@@ -311,6 +313,12 @@ function transformMedicineInput(target) {
   const property = target.children().eq(8).text()
   const available = target.children().eq(9).text()
 
+  target.children().eq(1).empty().append(`
+    <select class="main-category-select3 ui search fluid dropdown " id="mainCategory3" name="mainCategory3" style="width:200px">
+  </select>`)
+  target.children().eq(2).empty().append(`
+    <select class="small-category-select3 ui search fluid dropdown " id="smallCategory3" name="smallCategory3" style="width:100px;">
+    </select>`)
   target.children().eq(3).empty().append(`<input value="${name}" name="name" />`)
   target.children().eq(4).empty().append(`<input value="${ingredient}" name="ingredient" />`)
   target.children().eq(5).empty().append(`<input value="${amount}" name="amount"  />`)
@@ -329,6 +337,87 @@ function transformMedicineInput(target) {
 
     $('.select-available').dropdown();
     target.children().eq(9).children().dropdown('set selected', available);
+
+
+    //분류 설정
+    if ($('.main-category-select3 > select').children().length) {
+        $('.main-category-select3 > select *').remove();
+        $('.main-category-select3 > select').append(
+            `<option class='default' value=''>대분류</option>`
+        )
+    }
+
+    if ($('.small-category-select3 > select').children().length) {
+        $('.small-category-select3 > select *').remove();
+        $('.small-category-select3 > select').append(
+            `<option class='default' value=''>소분류</option>`
+        )
+    }
+
+    $('.dropdown').dropdown()
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/medicine/category/main',
+        dataType: 'json',
+        cache: false,
+    }).done(results => {
+        /**
+         * 데이터 추가 후 modal
+         */
+        $('.main-category-select3 > select').append(
+            _.map(results, result => `<option value='${result.primaryCategory}'> ${result.primaryCategory} </option>`)
+        );
+        console.log("대분류: ", primaryCategory);
+        $("#mainCategory3").val(primaryCategory).prop("selected", true).trigger("change");
+    });
+
+
+    // target.children().eq(1).children().dropdown('set selected', primaryCategory);
+    // target.children().eq(2).children().dropdown('set selected', secondaryCategory);
+
+    //대분류 변경
+    $('.main-category-select3').change(() => {
+      add_main_category_value = $('.main-category-select3 option:selected').attr('value');
+      var param = {
+        primaryCategory: add_main_category_value
+      }
+
+    console.log('@@@@'+add_main_category_value);
+      if ($('.small-category-select3 > select').children().length) {
+        $('.small-category-select3 > select *').remove();
+        $('.small-category-select3 > select').append(
+          `<option class='default' value=''>소분류</option>`
+        )
+      }
+
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/medicine/category/small',
+        data: param,
+        dataType: 'json',
+        cache: false,
+      }).done(result => {
+        console.table(result)
+
+        for (var i in result) {
+          if (i === '0') {
+            $('.small-category-select3 > select').nextAll('div.text').text(`${result[i].secondaryCategory}`);
+
+            $('.small-category-select3 > select').append(
+              `<option selected value='${result[i].secondaryCategory}'> ${result[i].secondaryCategory} </option>`
+            )
+            add_small_category_value = `${result[i].secondaryCategory}`;
+          }
+          else {
+            $('.small-category-select3 > select').append(
+              `<option value='${result[i].secondaryCategory}'> ${result[i].secondaryCategory} </option>`
+            )
+          }
+        }
+
+        $("#smallCategory3").val(secondaryCategory).prop("selected", true).trigger("change");
+      });
+    });
 
 }
 
@@ -349,7 +438,10 @@ function updateMedicineInManagement(target){
   for(var i in v){
     docs[v[i].name] = v[i].value;
   }
+
   docs.available = target.children().eq(9).children().children().val();
+  docs.primaryCategory = $('.main-category-select3 option:selected').attr('value');
+  docs.secondaryCategory = $('.small-category-select3 option:selected').attr('value');
   http
     .postMethod(`/medicine/update`, docs)
     .then(result => {
@@ -400,8 +492,10 @@ $(document).on('click', '.cancel-update-medicine', (e) => {
 });
 
 function cancelUpdateMedicine(target, data) {
-  const {name, ingredient, amount, quantity, medication, property, available } = data;
+  const {primaryCategory, secondaryCategory, name, ingredient, amount, quantity, medication, property, available } = data;
 
+  target.children().eq(1).empty().append(primaryCategory)
+  target.children().eq(2).empty().append(secondaryCategory)
   target.children().eq(3).empty().append(name)
   target.children().eq(4).empty().append(ingredient)
   target.children().eq(5).empty().append(amount)
@@ -432,7 +526,6 @@ $(document).on('click', '.delete-medicine-by-management', (e) => {
   var add_small_category_value='';
 
 $('.add-medicine-by-management').on('click', () => {
-
     if ($('.main-category-select2 > select').children().length) {
         $('.main-category-select2 > select *').remove();
         $('.main-category-select2 > select').append(
@@ -503,11 +596,13 @@ $('.main-category-select2').change(() => {
   });
 })
 
+
+
 $('.small-category-select2').change(() => {
   add_small_category_value = $('.small-category-select2 option:selected').attr('value');
 });
 
-$('#add-medicine-btn').click(function(e){
+$('#add-medicine-btn').on('click', function(){
     if(!$('#add-medicine-form').valid()) return false;
 
     if(!add_main_category_value || add_main_category_value === ""){
@@ -542,9 +637,7 @@ $('#add-medicine-btn').click(function(e){
     docs["primaryCategory"] = add_main_category_value;
     docs["secondaryCategory"] = add_small_category_value;
     insertMedicine(docs);
-
 });
-
 
 function insertMedicine (data) {
     http
@@ -568,6 +661,40 @@ function insertMedicine (data) {
           position: 'top-left',
           time: 2,
         });
+        updateLocalStorage(function(target){
+          $('#add-medicine-form')[0].reset();
+
+          $('.ui.longer.modal.pharmacopoeia-add').modal('hide')
+
+          // var changeCategory = function(){
+          //     return new Promise(function(resolve, reject){
+          //
+          //       $("#management-main-category-select").val(target.main).prop("selected", true).trigger("change");
+          //       $("#management-small-category-select").val(target.small).prop("selected", true).trigger("change");
+          //
+          //       resolve();
+          //     });
+          // }
+
+          // changeCategory()
+          // .then(function(){
+          //   var n;
+          //   setTimeout(function(){
+          //      n = $('#medicine-management-table').height();
+          //   }, 2000);
+          //   return n;
+          // })
+          // .then(function(height){
+          //     console.log(height);
+          //     $('body').animate({scrollTop: height}, 1000);
+          // })
+
+          $("#management-main-category-select").val(target.main).prop("selected", true).trigger("change");
+          $("#management-small-category-select").val(target.small).prop("selected", true).trigger("change");
+          $('body').animate({scrollTop: 4000}, 1000);
+        }, { "main" : add_main_category_value, "small" : add_small_category_value});
+
+
       })
       .catch(error => {
         console.log(error);
@@ -582,6 +709,12 @@ function insertMedicine (data) {
       });
 }
 
+
+$('#add-medicine-cancel-btn').on('click', function(){
+  $('#add-medicine-form')[0].reset();
+
+  $('.ui.longer.modal.pharmacopoeia-add').modal('hide')
+});
 //약 일괄삭제
 $('#delete-medicines-by-management').on('click', () => {
   let medicineIds = [];
