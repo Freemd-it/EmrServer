@@ -84,7 +84,7 @@ function setHistoryTable (result) {
 
     $('#history-management-table-body').append(
       `<tr>
-        <td class="defaultHistoryForManagementTableBody" style="text-align:center;" colspan="5">
+        <td class="defaultHistoryForManagementTableBody" style="text-align:center;" colspan="7">
         날짜를 지정한 뒤 약품 또는 성분명을 입력하지 않고 검색 버튼을 누르면 해당 기간 내 사용한 전체 약품 데이터가 조회됩니다.
         </td>
       </tr>`
@@ -95,11 +95,14 @@ function setHistoryTable (result) {
   $('#history-management-table-body').append(
     _.map(data, data => {
         const { medicineName, medicineIngredient, total, medicine } = data;
+        const { primaryCategory, secondaryCategory, totalAmount, quantity } = medicine
         return ` <tr>
+            <td>${medicine.primaryCategory}</td>
+            <td>${medicine.secondaryCategory}</td>
             <td>${medicineName}</td>
             <td>${medicineIngredient}</td>
             <td>${total}</td>
-            <td>${medicine.amount}</td>
+            <td>${medicine.totalAmount}</td>
             <td>${medicine.quantity}</td>
         </tr>`
     })

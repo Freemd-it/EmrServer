@@ -121,7 +121,7 @@ router.get('/history/:startTime/:endTime/:category', (req, res)=>{
   endTime += ' 23:59:59'
 
   const options = {}
-  options.include = { model: medicine, attributes: ['amount', 'quantity'] }
+  options.include = { model: medicine, attributes: ['primaryCategory', 'secondaryCategory', 'totalAmount', 'quantity'] }
   options.where = { useFlag: '1', createdAt: {between: [startTime, endTime]} }
   options.attributes = ['medicineName', 'medicineIngredient', [sequelize.fn('SUM', sequelize.col('prescription.useTotal')), 'total'], 'createdAt']
   options.group = ['prescription.medicine_id']
