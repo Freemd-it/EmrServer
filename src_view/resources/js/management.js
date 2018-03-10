@@ -296,130 +296,141 @@ $('.management-medicine-search-select').change(() => {
 /**
   * 약품 정보 수정
   */
+  let update_main_category_value = '';
+  let update_small_category_value = '';
+  let change_category = 0;
 $(document).on('click', '.configure-medicine-by-management', (e) => {
     const target = $(e.target).parent().parent();
-    transformMedicineInput(target)
+    const primaryCategory = target.children().eq(1).text()
+    const secondaryCategory = target.children().eq(2).text()
+    const name = target.children().eq(3).text()
+    const ingredient = target.children().eq(4).text()
+    const amount = target.children().eq(5).text()
+    const quantity = target.children().eq(6).text()
+    const medication = target.children().eq(7).text()
+    const property = target.children().eq(8).text()
+    const available = target.children().eq(9).text()
+    new Promise(function (resolve, reject) {
+
+
+        target.children().eq(1).empty().append(`
+          <select class="main-category-select3 ui search fluid dropdown " id="mainCategory3" name="mainCategory3" style="width:200px">
+        </select>`)
+        target.children().eq(2).empty().append(`
+          <select class="small-category-select3 ui search fluid dropdown " id="smallCategory3" name="smallCategory3" style="width:100px;">
+          </select>`)
+        target.children().eq(3).empty().append(`<input value="${name}" name="name" />`)
+        target.children().eq(4).empty().append(`<input value="${ingredient}" name="ingredient" />`)
+        target.children().eq(5).empty().append(`<input value="${amount}" name="amount"  />`)
+        target.children().eq(6).empty().append(`<input type="text" value="${quantity}" name="quantity" />`)
+        target.children().eq(7).empty().append(`<textarea name="medication" style="resize: none; overflow-x:hidden;">${medication}</textarea>`)
+        target.children().eq(8).empty().append(`<textarea name="property" style="resize: none; overflow-x:hidden;">${property}</textarea>`)
+        target.children().eq(9).empty().append(`
+          <select class="select-available ui search fluid dropdown">
+           <option value="1">활성</option>
+           <option value="0">비활성</option>
+          </select>`)
+        target.children().eq(10).empty().append(`
+          <a class="update-medicine-in-management">수정완료</a><br />
+          <a class="cancel-update-medicine">수정취소</a>
+          `)
+
+          $('.select-available').dropdown();
+          target.children().eq(9).children().dropdown('set selected', available);
+
+
+          //분류 설정
+          if ($('.main-category-select3 > select').children().length) {
+              $('.main-category-select3 > select *').remove();
+              $('.main-category-select3 > select').append(
+                  `<option class='default' value=''>대분류</option>`
+              )
+          }
+
+          if ($('.small-category-select3 > select').children().length) {
+              $('.small-category-select3 > select *').remove();
+              $('.small-category-select3 > select').append(
+                  `<option class='default' value=''>소분류</option>`
+              )
+          }
+
+          $('.dropdown').dropdown()
+          $.ajax({
+              type: 'GET',
+              url: 'http://localhost:3000/medicine/category/main',
+              dataType: 'json',
+              cache: false,
+          }).done(results => {
+              /**
+               * 데이터 추가 후 modal
+               */
+              $('.main-category-select3 > select').append(
+                  _.map(results, result => {
+                    if(_.eq(result.primaryCategory, primaryCategory)){
+                      return `<option selected value='${result.primaryCategory}'> ${result.primaryCategory} </option>`
+                    }
+                    return `<option value='${result.primaryCategory}'> ${result.primaryCategory} </option>`
+                  })
+              );
+          });
+
+          //대분류 변경
+          $('.main-category-select3').change(() => {
+            update_main_category_value = $('.main-category-select3 option:selected').attr('value');
+            var param = {
+              primaryCategory: update_main_category_value
+            }
+
+            if ($('.small-category-select3 > select').children().length) {
+              $('.small-category-select3 > select *').remove();
+              $('.small-category-select3 > select').append(
+                `<option class='default' value=''>소분류</option>`
+              )
+            }
+
+            $.ajax({
+              type: 'GET',
+              url: 'http://localhost:3000/medicine/category/small',
+              data: param,
+              dataType: 'json',
+              cache: false,
+            }).done(result => {
+              for (var i in result) {
+                if (i === '0') {
+                  $('.small-category-select3 > select').nextAll('div.text').text(`${result[i].secondaryCategory}`);
+
+                  $('.small-category-select3 > select').append(
+                    `<option selected value='${result[i].secondaryCategory}'> ${result[i].secondaryCategory} </option>`
+                  )
+                  update_small_category_value = `${result[i].secondaryCategory}`;
+                }
+                else {
+                  $('.small-category-select3 > select').append(
+                    `<option value='${result[i].secondaryCategory}'> ${result[i].secondaryCategory} </option>`
+                  )
+                }
+              }
+            });
+          });
+          $('.small-category-select3').change(() => {
+            update_small_category_value = $('.small-category-select3 option:selected').attr('value');
+            if(_.eq(primaryCategory, update_main_category_value) && _.eq(secondaryCategory, update_small_category_value)){
+               change_category = 0;
+             } else{
+               change_category = 1;
+             }
+          });
+
+          resolve({primaryCategory: primaryCategory, secondaryCategory: secondaryCategory});
+      })
+    .then(function (category) {
+      setTimeout(function(){
+        $("#mainCategory3").trigger("change");
+        $("#smallCategory3").val(category.secondaryCategory).prop("selected", true).trigger("change");
+      }, 800);
+    });
 });
 
-function transformMedicineInput(target) {
-
-  const primaryCategory = target.children().eq(1).text()
-  const secondaryCategory = target.children().eq(2).text()
-  const name = target.children().eq(3).text()
-  const ingredient = target.children().eq(4).text()
-  const amount = target.children().eq(5).text()
-  const quantity = target.children().eq(6).text()
-  const medication = target.children().eq(7).text()
-  const property = target.children().eq(8).text()
-  const available = target.children().eq(9).text()
-
-  target.children().eq(1).empty().append(`
-    <select class="main-category-select3 ui search fluid dropdown " id="mainCategory3" name="mainCategory3" style="width:200px">
-  </select>`)
-  target.children().eq(2).empty().append(`
-    <select class="small-category-select3 ui search fluid dropdown " id="smallCategory3" name="smallCategory3" style="width:100px;">
-    </select>`)
-  target.children().eq(3).empty().append(`<input value="${name}" name="name" />`)
-  target.children().eq(4).empty().append(`<input value="${ingredient}" name="ingredient" />`)
-  target.children().eq(5).empty().append(`<input value="${amount}" name="amount"  />`)
-  target.children().eq(6).empty().append(`<input type="text" value="${quantity}" name="quantity" />`)
-  target.children().eq(7).empty().append(`<textarea name="medication" style="resize: none; overflow-x:hidden;">${medication}</textarea>`)
-  target.children().eq(8).empty().append(`<textarea name="property" style="resize: none; overflow-x:hidden;">${property}</textarea>`)
-  target.children().eq(9).empty().append(`
-    <select class="select-available ui search fluid dropdown">
-     <option value="1">활성</option>
-     <option value="0">비활성</option>
-    </select>`)
-  target.children().eq(10).empty().append(`
-    <a class="update-medicine-in-management">수정완료</a><br />
-    <a class="cancel-update-medicine">수정취소</a>
-    `)
-
-    $('.select-available').dropdown();
-    target.children().eq(9).children().dropdown('set selected', available);
-
-
-    //분류 설정
-    if ($('.main-category-select3 > select').children().length) {
-        $('.main-category-select3 > select *').remove();
-        $('.main-category-select3 > select').append(
-            `<option class='default' value=''>대분류</option>`
-        )
-    }
-
-    if ($('.small-category-select3 > select').children().length) {
-        $('.small-category-select3 > select *').remove();
-        $('.small-category-select3 > select').append(
-            `<option class='default' value=''>소분류</option>`
-        )
-    }
-
-    $('.dropdown').dropdown()
-    $.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/medicine/category/main',
-        dataType: 'json',
-        cache: false,
-    }).done(results => {
-        /**
-         * 데이터 추가 후 modal
-         */
-        $('.main-category-select3 > select').append(
-            _.map(results, result => `<option value='${result.primaryCategory}'> ${result.primaryCategory} </option>`)
-        );
-        console.log("대분류: ", primaryCategory);
-        $("#mainCategory3").val(primaryCategory).prop("selected", true).trigger("change");
-    });
-
-
-    // target.children().eq(1).children().dropdown('set selected', primaryCategory);
-    // target.children().eq(2).children().dropdown('set selected', secondaryCategory);
-
-    //대분류 변경
-    $('.main-category-select3').change(() => {
-      add_main_category_value = $('.main-category-select3 option:selected').attr('value');
-      var param = {
-        primaryCategory: add_main_category_value
-      }
-
-    console.log('@@@@'+add_main_category_value);
-      if ($('.small-category-select3 > select').children().length) {
-        $('.small-category-select3 > select *').remove();
-        $('.small-category-select3 > select').append(
-          `<option class='default' value=''>소분류</option>`
-        )
-      }
-
-      $.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/medicine/category/small',
-        data: param,
-        dataType: 'json',
-        cache: false,
-      }).done(result => {
-        console.table(result)
-
-        for (var i in result) {
-          if (i === '0') {
-            $('.small-category-select3 > select').nextAll('div.text').text(`${result[i].secondaryCategory}`);
-
-            $('.small-category-select3 > select').append(
-              `<option selected value='${result[i].secondaryCategory}'> ${result[i].secondaryCategory} </option>`
-            )
-            add_small_category_value = `${result[i].secondaryCategory}`;
-          }
-          else {
-            $('.small-category-select3 > select').append(
-              `<option value='${result[i].secondaryCategory}'> ${result[i].secondaryCategory} </option>`
-            )
-          }
-        }
-
-        $("#smallCategory3").val(secondaryCategory).prop("selected", true).trigger("change");
-      });
-    });
-
-}
 
 //수정완료
 $(document).on('click', '.update-medicine-in-management', (e) => {
@@ -441,7 +452,9 @@ function updateMedicineInManagement(target){
 
   docs.available = target.children().eq(9).children().children().val();
   docs.primaryCategory = $('.main-category-select3 option:selected').attr('value');
-  docs.secondaryCategory = $('.small-category-select3 option:selected').attr('value');
+  docs.secondaryCategory = update_small_category_value;
+   // $('.small-category-select3 option:selected').attr('value');
+  console.table(docs);
   http
     .postMethod(`/medicine/update`, docs)
     .then(result => {
@@ -465,8 +478,15 @@ function updateMedicineInManagement(target){
       });
       updateLocalStorage(function(target){
         let id = target.attr('id');
-        let medicines = JSON.parse(window.localStorage.getItem('medicine'));
-        cancelUpdateMedicine(target, _.filter(medicines, ['id', parseInt(id)])[0]);
+
+        if(_.eq(change_category, 1)){
+          $("#management-main-category-select").val(update_main_category_value).prop("selected", true).trigger("change");
+          $("#management-small-category-select").val(update_small_category_value).prop("selected", true).trigger("change");
+          $('body').animate({scrollTop: 4000}, 1000);
+        }else{
+          let medicines = JSON.parse(window.localStorage.getItem('medicine'));
+          cancelUpdateMedicine(target, _.filter(medicines, ['id', parseInt(id)])[0]);
+        }
       }, target);
     })
     .catch(error => {
@@ -830,9 +850,9 @@ function updateLocalStorage(callback, target){
       .search({
         source: JSON.parse(window.localStorage.getItem('medicineName'))
       });
-      if(callback){
-        callback(target);
-      }
+    if(callback){
+      callback(target);
+    }
   });
 }
 

@@ -99,6 +99,7 @@ MedicineModel.delete = async function(options){
 
 MedicineModel.update = async function(options){
   const { id, name, ingredient, amount, quantity, medication, property, available, primaryCategory, secondaryCategory} = options;
+  const totalAmount = quantity * amount;
 
   return await medicine.update({
     name: name,
@@ -109,7 +110,8 @@ MedicineModel.update = async function(options){
     quantity: quantity,
     medication: medication,
     property: property,
-    available: available
+    available: available,
+    totalAmount: totalAmount
   },{
     where : { id: id }
   });
