@@ -9,6 +9,32 @@
 </head>
 
 <body>
+  <div class="ui sidebar inverted vertical menu past-diagnosis-list-wrap">
+
+    <div class="ui inverted segment past-diagnosis-list-segment">
+      <div class="ui inverted relaxed divided list past-diagnosis-list">
+        <a class="item past-diagnosis-item">
+          <div class="header">Chart - 2018031922</div>
+          <div class="content">[2018년 3월 19일]</div>
+        </a>
+        <a class="item past-diagnosis-item">
+          <div class="header">Chart - 2018031239</div>
+          <div class="content">[2018년 3월 12일]</div>
+        </a>
+        <a class="item past-diagnosis-item">
+          <div class="header">Chart - 2018030506</div>
+          <div class="content">[2018년 3월 5일]</div>
+        </a>
+        <a class="item past-diagnosis-item">
+          <div class="header">Chart - 2018030506</div>
+          <div class="content">[2018년 3월 5일]</div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pusher">
 
     <header>
         <% include ./parts/header.ejs %>
@@ -584,7 +610,11 @@
         </div>
     </div>
 
-    <script src="/dist/index.bundle.js"></script>
+    <!-- Site content Start divider (<div class="pusher">) -->
+    </div>
+    <!-- Site content End divider -->
+
+<script src="/dist/index.bundle.js"></script>
 </body>
 
 </html>

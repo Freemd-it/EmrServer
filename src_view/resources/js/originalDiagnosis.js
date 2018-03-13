@@ -651,5 +651,12 @@ $('#vitalSign').on('click', () => {
 
 });
 
+$('#pastDiagnosisRecord').on('click', () => {
+    $('.ui.sidebar').sidebar('toggle')
+})
+
+$('.past-diagnosis-item').on('click', (e) => {
+    $('.ui.longer.modal.pharmacopoeia').modal('show')
+})
 
 init();
