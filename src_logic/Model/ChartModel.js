@@ -218,7 +218,7 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                   const whenArray = [];
 
                   var now = moment().format('YYYY-MM-DD HH:mm:ss');
-                  var query = `update medicines set updatedAt = '${now}', amount = case`;
+                  var query = `update medicines set updatedAt = '${now}', totalAmount = case`;
                   var index = 0;
 
                   array.forEach((data) => {
@@ -232,7 +232,7 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                   })
 
                   whenArray.forEach((data) => {
-                    query += ` when id = ` + data.medicine_id + ` then amount - ` + data.integerToSubstract;
+                    query += ` when id = ` + data.medicine_id + ` then totalAmount - ` + data.integerToSubstract;
                   })
 
                   query += ` end where id in (`;
