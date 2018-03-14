@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { bb } from "billboard.js";
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
+import diagnosis from './pastDiagnosisList';
 import moment from 'moment';
 import 'jquery-validation';
 
@@ -259,7 +260,8 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         cache: false,
     }).done(result => {
 
-        // console.log(result)
+        diagnosis
+          .getPastChartList(result.patient_id)
 
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
@@ -650,13 +652,5 @@ $('#vitalSign').on('click', () => {
         })
 
 });
-
-$('#pastDiagnosisRecord').on('click', () => {
-    $('.ui.sidebar').sidebar('toggle')
-})
-
-$('.past-diagnosis-item').on('click', (e) => {
-    $('.ui.longer.modal.pharmacopoeia').modal('show')
-})
 
 init();

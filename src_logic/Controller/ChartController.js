@@ -84,4 +84,19 @@ router.get('/vitalSign/:patient_id', function (req, res, next) {
 
 });
 
+router.get('/past/:patient_id', function (req, res, next) {
+
+    const { patient_id } = req.params;
+
+    const options = {};
+    options.attributes = ['id', 'chartNumber', 'patient_id']
+    options.where = { patient_id: patient_id }
+    options.order = [['updatedAt', 'DESC']]
+
+    chartModel
+        .findAll(options)
+        .then(result => respondJson(res, resultCode.success, result))
+        .catch((error) => respondOnError(res, resultCode.fail, error))
+});
+
 module.exports = router;

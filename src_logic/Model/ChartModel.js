@@ -322,13 +322,7 @@ ChartModel.find = async function (options) {
 
 ChartModel.findAll = async function (options) {
 
-    const { where = {}, include = {}, order = [] } = options;
-
-    return chart.findAll({
-        where: where,
-        include: include,
-        order: order
-    })
+    return chart.findAll(options)
 }
 
 function statusConvert (param) {

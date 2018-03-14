@@ -57,7 +57,7 @@ $('.management-medicine-history-search-button').on('click', () => {
         .getMethod(`/prescription/history/${startTime}/${endTime}/${medicineCategory}?word=${searchWord}`)
         .then(result => {
 
-            const { code } = result;
+            const { code, data } = result;
 
             if (!_.eq(code, resultCode.success)) {
                 return Promise.reject(`fail get use medicine history ${data.error}`);
