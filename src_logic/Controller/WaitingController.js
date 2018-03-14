@@ -1,5 +1,9 @@
 const express = require('express');
 const waitingModel = require('../Model/WaitingModel.js');
+const resultCode = require('../Common/ResultCode');
+const { respondJson, respondOnError, respondHtml } = require('../Utils/respond');
+const _ = require('lodash');
+const moment = require('moment');
 const router = express.Router();
 
 router.use(function log(req, res, next) {
@@ -10,16 +14,82 @@ router.use(function log(req, res, next) {
 
 router.get('/', (req, res) => {
 
-  if (typeof req.query.status === 'undefined') {
+  const nowDay = moment('00:00:00', 'hh:mm:ss');
+  const status = req.query.status
+
+  if (typeof status === 'undefined') {
     waitingModel.FindAll(result => {
       res.send(result);
     });
   } else {
-    waitingModel.FindByStatus(req.query.status, result => {
-      // console.log(result);
-      res.send(result);
-    });
+
+    const options = {};
+    options.order = [['chartNumber', 'ASC']];
+    options.attributes = ['chartNumber', 'name', 'birth', 'status'];
+    options.where = { status: status , createdAt: {gt: Date.parse(nowDay)} }
+    waitingModel
+        .FindByStatus(options)
+        .then(result => {
+          respondJson(res, resultCode.success, result);
+        })
+        .catch(error => {
+          respondOnError(res, resultCode.fail, error);
+        })
   }
+});
+
+router.get('/pharmacy/now/:page', (req, res) => {
+
+  let { page = 1 } = req.params;
+  page = parseInt(page, 15);
+
+  const SIZE = 15;
+  const PAGE_SIZE = 4;
+  const BEGIN = (page - 1) * 15;
+  const nowTime = moment(new Date());
+  const nowDay = moment('00:00:00', 'hh:mm:ss');
+
+  let totalPage;
+  let startPage;
+  let endPage;
+  let max;
+
+  const tableRange = (cnt) => {
+    totalPage = Math.ceil(cnt / SIZE);
+    startPage = Math.floor((page - 1) / PAGE_SIZE) * PAGE_SIZE + 1;
+    endPage = startPage + (PAGE_SIZE - 1);
+    max = cnt - (page - 1) * SIZE;
+
+    if(endPage > totalPage) {
+      endPage = totalPage;
+    }
+
+    const options = {};
+    options.order = [['chartNumber', 'ASC']];
+    // options.where = { createdAt: {gt: Date.parse(nowDay)}, status: {ne: 7} } // 조건 : 오늘 날짜이고, 상태가 7이 아닌
+    options.where = { createdAt: {gt: Date.parse(nowDay)} } // 개발 모드, 완료 후 삭제 및 윗 라인 조건으로 변경 예정
+    options.offset = BEGIN;
+    options.limit = SIZE;
+
+    return waitingModel.FindByPharmacy(options);
+  }
+
+  waitingModel
+          .Count({ where : { createdAt: {gt: Date.parse(moment('00:00:00', 'hh:mm:ss'))}}})
+          .then(tableRange)
+          .then((datas) => {
+            const result = {
+              pageSize : PAGE_SIZE,
+              page : page,
+              startPage : startPage,
+              endPage : endPage,
+              totalPage : totalPage,
+              max : max,
+              datas : datas
+            }
+            respondJson(res, resultCode.success, result)
+          })
+          .catch((error) => respondOnError(res, resultCode.fail, error))
 });
 
 module.exports = router;

@@ -7,37 +7,128 @@ import _ from 'lodash';
 import { bb } from "billboard.js";
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
+import diagnosis from './pastDiagnosisList';
 import moment from 'moment';
+import 'jquery-validation';
 
 /**
- * Init
+ * init
  */
-const init = () => {
-    // default 진료
-    showAndHide('diagosis-container');
+function init() {
 
+    if (!_.eq(location.pathname, '/originalDiagnosis')) return;
+
+    showAndHide('main-hide-and-show-row', 'diagnosis-container');
 }
-
 /**
  *
- * @param {string} newIdType
+ * @param {string} newId
  * @description
  * tmeplate originalDiagnosis.ejs class main-hide-and-show-row 중
  * 보여주고 있는것은 숨기고 새로운 것을 보여줌
- * default id diagosis
+ * default class     main-hide-and-show-row
+ * default id           diagosis
  */
-const showAndHide = (newIdType) => {
-
+const showAndHide = (rowsClass, newId) => {
     //현재 목록 가져온 후 보여주고 있는 row 찾기
-    const rows = $('.main-hide-and-show-row');
+    const rows = $(`.${rowsClass}`);
     const findRow = _.find(rows, row => $(row).is(':visible'));
-
+    const { id: findId = "" } = findRow;
     // 다를 경우만 변화
-    if (!_.eq(findRow.id, newIdType)) {
-        $('.main-hide-and-show-row').hide()
-        $(`#${newIdType}`).show()
+    if (!_.eq(findId, newId)) {
+        $(`.${rowsClass}`).hide()
+        $(`#${newId}`).show()
     }
 }
+
+//validation
+/**
+*Impression, Present illness / Medication,  Treatment note / Medication -> 300자 이내
+*
+*/
+function validateHandler (errorMap, errorList){
+    if(this.numberOfInvalids()) {
+        $.uiAlert({
+            textHead: '[경고]',
+            text: errorList[0].message,
+            bgcolor: '#FF5A5A',
+            textcolor: '#fff',
+            position: 'top-center',
+            time: 2
+        });
+        errorList[0].element.focus();
+    }
+}
+
+//본진 정보
+$('#diagonosisChartForm').validate({
+  onkeyup: false,
+  rules: {
+    impression: {
+      maxlength:300
+    },
+    presentIllness: {
+      maxlength:300
+    }
+  },
+  messages:{
+    impression:{
+      maxlength: "impression은 최대 {0}자 까지 입력 가능 합니다."
+    },
+    presentIllness:{
+      maxlength: "Present illness / Medication은 최대 {0}자까지 입력 가능합니다."
+    }
+  },
+  showErrors: validateHandler
+});
+
+$('#Treatmentform').validate({
+  onkeyup: false,
+  rules:{
+    treatmentNote:{
+      maxlength: 300
+    }
+  },
+  messages:{
+    treatmentNote:{
+      maxlength: "Treatment note는 최대 {0}자까지 입력 가능합니다."
+    }
+  },
+  showErrors: validateHandler
+});
+
+//약전 validation
+$('#prescriptionForm').validate({
+  onkeyup : false,
+  rules: {
+    currentDoses:{
+      digits: true,
+      min: 1
+    },
+    currentDosesDay:{
+      digits: true,
+      min: 1
+    },
+    currentRemarks:{
+      maxlength: 100
+    }
+  },
+  messages: {
+    currentDoses: {
+      digits: "1회 투약량은 1이상의 정수만 입력 가능합니다.",
+      min: "1회 투약량은 1이상의 정수만 입력 가능합니다."
+    },
+    currentDosesDay: {
+      digits: "복용 일수는 1이상의 정수만 입력 가능합니다.",
+      min: "복용 일수는 1이상의 정수만 입력 가능합니다."
+    },
+    currentRemarks:{
+      maxlength: "비고란은 최대 {0}자까지 입력 가능합니다."
+    }
+  },
+  showErrors:validateHandler
+});
+
 
 $('.diagnosisWaitings').on('click', () => {
 
@@ -56,18 +147,23 @@ $('.diagnosisWaitings').on('click', () => {
         cache: false,
     }).done(result => {
 
-        // console.log(result);
-        for (let i = 0; i < result.length; i++) {
-            $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
-                    <td id=${result[i].chart_id}>${result[i].chart_id}</td>
-                    <td id=${result[i].chart_id}>${result[i].name}</td>
-                    <td id=${result[i].chart_id}>${result[i].birth}</td>
-                </tr>`
-
-            )
+        const { data, code } = result;
+        if (!_.eq(code, resultCode.success)) {
+            return Promise.reject(`get fail waiting list data ${data.error}`);
         }
-    });
+
+    }).then((result) => {
+
+      const { data } = result;
+      for(let i = 0; i < data.length; i++) {
+          $('#tableBody').append(
+              `<tr id=${data[i].chartNumber} class="diagnosis-table-content">
+                     <td id=${data[i].chartNumber}>${data[i].chartNumber}</td>
+                     <td id=${data[i].chartNumber}>${data[i].name}</td>
+                     <td id=${data[i].chartNumber}>${data[i].birth}</td>
+              </tr>`
+          )}
+    }).catch(error => console.log(error));
 
     $('.ui.longer.modal.waitingPatientList').modal('show');
     $(".completeTab").removeClass("active");
@@ -90,17 +186,23 @@ $('.waitingTab').on('click', () => {
         cache: false,
     }).done(result => {
 
-        for (let i = 0; i < result.length; i++) {
-            $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
-                       <td id=${result[i].chart_id}>${result[i].chart_id}</td>
-                       <td id=${result[i].chart_id}>${result[i].name}</td>
-                       <td id=${result[i].chart_id}>${result[i].birth}</td>
-                </tr>`
-
-            )
+        const { data, code } = result;
+        if (!_.eq(code, resultCode.success)) {
+            return Promise.reject(`get fail waiting list data ${data.error}`);
         }
-    });
+
+    }).then((result) => {
+
+      const { data } = result;
+      for(let i = 0; i < data.length; i++) {
+          $('#tableBody').append(
+              `<tr id=${data[i].chartNumber} class="diagnosis-table-content">
+                     <td id=${data[i].chartNumber}>${data[i].chartNumber}</td>
+                     <td id=${data[i].chartNumber}>${data[i].name}</td>
+                     <td id=${data[i].chartNumber}>${data[i].birth}</td>
+              </tr>`
+          )}
+    }).catch(error => console.log(error));
 
     $(".completeTab").removeClass("active");
     $(".waitingTab").addClass("active");
@@ -125,10 +227,10 @@ $('.completeTab').on('click', () => {
 
         for (let i = 0; i < result.length; i++) {
             $('#tableBody').append(
-                `<tr id=${result[i].chart_id} class="diagnosis-table-content">
-                       <td id=${result[i].chart_id}>${result[i].chart_id}</td>
-                       <td id=${result[i].chart_id}>${result[i].name}</td>
-                       <td id=${result[i].chart_id}>${result[i].birth}</td>
+                `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
+                       <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
+                       <td id=${result[i].chartNumber}>${result[i].name}</td>
+                       <td id=${result[i].chartNumber}>${result[i].birth}</td>
                 </tr>`
 
             )
@@ -158,7 +260,8 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         cache: false,
     }).done(result => {
 
-        console.log(result)
+        diagnosis
+          .getPastChartList(result.patient_id)
 
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
@@ -176,10 +279,10 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#mealTerm').val(result.mealTerm + '시간');
         // 예진 정보 화면 렌더링
 
-        for(var i in result.complaints) {
+        for (var i in result.complaints) {
 
-          $('#originalDiagnosisCCsegment').append(
-              ` <div class="inner-div" style="border-color: #ddd;">
+            $('#originalDiagnosisCCsegment').append(
+                ` <div class="inner-div" style="border-color: #ddd;">
                   <div class="sixteen wide column">
                           <div class="ui fluid input focus">
                               <input type="text" placeholder="C.C" value="${result.complaints[i].chiefComplaint}" />
@@ -192,8 +295,8 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
                           </div>
                       </div>
                   </div>`
-          );
-          // CC 갯수에 따라 화면 렌더링
+            );
+            // CC 갯수에 따라 화면 렌더링
         }
 
         $('#name').val(result.patient.name);
@@ -206,31 +309,69 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#smokingPeriod').val(result.patient.smokingPeriod);
         $('#drinking').val(result.patient.drinkingAmount);
         $('#drinkingPeriod').val(result.patient.drinkingPeriod);
-        // $('#name').val(result.patient.name);
+
+        let idx = 1; /* 과거력 조회용 인덱스 */
+
+        for (let i of result.patient.histories[0].pastHistory) {
+            let id = '#disease'+idx;
+            if(i == 1) {
+                $(id).prop("checked", true);
+            }
+            idx++;
+        }
+
+        idx = 1;
+
+        for (let i of result.patient.histories[0].allergy) {
+            let id = '#allergy'+idx;
+            if(i == 1) {
+                $(id).prop("checked", true);
+            }
+            idx++;
+        }
+
+        let value = result.patient.histories[0].pastMedical;
+
+        $('input[name="pastMedical"][value=' + value + ']').prop('checked', true).trigger("change");
+        $('#pastMedicalTime').val(result.patient.histories[0].pastMedicalTime);
+        $('#pastMedicalArea').val(result.patient.histories[0].pastMedicalArea);
+
+        value = result.patient.histories[0].pastMedication;
+
+        $('input[name="pastMedication"][value=' + value + ']').prop('checked', true).trigger("change");
+        $('#pastMedicationPeriod').val(result.patient.histories[0].pastMedicationPeriod);
+        $('#pastMedicationType').val(result.patient.histories[0].pastMedicationType);
+        $('#diseaseDescription').val(result.patient.histories[0].pastHistoryComment);
+        $('#allergyDescription').val(result.patient.histories[0].allergyComment)
     })
 
     $('#vitalSign').attr('disabled', false);
     $('#pharmacopoeia').attr('disabled', false);
     $('#pastDiagnosisRecord').attr('disabled', false);
+    $('#diagonosis').attr('disabled', false);
+    $('#preDiagonosis').attr('disabled', false);
+    $('#patientInfo').attr('disabled', false);
     $('.ui.longer.modal').modal('hide');
 });
 
 $('#doctorSignedComplete').on('click', function () {
 
-    var prescriptionLength = $('#prescriptionTableBody').children().length - 1;
+    if(!$('#diagonosisChartForm').valid() || !$('#Treatmentform').valid() || !$('#prescriptionForm').valid()) return false;
+
+    var prescriptionLength = $('#prescription-table-body').children().length - 1;
     var prescription = [];
     var medicine = {};
 
     for (var i = 1; i <= prescriptionLength; i++) {
         medicine = {};
-        medicine.medicine_id = $('#prescriptionTableBody').children().eq(i).attr('id');
+        medicine.medicine_id = $('#prescription-table-body').children().eq(i).attr('id');
         medicine.chartNumber = $('#preChartId').val();
-        medicine.medicineName = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(0).text());
-        medicine.medicineIngredient = $.trim($('#prescriptionTableBody').children().eq(i).children().eq(1).text());
-        medicine.doses = $('#prescriptionTableBody').children().eq(i).children().eq(2).children().val();
-        medicine.dosesCountByDay = $('#prescriptionTableBody').children().eq(i).children().eq(3).children().val();
-        medicine.dosesDay = $('#prescriptionTableBody').children().eq(i).children().eq(4).children().val();
-        medicine.remarks = $('#prescriptionTableBody').children().eq(i).children().eq(5).children().val();
+        medicine.medicineName = $.trim($('#prescription-table-body').children().eq(i).children().eq(0).text());
+        medicine.medicineIngredient = $.trim($('#prescription-table-body').children().eq(i).children().eq(1).text());
+        medicine.doses = $('#prescription-table-body').children().eq(i).children().eq(2).children().val();
+        medicine.dosesCountByDay = $('#prescription-table-body').children().eq(i).children().eq(3).children().children().val();
+        medicine.dosesDay = $('#prescription-table-body').children().eq(i).children().eq(4).children().val();
+        medicine.remarks = $('#prescription-table-body').children().eq(i).children().eq(5).children().val();
         prescription.push(medicine);
     }
 
@@ -250,22 +391,28 @@ $('#doctorSignedComplete').on('click', function () {
         dataType: 'json',
         cache: false,
     }).done(result => {
-        console.log(result)
+
         if (result[0] === 1) {
 
-            $('#preChartId').val('');
-            $('#preName').val('');
-            $('.impression').val('');
-            $('.presentIllness').val('');
             $('.treatmentNote').val('');
+            $('#diagonosisChartForm, #preDiagonosisChartForm, #patientChartForm').each(function(){
+                this.reset();
+            });
 
-            if ($('#prescriptionTableBody').children().length > 0) {
-                $('#prescriptionTableBody *').remove();
+            if ($('#originalDiagnosisCCsegment').children().length) {
+              $('#originalDiagnosisCCsegment *').remove();
+            }
+
+            if ($('#prescription-table-body').children().length > 0) {
+                $('#prescription-table-body *').remove();
             }
 
             $('#pastDiagnosisRecord').attr('disabled', true);
             $('#vitalSign').attr('disabled', true);
             $('#pharmacopoeia').attr('disabled', true);
+            $('#diagonosis').attr('disabled', true);
+            $('#preDiagonosis').attr('disabled', true);
+            $('#patientInfo').attr('disabled', true);
 
             $.uiAlert({
                 textHead: '[알림]',
@@ -320,30 +467,27 @@ $('#pharmacopoeia').on('click', () => {
 
     $('.ui.longer.modal.pharmacopoeia').modal('show')
     $('.dropdown').dropdown()
-    // $(".main-category-select option[value='심혈관계질환']").attr("selected", "selected");
-    // console.log($('.main-category-select option').attr('value'));
-    // $('.main-category-select > select > option').val();
 });
 
 /**
  * 본진 정보 클릭
  */
 $('#diagonosis').on('click', () => {
-    showAndHide('diagosis-container');
+    showAndHide('main-hide-and-show-row', 'diagnosis-container');
 })
 
 /**
  * 예진 정보 클릭
  */
 $('#preDiagonosis').on('click', () => {
-    showAndHide('pre-diagosis-container');
+    showAndHide('main-hide-and-show-row', 'pre-diagnosis-container');
 })
 
 /**
  * 환자 정보 클릭
  */
 $('#patientInfo').on('click', () => {
-    showAndHide('patient-info-container');
+    showAndHide('main-hide-and-show-row', 'patient-info-container');
 })
 
 
@@ -351,10 +495,7 @@ $('#patientInfo').on('click', () => {
  * vital sign 생성
  */
 $('#vitalSign').on('click', () => {
-
-    showAndHide('vital-sign-container');
-
-
+    showAndHide('main-hide-and-show-row', 'vital-sign-container');
 
     function _each(data, iter) {
         if (Array.isArray(data)) {
@@ -368,9 +509,17 @@ $('#vitalSign').on('click', () => {
         }
     }
 
-
-    const dataInput = (vitalDatas, types) => {
+    /**
+     *
+     * @param {array} vitalDatas
+     * @param {array} types      y 축 대상자들
+     * @param {string} standard  x 축 기준이 될 것
+     */
+    const dataInput = (vitalDatas, types, standard) => {
         let new_columns = [];
+        const startIndex = 0;
+        const notFoundIndex = -1;
+
         _.each(vitalDatas, (vitalData, vitalIndex) => {
             _each(vitalData, (data, key, i) => {
                 // 초기화
@@ -378,17 +527,17 @@ $('#vitalSign').on('click', () => {
                     new_columns[i] = [];
                 }
                 //types 에 포함되어있어야만 push
-                if (_.findIndex(types, (type) => type === key) !== -1) {
-                    if (vitalIndex === 0) {
+                if (!_.eq(_.findIndex(types, (type) => type === key), notFoundIndex)) {
+                    if (_.eq(vitalIndex, startIndex)) {
                         // key insert
-                        if (key === "createdAt") {
+                        if (_.eq(key, standard)) {
                             new_columns[i].push('x');
                         } else {
                             new_columns[i].push(key);
                         }
                     }
                     //value insert
-                    if (key === "createdAt") {
+                    if (_.eq(key, standard)) {
                         new_columns[i].push(moment(data).format('YYYY-MM-DD'));
                     } else {
                         new_columns[i].push(data);
@@ -401,14 +550,13 @@ $('#vitalSign').on('click', () => {
 
 
     const chartGenerator = _.flow((chartDataInfo) => {
-        const { vitalDatas, types, selectGraph } = chartDataInfo
-
-
-        let info = {
+        const { vitalDatas, types, selectGraph } = chartDataInfo;
+        const standard = 'createdAt';
+        const info = {
             "x": "x",
             "columns": []
         };
-        info.columns = dataInput(vitalDatas, types);
+        info.columns = dataInput(vitalDatas, types, standard);
 
         const returnToData = {
             info,
@@ -436,8 +584,10 @@ $('#vitalSign').on('click', () => {
     /**
      * get data
      */
+    const parentId = 1;
+
     http
-        .getMethod('/chart/vitalSign/1')
+        .getMethod(`/chart/vitalSign/${parentId}`)
         .then((result) => {
             const { data, code } = result;
 
@@ -447,8 +597,7 @@ $('#vitalSign').on('click', () => {
             return Promise.resolve(data);
 
         }).then(datas => {
-
-
+            const startArd = 'createdAt';
             // heartRate tinyint(3), # HR 심박수
             // pulseRate tinyint(3), # PR 맥박수
             // bodyTemporature tinyint(3), # BT 체온
@@ -502,11 +651,6 @@ $('#vitalSign').on('click', () => {
              */
         })
 
-})
+});
 
-
-
-/**
- * initial
- */
 init();

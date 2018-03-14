@@ -1,5 +1,6 @@
 const complaint = require('../Entity/Complaint.js');
 const chart = require('../Entity/Chart.js');
+
 const _ = require('lodash');
 
 var ComplaintModel = function(data){
@@ -47,7 +48,6 @@ ComplaintModel.findAllByChartId = function(data, callback){
           chart_id : data,
       },
     }).then(result => {
-      console.log(result)
       callback(result)
     })
 }

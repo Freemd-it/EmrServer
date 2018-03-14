@@ -1,9 +1,104 @@
 import $ from 'jquery';
+import 'jquery-validation';
+
+/**
+ * patient form 유효성 검사
+ */
+$('#patient_form').validate({
+    onkeyup:false,
+    onfocusout : function(element){
+        $(element).valid();
+    },
+    rules:{
+        name: {
+            required: true,
+            rangelength: [2, 10]
+        },
+        birth: {
+          required: true,
+          dateISO: true
+        },
+        height: {
+            digits: true
+        },
+        weight: {
+            digits: true
+        },
+        smoking: {
+            number: true,
+            min: 0
+        },
+        smokingPeriod: {
+            digits: true
+        },
+        drinking: {
+            number: true,
+            min: 0
+        },
+        drinkingPeriod: {
+            digits: true
+        }
+    },
+    messages:{
+        name: {
+            required: "이름을 입력해주세요",
+            rangelength: "이름을 2자에서 10자 사이로 입력해주세요"
+        },
+        birth: {
+          required: "생년월일을 정확히 입력해주세요",
+          dateISO: "생년월일을 정확히 입력해주세요"
+        },
+        height: {
+            digits: "신장을 양의 정수 형식으로 입력해주세요"
+        },
+        weight: {
+            digits: "체중을 양의 정수 형식으로 입력해주세요"
+        },
+        smoking: {
+            number: "흡연량을 숫자 형식으로 입력해주세요",
+            min: "흡연량은 음수를 입력할 수 없습니다"
+        },
+        smokingPeriod: {
+            digits: "흡연경력을 양의 정수 형식으로 입력해주세요"
+        },
+        drinking: {
+            number: "음주량을 숫자 형식으로 입력해주세요",
+            min: "음주량은 음수를 입력할 수 없습니다"
+        },
+        drinkingPeriod: {
+            digits: "음주경력을 양의 정수 형식으로 입력해주세요"
+        }
+    },
+    showErrors:function(errorMap, errorList){
+        if(this.numberOfInvalids()) {
+            $.uiAlert({
+                textHead: '[경고]',
+                text: errorList[0].message,
+                bgcolor: '#FF5A5A',
+                textcolor: '#fff',
+                position: 'top-center',
+                time: 2
+            });
+            errorList[0].element.focus();
+        }
+    }
+});
+
+/**
+ * 엔터 search버튼 임포팅
+ */
+
+ $('#nameInput').keydown(function(){
+    if(event.keyCode == 13){
+       $('#btn-name-send').trigger('click');
+    }
+});
 
 /**
  * 이름으로 조회
  */
 $('#btn-name-send').on('click', () => {
+
     const name = $.trim($('#nameInput').val());
     let docs;
     let date;
@@ -36,7 +131,6 @@ $('#btn-name-send').on('click', () => {
         cache: false,
     }).done((result) => {
 
-        console.log(result);
         if(!result.length) {
 
 
@@ -54,6 +148,7 @@ $('#btn-name-send').on('click', () => {
             }, 1000);
 
             $('#nameInput').val('');
+            $('#name').val(name);
             $('#name').val(name);
             $('#height').val('');
             $('#weight').val('');
@@ -113,9 +208,9 @@ $('#btn-name-send').on('click', () => {
 
             $('#weight').val(result[0].weight);
 
-            $('#drinking').val(result[0].smokingAmount);
+            $('#drinking').val(result[0].drinkingAmount);
 
-            $('#smoking').val(result[0].drinkingAmount);
+            $('#smoking').val(result[0].smokingAmount);
 
             $('#smokingPeriod').val(result[0].smokingPeriod);
 
@@ -181,7 +276,7 @@ $('#btn-name-send').on('click', () => {
                 date = new Date(result[i].birth);
                 $('#nameInput').val('');
                 $('#list').append(
-                    '  <div id=' + result[i].id + '  class="item" align="middle">\n' +
+                    '  <div id=' + result[i].id + '  class="item homonym-item" align="middle">\n' +
                     '                    <div id=' + result[i].id + ' class="content">\n' +
                     '                        <div id=' + result[i].id + ' class="header">' + result[i].name +'</div>\n' +
                     '                        ' + date.getFullYear() + ' 년 ' + (date.getMonth()+1) + ' 월 ' + date.getDate() + ' 일 '+
@@ -199,7 +294,7 @@ $('#btn-name-send').on('click', () => {
 /**
  * 동명이인 id로 조회
  */
-$(document).on('click', '.item', (e) => {
+$(document).on('click', '.homonym-item', (e) => {
     let date;
     let idx = 1;
     const docs = {
@@ -214,8 +309,6 @@ $(document).on('click', '.item', (e) => {
         dataType: 'json',
         cache: false,
     }).done((result) => {
-        console.log('#####')
-        console.log(result)
         $('#nameMessage').html('[ ' + result.name + ' ]' + ' 님이 조회됐습니다.');
 
         $('#message').attr({
@@ -364,12 +457,18 @@ $('input[name="pastMedication"]').on('change', () => {
     }
 });
 
+
+
 $('#sendToPart2').on('click', () => {
+
+    if(!$('#patient_form').valid()){
+      return;
+    }
+
     let docs;
+
     const name = $('#name').val();
     const birth = $('#birth').val();
-    console.log(birth)
-    console.log(typeof birth)
     const height = $('#height').val();
     const weight = $('#weight').val();
     const BMI = $('#bmi').val();
@@ -391,7 +490,7 @@ $('#sendToPart2').on('click', () => {
 
     docs = {
         name,
-        birth: birth.toString(),
+        birth,
         height,
         weight,
         BMI,
@@ -411,8 +510,6 @@ $('#sendToPart2').on('click', () => {
         pastMedicationType,
         pastMedication,
     };
-    console.log(docs)
-    // return 0;
 
     $.ajax({
         type: 'POST',
@@ -427,6 +524,8 @@ $('#sendToPart2').on('click', () => {
             this.reset();
         });
 
+        $('#gender').dropdown('set selected', 'male');
+
         $.uiAlert({
           textHead: '[알림]',
           text: name+'님의 접수가 완료되었습니다.',
@@ -435,7 +534,6 @@ $('#sendToPart2').on('click', () => {
           position: 'top-left',
           time: 2,
         })
-        //todo 정상적으로 등록되었는지 어럴트, 정상적 등록시 적힌데이터 지우기
     });
 
 });

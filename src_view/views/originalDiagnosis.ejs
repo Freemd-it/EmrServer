@@ -6,15 +6,30 @@
     <title>Freemed-EMR</title>
     <link href="/vscode.ico" rel="shortcut icon">
     <link href="/dist/index.css" rel="stylesheet">
+    <style>
+        .past-diagnosis-item {
+          padding: 8% !important;
+        }
+    </style>
 </head>
 
 <body>
+  <div class="ui sidebar inverted vertical menu past-diagnosis-list-wrap">
+
+    <div class="ui inverted segment past-diagnosis-list-segment">
+      <div class="ui inverted relaxed divided list past-diagnosis-list">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pusher">
 
     <header>
         <% include ./parts/header.ejs %>
     </header>
 
-    <section class="ui container" style="margin-top:55px">
+    <section class="ui container" style="margin-top:55px;">
         <div class="ui grid">
             <div class="left floated six wide column" style="margin-left:.1%">
                 <h1>본진</h1>
@@ -29,11 +44,11 @@
 
         <div class="ui form container">
             <!-- TODO 환자 정보 들어와야 disable 풀어야함. -->
-            <button id="vitalSign" class="ui primary button" style="float: right;">바이탈 사인</button>
+            <button id="vitalSign" class="ui primary button" style="float: right;" disabled>바이탈 사인</button>
             <button id="pastDiagnosisRecord" class="ui primary button" style="float: right;" disabled>과거 진료 기록</button>
-            <button id="diagonosis" class="ui primary button" style="float: left;">진료</button>
-            <button id="preDiagonosis" class="ui primary button" style="float: left;">예진 정보</button>
-            <button id="patientInfo" class="ui primary button" style="float: left;">환자 정보</button>
+            <button id="diagonosis" class="ui primary button" style="float: left;" disabled>진료</button>
+            <button id="preDiagonosis" class="ui primary button" style="float: left;" disabled>예진 정보</button>
+            <button id="patientInfo" class="ui primary button" style="float: left;" disabled>환자 정보</button>
             <div class="ui clearing divider" style="border-top : 0px;"> </div>
 
             <!-- 아래 부분을 바꿔줌 vitalSign and past record -->
@@ -69,7 +84,7 @@
                 </div>
 
                 <div class="main-hide-and-show-row" id="patient-info-container">
-                  <form id="patient_form" class="ui form container">
+                  <form id="patientChartForm" class="ui form container">
                       <div class="ui segment">
                           <h3 class="ui dividing header">환자 정보</h3>
 
@@ -365,10 +380,10 @@
                   </form>
                 </div>
 
-                <div class="main-hide-and-show-row" id="pre-diagosis-container">
+                <div class="main-hide-and-show-row" id="pre-diagnosis-container">
                   <!-- 불러온 환자의 예진 정보 -->
 
-                  <form id="chartForm" class="ui segment">
+                  <form id="preDiagonosisChartForm" class="ui segment">
                       <h3 class="ui dividing header" style="padding-bottom: 0.7rem;">예진 정보</h3>
                       <div class="two fields">
                           <div class="field">
@@ -385,12 +400,12 @@
                       <div class="two fields">
                           <div class="field">
                               <label>HR <scan style="font-size : 10px;">(Heart Rate , 심박수)</scan></label>
-                              <input type="text" id="heartRate">
+                              <input type="text" id="heartRate" name="heartRate">
                           </div>
 
                           <div class="field">
                               <label>PR <scan style="font-size : 10px;">(Pulse Rate , 맥박수)</scan></label>
-                              <input type="text" id="pulseRate">
+                              <input type="text" id="pulseRate" name="pulseRate">
                           </div>
                       </div>
 
@@ -398,18 +413,18 @@
                       <div class="two fields">
                           <div class="field">
                               <label>BT <scan style="font-size : 10px;">(Body Temporature , 체온)</scan></label>
-                              <input type="text" id="bodyTemporature">
+                              <input type="text" id="bodyTemporature" name="bodyTemporature">
                           </div>
 
                           <div class="field">
                               <label>BP <scan style="font-size : 10px;">(Blood Pressure , 혈압)</scan></label>
                               <div class="two fields">
                                   <div class="field">
-                                      <input type="number" placeholder="수축기" id="systoleBloodPressure">
+                                      <input type="number" placeholder="수축기" id="systoleBloodPressure" name="systoleBloodPressure">
                                   </div>
 
                                   <div class="field">
-                                      <input type="number" placeholder="이완기" id="diastoleBloodPressure">
+                                      <input type="number" placeholder="이완기" id="diastoleBloodPressure" name="diastoleBloodPressure">
                                   </div>
                               </div>
                           </div>
@@ -419,12 +434,12 @@
                       <div class="two fields">
                           <div class="field">
                               <label>Glucose <scan style="font-size : 10px;">(혈당)</scan></label>
-                              <input type="number" id="bloodGlucose">
+                              <input type="number" id="bloodGlucose" name="bloodGlucose">
                           </div>
 
                           <div class="field">
                               <label>식후</label>
-                              <input type="text" id="mealTerm">
+                              <input type="text" id="mealTerm" name="mealTerm">
                           </div>
                       </div>
 
@@ -438,12 +453,9 @@
                   </div>
                 </div>
 
-                <!-- TODO 예진 본진 전환  -->
-                <!-- TODO 접수 본진 전환  -->
+                <div class="main-hide-and-show-row" id="diagnosis-container">
 
-                <div class="main-hide-and-show-row" id="diagosis-container">
-
-                    <form id="chartForm" class="ui segment">
+                    <form id="diagonosisChartForm" class="ui segment">
                         <div class="two fields">
                             <div class="field">
                                 <label>CHART ID</label>
@@ -463,7 +475,7 @@
 
                         <div class="field">
                             <label>Present illness / Medication</label>
-                            <textarea class="presentIllness" name="impression" rows="3"></textarea>
+                            <textarea class="presentIllness" name="presentIllness" rows="3"></textarea>
                         </div>
                     </form>
 
@@ -471,9 +483,8 @@
                         <button id="pharmacopoeia" class="ui primary button" style="float: right;" disabled>약전</button>
                         <h3 class="ui dividing header">처방</scan>
                         </h3>
-
+                        <form id="prescriptionForm">
                         <table class="ui celled table" style="text-align:center;">
-
                             <thead>
                                 <tr>
                                     <th width="20%">약품명</th>
@@ -485,16 +496,19 @@
                                     <th width="6%">삭제</th>
                                 </tr>
                             </thead>
-                            <tbody id="prescriptionTableBody">
+                            <tbody id="prescription-table-body">
                                 <tr>
                                     <td class="defaultPrescriptionTableBody" style="text-align:center;" colspan="6">약전 탭에서 처방하실 약을 추가해주세요.</td>
                                 </tr>
                             </tbody>
                         </table>
+                      </form>
                     </div>
                     <div class="ui segment">
+                      <form id="Treatmentform">
                         <label>Treatment note / Medication</label>
-                        <textarea class="treatmentNote" name="impression" rows="5"></textarea>
+                        <textarea class="treatmentNote" name="treatmentNote" rows="5"></textarea>
+                      </form>
                     </div>
                 </div>
             </div>
@@ -542,8 +556,6 @@
 
     <div class="ui longer modal pharmacopoeia main-page">
         <div class="ui two item stackable tabs menu">
-
-
             <select class="ui search dropdown categoryWidth main-category-select">
                 <option class="default" value="">대분류</option>
             </select>
@@ -587,7 +599,11 @@
         </div>
     </div>
 
-    <script src="/dist/index.bundle.js"></script>
+    <!-- Site content Start divider (<div class="pusher">) -->
+    </div>
+    <!-- Site content End divider -->
+
+<script src="/dist/index.bundle.js"></script>
 </body>
 
 </html>

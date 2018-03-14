@@ -28,10 +28,10 @@ router.get('/login', passportService.passport.authenticate('google', { scope:
 router.get('/google/callback', passportService.passport.authenticate('google'), function(req, res){
     if (req.user._json.domain !== 'freemed.or.kr') {
         req.logout();
-        return res.redirect('http://localhost:8080/views/login.html?err=account');
+        return res.redirect('http://localhost:3000/login?err=account');
     }
 
-    res.redirect('http://localhost:8080');
+    res.redirect('http://localhost:3000/receipt');
 });
 
 // router.get('/login', function(req, res){

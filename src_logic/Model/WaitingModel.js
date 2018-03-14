@@ -5,26 +5,21 @@ const WaitingModel = function(data) {
 }
 
 /* Find */
-WaitingModel.FindByStatus = function(status, callback) {
+WaitingModel.FindByStatus = async function(options) {
 
-  waiting.findAll({
-      where: {
-        status,
-      },
-      attributes: ['chart_id', 'name', 'birth', 'status'],
-    })
-    .then(result => {
-      callback(result);
-    })
-    .catch(error => {
-      callback(error);
-    });
+  return await waiting.findAll(options)
+}
+
+WaitingModel.FindByPharmacy = async function (options) {
+
+  const { limit, attributes, where, order } = options;
+  return await waiting.findAll(options);
 }
 
 WaitingModel.FindAll = function(callback) {
 
   waiting.findAll({
-      attributes: ['chart_id', 'name', 'birth', 'status'],
+      attributes: ['chartNumber', 'name', 'birth', 'status'],
     })
     .then(result => {
       callback(result);
@@ -40,7 +35,7 @@ WaitingModel.Update = function(data, callback) {
     status: data.status
   }, {
     where: {
-      chart_id: data.chart_id
+      chartNumber: data.chart_id
     }
   }).then(results => {
     callback(results);
@@ -50,7 +45,7 @@ WaitingModel.Update = function(data, callback) {
 /* Create */
 WaitingModel.Insert = function(data, callback) {
   waiting.create({
-      chart_id: data.dataValues.chartNumber,
+      chartNumber: data.dataValues.chartNumber,
       name: data.name,
       birth: data.birth,
       status: 1
@@ -60,6 +55,12 @@ WaitingModel.Insert = function(data, callback) {
     .catch(error => {
       callback(error);
     });
+}
+
+WaitingModel.Count = async function (options) {
+
+  const { where = {} } = options;
+  return waiting.count({ where });
 }
 
 module.exports = WaitingModel;
