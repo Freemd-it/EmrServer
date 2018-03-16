@@ -119,12 +119,18 @@ function renderPastOriginalDiagnosis(data) {
   );
   // 예진 정보 렌더링
 
-  $(document).on('click', '#get-past-chart', () => {
+  $('#get-past-chart').on('click', () => {
 
       renderOriginalDiagnosis(data);
       $('.past-chart-modal').modal('hide');
       $('.ui.sidebar').sidebar('toggle');
   })
+  /**
+   * @description 이게 중복으로 호출되는 문제가 발생하고 있음
+   * 결과적으로 동작에 문제는 없지만
+   * 차 후에 로컬 스토리지를 이용하는 방식? 처럼 다른 방식으로 변경할 필요 있음
+   * 아님 커링을 이용?
+   */
 }
 
 function renderOriginalDiagnosis(data) {
@@ -170,14 +176,14 @@ function renderOriginalDiagnosis(data) {
   $('.doses-for-day').addClass('ui search fluid dropdown');
   $('.doses-for-day.dropdown').dropdown();
 
-  return $.uiAlert({
-    textHead: '[알림]',
-    text: pastChart + '를 복사하였습니다.',
-    bgcolor: '#55a9ee',
-    textcolor: '#fff',
-    position: 'top-left',
-    time: 3
-  })
+  // return $.uiAlert({
+  //   textHead: '[알림]',
+  //   text: pastChart + '를 복사하였습니다.',
+  //   bgcolor: '#55a9ee',
+  //   textcolor: '#fff',
+  //   position: 'top-left',
+  //   time: 3
+  // })
 }
 
 function getPastChartList(patient) {
