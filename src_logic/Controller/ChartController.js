@@ -119,7 +119,7 @@ router.get('/detail/:chartId/:patientId/:chartNumber', function (req, res, next)
           where: { chartNumber: chartNumber } },
         { model: patient,
           where: { id: patientId },
-          include: { model: history }},
+          attributes: ['name']},
         { model: complaint,
           where: { chart_id: chartId } }
     ]

@@ -11,7 +11,7 @@ const Medicine = dbService.define('medicine', {
     ingredient : { type : sequelize.STRING(100), allowNull : false },
     amount : { type : sequelize.INTEGER(3), allowNull : false },
     quantity : { type : sequelize.INTEGER(3), allowNull : false },
-    available : { type : sequelize.TINYINT(1), allowNull : false, defaultValue : 1 },
+    available : { type : sequelize.BOOLEAN, allowNull : false, defaultValue : 1 },
     totalAmount : { type : sequelize.INTEGER(6), allowNull : false },
     expiry : { type: sequelize.DATE, allowNull : true },
     memo : { type: sequelize.STRING(300), allowNull : true }

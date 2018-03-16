@@ -505,13 +505,6 @@ $(document).on('click', '#past-chart-pre-diagnosis', () => {
 })
 
 /**
- * 환자 정보
- */
-$(document).on('click', '#past-chart-patient-info', () => {
-    showAndHide('past-hide-and-show-row', 'past-chart-patient-info-container');
-})
-
-/**
  * vital sign 생성
  */
 $('#vitalSign').on('click', () => {
