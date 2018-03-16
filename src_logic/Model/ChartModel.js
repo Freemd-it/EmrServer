@@ -317,7 +317,6 @@ ChartModel.find = async function (options) {
             order: order
         })
     }
-
 }
 
 ChartModel.findAll = async function (options) {

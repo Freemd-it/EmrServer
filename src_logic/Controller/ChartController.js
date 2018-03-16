@@ -3,8 +3,8 @@
  * Defendencies
  */
 const express = require('express');
-const chartModel = require('../Model/ChartModel.js');
-const waitingModel = require('../Model/WaitingModel.js');
+const chartModel = require('../Model/ChartModel');
+const waitingModel = require('../Model/WaitingModel');
 const resultCode = require('../Common/ResultCode');
 const { respondJson, respondOnError } = require('../Utils/respond');
 
@@ -12,9 +12,11 @@ const { respondJson, respondOnError } = require('../Utils/respond');
 /**
  * Entity
  */
+const prescription = require('../Entity/Prescription');
 const chart = require('../Entity/Chart.js');
 const patient = require('../Entity/Patient.js');
-const complaintEntity = require('../Entity/Complaint.js');
+const complaint = require('../Entity/Complaint.js');
+const history = require('../Entity/History.js');
 
 const router = express.Router();
 
@@ -84,19 +86,48 @@ router.get('/vitalSign/:patient_id', function (req, res, next) {
 
 });
 
+/**
+ * @description 과거 진료 기록 조회 (복약지도까지 완료된 것만)
+ */
 router.get('/past/:patient_id', function (req, res, next) {
 
     const { patient_id } = req.params;
 
     const options = {};
     options.attributes = ['id', 'chartNumber', 'patient_id']
-    options.where = { patient_id: patient_id }
+    options.where = { patient_id: patient_id, status: '7' }
     options.order = [['updatedAt', 'DESC']]
 
     chartModel
         .findAll(options)
         .then(result => respondJson(res, resultCode.success, result))
         .catch((error) => respondOnError(res, resultCode.fail, error))
+});
+
+/**
+ * @description get 과거력 포함한 환자정보, 진료정보, CC 포함한 예진 정보 api
+ * 총 5개의 테이블을 조인하는데 다른 방법이 있으면 찾아보는 것도 좋을 듯함
+ */
+router.get('/detail/:chartId/:patientId/:chartNumber', function (req, res, next) {
+
+    const { chartId, patientId, chartNumber } = req.params
+
+    const options = {};
+    options.where = { id: chartId }
+    options.include = [
+        { model: prescription,
+          where: { chartNumber: chartNumber } },
+        { model: patient,
+          where: { id: patientId },
+          include: { model: history }},
+        { model: complaint,
+          where: { chart_id: chartId } }
+    ]
+
+    chartModel
+        .findAll(options)
+        .then(result => respondJson(res, resultCode.success, result))
+        .catch(error => respondOnError(res, resultCode.fail, error))
 });
 
 module.exports = router;

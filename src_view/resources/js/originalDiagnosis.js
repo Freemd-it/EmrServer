@@ -17,7 +17,6 @@ import 'jquery-validation';
 function init() {
 
     if (!_.eq(location.pathname, '/originalDiagnosis')) return;
-
     showAndHide('main-hide-and-show-row', 'diagnosis-container');
 }
 /**
@@ -490,6 +489,27 @@ $('#patientInfo').on('click', () => {
     showAndHide('main-hide-and-show-row', 'patient-info-container');
 })
 
+/**
+ * 과거 진료 기록
+ */
+// $('#past-chart-ori-diagonosis').on('click', () => {
+$(document).on('click', '#past-chart-ori-diagnosis', () => {
+    showAndHide('past-hide-and-show-row', 'past-chart-diagnosis-container');
+})
+
+/**
+ * 과거 예진 기록
+ */
+$(document).on('click', '#past-chart-pre-diagnosis', () => {
+    showAndHide('past-hide-and-show-row', 'past-chart-pre-diagnosis-container');
+})
+
+/**
+ * 환자 정보
+ */
+$(document).on('click', '#past-chart-patient-info', () => {
+    showAndHide('past-hide-and-show-row', 'past-chart-patient-info-container');
+})
 
 /**
  * vital sign 생성

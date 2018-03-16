@@ -32,6 +32,7 @@ EntityService.Init = function(){
 
     chart.hasMany( complaint, { foreignKey : 'chart_id', onUpdate : 'CASCADE'});
     chart.hasMany( ocs, { foreignKey : 'chart_id', onUpdate : 'CASCADE'});
+    chart.hasMany(prescription, { foreignKey: 'chartNumber', sourceKey: 'chartNumber' });
     chart.belongsTo(patient, { foreignKey : 'patient_id'});
     /*
       차트 : CC = 1 : N
@@ -41,6 +42,7 @@ EntityService.Init = function(){
 
     medicine.hasMany( prescription, { foreignKey : 'medicine_id', onUpdate : 'CASCADE'});
     prescription.belongsTo(medicine, { foreignKey : 'medicine_id'});
+    prescription.belongsTo(chart, { foreignKey: 'chartNumber' });
 
     permission.sync().then(() => {
 
