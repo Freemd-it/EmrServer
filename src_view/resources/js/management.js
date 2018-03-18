@@ -817,6 +817,8 @@ function openConfirmModal (target, message, gotoFunction) {
 }
 
 $('#select-all-medicine-button').click(function(){
+  $("#management-main-category-select").val('').prop("selected", true);
+  $("#management-small-category-select").val('').prop("selected", true);
 
   let medicines = JSON.parse(window.localStorage.getItem('medicine'));
 
@@ -824,6 +826,14 @@ $('#select-all-medicine-button').click(function(){
     $('#medicine-management-table-body *').remove();
 
   setMedicineTableBody(medicines);
+  $.uiAlert({
+    textHead: '[알림]',
+    text: ' 전체 약품 정보가 조회되었습니다 ',
+    bgcolor: '#55a9ee',
+    textcolor: '#fff',
+    position: 'top-left',
+    time: 2,
+  });
 })
 
 function updateLocalStorage(callback, target){
