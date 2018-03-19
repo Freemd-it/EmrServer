@@ -244,12 +244,12 @@ function setMedicineTableBody(datas){
               <td style="overflow:visible;">${secondaryCategory}</td>
               <td>${name}</td>
               <td>${ingredient}</td>
-              <td>${capacity}</td>
+              <td>${capacity ? capacity : ''}</td>
               <td>${amount}</td>
               <td>${expiry}</td>
               <td>${quantity}</td>
               <td>${totalAmount}</td>
-              <td>${memo}</td>
+              <td>${memo ? memo : ''}</td>
               <td>
                 <i class="configure-medicine-by-inventory configure link icon"></i>
                 <i class="delete-medicine-by-inventory trash link icon"></i>
