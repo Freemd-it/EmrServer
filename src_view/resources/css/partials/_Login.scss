@@ -25,12 +25,32 @@
   width: 100%;
 }
 
+.special-login-form-wrap {
+  display: none;
+}
+
 .login-act-tag {
   margin-top: 8px !important;
   width: 100%;
   height: 60px;
   line-height: 32px !important;
   font-size: 17px !important;
+}
+
+.login-button-link {
+  width: 100%;
+}
+
+.special_button-wrap {
+  display: inline-block;
+  width: 49%;
+}
+
+.special-login-input {
+  margin-top: 8px !important;
+  width: 100%;
+  height: 60px;
+  font-size: 14px !important;
 }
 
 .silde-wrapper {
@@ -225,4 +245,8 @@ input:focus~.highlight {
     -webkit-animation: inputHighlighter 0.3s ease;
     -moz-animation: inputHighlighter 0.3s ease;
     animation: inputHighlighter 0.3s ease;
+}
+
+.login-logo-desc {
+  margin-top: 8px !important;
 }

@@ -17,11 +17,36 @@ function slideImage(len, i) {
   }, 5000)
 }
 
-function fadeInOut(source, target) {
+function fadeInOut (source, target) {
   source
   .fadeOut(1500, () => {
     target.fadeIn(1500)
   })
 }
+
+function fadeButtonAnimation (outContent, inContent) {
+  $(outContent)
+    .transition({
+      animation: 'fade left',
+      duration: 300
+    })
+  setTimeout(() => {
+    $(inContent)
+        .transition({
+          animation: 'fade right',
+          duration: 300
+        })
+  }, 300)
+}
+
+$('#login-special').on('click', () => {
+
+  fadeButtonAnimation('#login-special', '.special-login-form-wrap')
+})
+
+$('#login-special-cancel-btn').on('click', () => {
+
+  fadeButtonAnimation('.special-login-form-wrap', '#login-special')
+})
 
 init()

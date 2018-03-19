@@ -18,7 +18,7 @@
             <div class="login-logo">
                 <img class="logo-img" src="/img/freemed_logo_eng.png" alt="">
                 <b><h4>Welcome to Freemed EMR</h4></b>
-                <h5>Login with your
+                <h5 class="login-logo-desc">Login with your
                     <b>Freemed ID</b>
                 </h5>
             </div>
@@ -28,28 +28,43 @@
                   <div class="login-button-link">
                     <a class="ui google plus button login-act-tag" href="/auth/login" id="login-member">
                       <i class="google plus icon"></i>
+                      Sign In With Google
                     </a>
                   </div>
                   <div class="login-button-link">
-                    <a class="ui grey button login-act-tag" id="login-special">For Doctor, Pharmacist</a>
+
+                    <a class="ui vk button login-act-tag" id="login-special">
+                      <i class="address card outline icon"></i>
+                      For Doctor, Pharmacist
+                    </a>
                   </div>
 
-                    <!-- <div class="group"> -->
-                        <!-- <input type="text" name="userid" placeholder="Input your Id"> -->
-                        <!-- <span class="highlight"></span> -->
-                        <!-- <span class="bar"></span> -->
-                        <!-- <label>ID</label> -->
-                    <!-- </div> -->
-                    <!-- <div class="group"> -->
-                        <!-- <input type="password" name="password" placeholder="Input your Password"> -->
-                        <!-- <span class="highlight"></span> -->
-                        <!-- <span class="bar"></span> -->
-                        <!-- <label>Password</label> -->
-                    <!-- </div> -->
+                  <div class="special-login-form-wrap">
+                    <div class="ui form">
+                      <div class="special-login-input-wrap">
+                          <input type="text" class="special-login-input" name="special-account" placeholder="Input Doctor or Pharmacist Account">
+                      </div>
+                      <div class="special-login-input-wrap">
+                          <input type="password" class="special-login-input" name="special-account-password" placeholder="Input Doctor or Pharmacist Password">
+                      </div>
+                    </div>
 
-                    <!-- <button class="send-btn loginForm__login_btn"> -->
+                    <div class="login-button-link">
+                      <div class="special_button-wrap">
+                        <a class="ui vk button login-act-tag" id="login-special-cancel-btn">
+                          <i class="address card outline icon"></i>
+                          Cancel
+                        </a>
+                      </div>
+                      <div class="special_button-wrap">
+                        <a class="ui vk button login-act-tag" id="login-special-btn">
+                          <i class="address card outline icon"></i>
+                          Sign In
+                        </a>
+                      </div>
 
-                    <!-- </button> -->
+                    </div>
+                  </div>
                 </form>
             </div>
         </div>
