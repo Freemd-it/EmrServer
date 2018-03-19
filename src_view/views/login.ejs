@@ -2,51 +2,68 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
+    <title>Freemed-EMR</title>
     <link href="/vscode.ico" rel="shortcut icon">
     <link href="/dist/index.css" rel="stylesheet">
-
+    <style>
+    </style>
 </head>
 
 <body>
+  <div class="content-wrap">
     <div class="login-container">
         <div class="login-wrapper">
 
             <div class="login-logo">
                 <img class="logo-img" src="/img/freemed_logo_eng.png" alt="">
-                <h4>Welcome to Freemed</h4>
-                <p>Login with your
+                <b><h4>Welcome to Freemed EMR</h4></b>
+                <h5>Login with your
                     <b>Freemed ID</b>
-                </p>
+                </h5>
             </div>
 
             <div class="login-form">
-                <form action="/" method="POST" class="form login">
+                <form class="ui form login">
+                  <div class="login-button-link">
+                    <a class="ui google plus button login-act-tag" href="/auth/login" id="login-member">
+                      <i class="google plus icon"></i>
+                    </a>
+                  </div>
+                  <div class="login-button-link">
+                    <a class="ui grey button login-act-tag" id="login-special">For Doctor, Pharmacist</a>
+                  </div>
 
-                    <div class="group">
-                        <input type="text" name="userid" placeholder="Input your Id" required>
+                    <!-- <div class="group"> -->
+                        <!-- <input type="text" name="userid" placeholder="Input your Id"> -->
                         <!-- <span class="highlight"></span> -->
-                        <span class="bar"></span>
+                        <!-- <span class="bar"></span> -->
                         <!-- <label>ID</label> -->
-                    </div>
-                    <div class="group">
-                        <input type="password" name="password" placeholder="Input your Password" required> 
+                    <!-- </div> -->
+                    <!-- <div class="group"> -->
+                        <!-- <input type="password" name="password" placeholder="Input your Password"> -->
                         <!-- <span class="highlight"></span> -->
-                        <span class="bar"></span>
+                        <!-- <span class="bar"></span> -->
                         <!-- <label>Password</label> -->
-                    </div>
+                    <!-- </div> -->
 
-                    <button class="send-btn loginForm__login_btn">
-                        <a class="login_btn" id="login">Login</a>
-                    </button>
+                    <!-- <button class="send-btn loginForm__login_btn"> -->
+
+                    <!-- </button> -->
                 </form>
-            </div>
-
-            <div class="login-wrapper-footer">
-                <a href="#">Forgot Password</a>
-                <a href="#">Create Account</a>
             </div>
         </div>
     </div>
+    <div class="silde-container">
+        <div class="silde-wrapper">
+            <img class="slide-img" src="/img/freemed_autumn.jpg" alt="">
+            <img class="slide-img" src="/img/freemed_winter.jpg" alt="">
+            <img class="slide-img" src="/img/freemed_leadership.jpg" alt="">
+            <img class="slide-img" src="/img/freemed_recruit.jpg" alt="">
+        </div>
+    </div>
+  </div>
+  <script src="/dist/index.bundle.js"></script>
 </body>
 
 </html>

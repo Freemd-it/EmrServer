@@ -17,17 +17,51 @@
 }
 
 .login-form {
+    text-align: center;
     margin-top: 40px;
 }
 
+.content-wrap {
+  width: 100%;
+}
+
+.login-act-tag {
+  margin-top: 8px !important;
+  width: 100%;
+  height: 60px;
+  line-height: 32px !important;
+  font-size: 17px !important;
+}
+
+.silde-wrapper {
+  width: 100%;
+}
+
+.slide-img {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+.silde-container {
+  width: 50%;
+  float: left;
+}
+
+#login-member{
+  margin: 0 auto;
+}
+
 .login-container {
-    background: #eaeaea;
+    width: 50%;
+    float: left;
+    // background: #eaeaea;
     color: #282828;
     .login-wrapper {
         font-size: 20px;
         width: 360px;
         margin: 0 auto;
-        padding-top: 120px;
+        padding-top: 30%;
         height: 100%;
         position: relative;
     }

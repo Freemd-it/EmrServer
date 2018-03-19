@@ -4,7 +4,7 @@ const router = express.Router();
 
 
 router.get('/', function (req, res, next) {
-    res.render('login_test');
+    res.render('login');
 })
 
 
