@@ -246,7 +246,7 @@ function setMedicineTableBody(datas){
               <td>${ingredient}</td>
               <td>${capacity ? capacity : ''}</td>
               <td>${amount}</td>
-              <td>${expiry}</td>
+              <td>${expiry ? expiry : ''}</td>
               <td>${quantity}</td>
               <td>${totalAmount}</td>
               <td>${memo ? memo : ''}</td>
