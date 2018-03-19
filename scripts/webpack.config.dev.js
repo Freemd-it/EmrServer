@@ -20,7 +20,7 @@ const config = {
     module: {
         rules: webpackLoader
     },
-    plugins: webpackPlugins,
+    plugins: webpackPlugins
 }
 
 

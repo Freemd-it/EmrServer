@@ -6,9 +6,30 @@
     <title>Freemed-EMR</title>
     <link href="/vscode.ico" rel="shortcut icon">
     <link href="/dist/index.css" rel="stylesheet">
+    <style>
+        .past-diagnosis-item {
+          padding: 8% !important;
+        }
+        .past-chart-header {
+          min-height: 74px;
+        }
+        .past-chart-modal {
+          margin-top: -415px !important;
+        }
+    </style>
 </head>
 
 <body>
+  <div class="ui sidebar inverted vertical menu past-diagnosis-list-wrap">
+
+    <div class="ui inverted segment past-diagnosis-list-segment">
+      <div class="ui inverted relaxed divided list past-diagnosis-list">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pusher">
 
     <header>
         <% include ./parts/header.ejs %>
@@ -439,6 +460,7 @@
                 </div>
 
                 <div class="main-hide-and-show-row" id="diagnosis-container">
+                  <!-- 진료 정보 -->
 
                     <form id="diagonosisChartForm" class="ui segment">
                         <div class="two fields">
@@ -584,7 +606,27 @@
         </div>
     </div>
 
-    <script src="/dist/index.bundle.js"></script>
+    <!-- Site content Start divider (<div class="pusher">) -->
+    </div>
+    <!-- Site content End divider -->
+
+    <div class="ui large longer modal past-chart-modal">
+      <div class="past-chart-header header">
+        <div>
+
+        </div>
+        <div>
+          <button id="get-past-chart" class="ui primary button" style="float: right;">불러오기</button>
+          <button id="past-chart-ori-diagnosis" class="ui primary button" style="float: left;">진료 정보</button>
+          <button id="past-chart-pre-diagnosis" class="ui primary button" style="float: left;">예진 정보</button>
+        </div>
+      </div>
+      <div class="content">
+        <% include ./parts/pastChartContent.ejs %>
+      </div>
+    </div>
+
+<script src="/dist/index.bundle.js"></script>
 </body>
 
 </html>

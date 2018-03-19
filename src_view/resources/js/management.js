@@ -453,6 +453,8 @@ function updateMedicineInManagement(target){
   docs.available = target.children().eq(9).children().children().val();
   docs.primaryCategory = $('.main-category-select3 option:selected').attr('value');
   docs.secondaryCategory = update_small_category_value;
+  let medicines = JSON.parse(window.localStorage.getItem('medicine'));
+  docs.totalAmount =  _.filter(medicines, ['id', parseInt(id)])[0].totalAmount;
    // $('.small-category-select3 option:selected').attr('value');
   console.table(docs);
   http

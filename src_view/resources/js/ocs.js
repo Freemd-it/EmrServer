@@ -24,12 +24,12 @@ function setDatePicker () {
 }
 
 function dataInit(startTimeDom, endTimeDom) {
-    const date = new Date();
+    const date = moment().format("YYYY-MM-DD HH:mm:ss");
     if (!startTimeDom.value) {
-        startTimeDom.value = date.toISOString().slice(0, 10);
+        startTimeDom.value = date.slice(0, 10);
     }
     if (!endTimeDom.value) {
-        endTimeDom.value = date.toISOString().slice(0, 10);
+        endTimeDom.value = date.slice(0, 10);
     }
 }
 

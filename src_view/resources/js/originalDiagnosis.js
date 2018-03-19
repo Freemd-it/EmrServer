@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { bb } from "billboard.js";
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
+import diagnosis from './pastDiagnosisList';
 import moment from 'moment';
 import 'jquery-validation';
 
@@ -16,7 +17,6 @@ import 'jquery-validation';
 function init() {
 
     if (!_.eq(location.pathname, '/originalDiagnosis')) return;
-
     showAndHide('main-hide-and-show-row', 'diagnosis-container');
 }
 /**
@@ -213,7 +213,7 @@ $('.completeTab').on('click', () => {
         $('#tableBody *').remove();
 
     const docs = {
-        status: '1',
+        status: '7',
     };
 
     $.ajax({
@@ -225,16 +225,37 @@ $('.completeTab').on('click', () => {
     }).done(result => {
 
         for (let i = 0; i < result.length; i++) {
-            $('#tableBody').append(
-                `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
-                       <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
-                       <td id=${result[i].chartNumber}>${result[i].name}</td>
-                       <td id=${result[i].chartNumber}>${result[i].birth}</td>
-                </tr>`
 
-            )
+            const { code, data } = result;
+
+            if (!_.eq(code, resultCode.success)) {
+                return Promise.reject(`fail get complete paitents ${data.error}`);
+            }
+            return Promise.resolve(data);
+            // $('#tableBody').append(
+            //     `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
+            //            <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
+            //            <td id=${result[i].chartNumber}>${result[i].name}</td>
+            //            <td id=${result[i].chartNumber}>${result[i].birth}</td>
+            //     </tr>`
+            //
+            // )
         }
-    });
+    })
+    .then(result => {
+      const { data } = result;
+      $('#tableBody').append(
+          _.map(data, row => {
+            const { chartNumber, name, birth } = row;
+            return `<tr id="${chartNumber}" flag="complete" class="diagnosis-table-content">
+                        <td id=${chartNumber} flag="complete">${chartNumber}</td>
+                        <td id=${chartNumber} flag="complete">${name}</td>
+                        <td id=${chartNumber} flag="complete">${birth}</td>
+                 </tr>`
+          })
+      );
+    })
+    .catch(error => console.log(error))
 
     $(".waitingTab").removeClass("active");
     $(".completeTab").addClass("active");
@@ -245,6 +266,17 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
     if ($('#originalDiagnosisCCsegment').children().length)
         $('#originalDiagnosisCCsegment *').remove();
     // 현재 화면에 렌더링 되어있던 CC rows 전체 삭제
+
+    const completeFlag = $(e.target).attr('flag')
+
+    $('.impression').val('');
+    $('.presentIllness').val('');
+    $('.treatmentNote').val('');
+    $('#prescription-table-body').empty().append(
+      `<tr>
+        <td class="defaultPrescriptionTableBody" style="text-align:center;" colspan="7">조제를 시작할 환자를 선택해주세요.</td>
+      </tr>`
+    );
 
     const docs = {
         chartNumber: e.target.id,
@@ -259,7 +291,8 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         cache: false,
     }).done(result => {
 
-        // console.log(result)
+        diagnosis
+          .getPastChartList(result.patient_id)
 
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
@@ -341,8 +374,11 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#pastMedicationType').val(result.patient.histories[0].pastMedicationType);
         $('#diseaseDescription').val(result.patient.histories[0].pastHistoryComment);
         $('#allergyDescription').val(result.patient.histories[0].allergyComment)
+
+        if(completeFlag) renderCompleteChart(result)
     })
 
+    $('#doctorSignedComplete').attr('disabled', false);
     $('#vitalSign').attr('disabled', false);
     $('#pharmacopoeia').attr('disabled', false);
     $('#pastDiagnosisRecord').attr('disabled', false);
@@ -351,6 +387,49 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
     $('#patientInfo').attr('disabled', false);
     $('.ui.longer.modal').modal('hide');
 });
+
+function renderCompleteChart(data) {
+
+  http
+      .getMethod(`/prescription/${data.chartNumber}`)
+      .then(result => {
+          const { data, code } = result;
+
+          if (!_.eq(code, resultCode.success)) {
+              return Promise.reject(`get fail prescriptions data ${data.error}`);
+          }
+          return Promise.resolve(data);
+      })
+      .then(data => {
+
+        if ($('#prescription-table-body .defaultPrescriptionTableBody').length)
+          $('#prescription-table-body .defaultPrescriptionTableBody').remove();
+        $('#prescription-table-body').empty();
+        $('#prescription-table-body').append(`<tr></tr>`);
+
+        $('#prescription-table-body').append(
+            _.map(data.prescriptions, data => {
+              const { id, medicineName, medicineIngredient, doses, dosesCountByDay, dosesDay, remarks } = data;
+              return ` <tr prescription-id="${id}" class="ui fluid">
+                <td>${medicineName}</td>
+                <td>${medicineIngredient}</td>
+                <td>${doses}</td>
+                <td>${dosesCountByDay}</td>
+                <td>${dosesDay}</td>
+                <td>${remarks === '' ? '-' : remarks}</td>
+                <td>-</td>
+              </tr>`
+            })
+        );
+      })
+      .catch(error => console.log(error))
+
+  $('.impression').val(data.impression);
+  $('.presentIllness').val(data.presentIllness);
+  $('.treatmentNote').val(data.treatmentNote);
+  $('#doctorSignedComplete').attr('disabled', true);
+  $('#pharmacopoeia').attr('disabled', true);
+}
 
 $('#doctorSignedComplete').on('click', function () {
 
@@ -488,6 +567,20 @@ $('#patientInfo').on('click', () => {
     showAndHide('main-hide-and-show-row', 'patient-info-container');
 })
 
+/**
+ * 과거 진료 기록
+ */
+// $('#past-chart-ori-diagonosis').on('click', () => {
+$(document).on('click', '#past-chart-ori-diagnosis', () => {
+    showAndHide('past-hide-and-show-row', 'past-chart-diagnosis-container');
+})
+
+/**
+ * 과거 예진 기록
+ */
+$(document).on('click', '#past-chart-pre-diagnosis', () => {
+    showAndHide('past-hide-and-show-row', 'past-chart-pre-diagnosis-container');
+})
 
 /**
  * vital sign 생성
@@ -650,6 +743,5 @@ $('#vitalSign').on('click', () => {
         })
 
 });
-
 
 init();

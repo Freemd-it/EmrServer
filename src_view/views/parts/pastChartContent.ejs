@@ -1,0 +1,121 @@
+<div class="past-hide-and-show">
+
+  <div class="past-hide-and-show-row ui form" id="past-chart-diagnosis-container">
+      <form id="diagonosisChartForm" class="ui segment">
+          <div class="two fields">
+              <div class="field">
+                  <label>CHART ID</label>
+                  <input type="text" id="past-originChartId" style="border-color: #fc0a0e; background: #fcf4f1" disabled>
+              </div>
+
+              <div class="field">
+                  <label>NAME</label>
+                  <input type="text" id="past-originName" style="border-color: #fc0a0e; background: #fcf4f1" disabled>
+              </div>
+          </div>
+
+          <div class="field">
+              <label>Impression</label>
+              <textarea class="past-impression" name="impression" rows="5"></textarea>
+          </div>
+
+          <div class="field">
+              <label>Present illness / Medication</label>
+              <textarea class="past-presentIllness" name="presentIllness" rows="3"></textarea>
+          </div>
+      </form>
+
+      <div class="ui segment">
+          <h3 class="ui dividing header">처방</scan></h3>
+          <form id="past-prescriptionForm">
+          <table class="ui celled table" style="text-align:center;">
+              <thead>
+                  <tr>
+                      <th width="20%">약품명</th>
+                      <th width="23%">성분명 / 함량</th>
+                      <th width="10%">1회 투약량</th>
+                      <th width="10%">1일<br />복용횟수</th>
+                      <th width="10%">복용일수</th>
+                      <th>비고</th>
+                  </tr>
+              </thead>
+              <tbody id="past-prescription-table-body">
+              </tbody>
+          </table>
+        </form>
+      </div>
+      <div class="ui segment">
+        <form id="past-Treatmentform">
+          <label>Treatment note / Medication</label>
+          <textarea class="past-treatmentNote" name="treatmentNote" rows="5"></textarea>
+        </form>
+      </div>
+    </div>
+
+    <div class="past-hide-and-show-row ui form" id="past-chart-pre-diagnosis-container">
+      <form id="preDiagonosisChartForm" class="ui segment">
+          <h3 class="ui dividing header" style="padding-bottom: 0.7rem;">예진 정보</h3>
+          <div class="two fields">
+              <div class="field">
+                  <label>CHART ID</label>
+                  <input type="text" id="past-preChartId">
+              </div>
+
+              <div class="field">
+                  <label>NAME</label>
+                  <input type="text" id="past-preName">
+              </div>
+          </div>
+
+          <div class="two fields">
+              <div class="field">
+                  <label>HR <scan style="font-size : 10px;">(Heart Rate , 심박수)</scan></label>
+                  <input type="text" id="past-heartRate" name="heartRate">
+              </div>
+
+              <div class="field">
+                  <label>PR <scan style="font-size : 10px;">(Pulse Rate , 맥박수)</scan></label>
+                  <input type="text" id="past-pulseRate" name="pulseRate">
+              </div>
+          </div>
+
+
+          <div class="two fields">
+              <div class="field">
+                  <label>BT <scan style="font-size : 10px;">(Body Temporature , 체온)</scan></label>
+                  <input type="text" id="past-bodyTemporature" name="bodyTemporature">
+              </div>
+
+              <div class="field">
+                  <label>BP <scan style="font-size : 10px;">(Blood Pressure , 혈압)</scan></label>
+                  <div class="two fields">
+                      <div class="field">
+                          <input type="number" placeholder="수축기" id="past-systoleBloodPressure" name="systoleBloodPressure">
+                      </div>
+
+                      <div class="field">
+                          <input type="number" placeholder="이완기" id="past-diastoleBloodPressure" name="diastoleBloodPressure">
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="two fields">
+              <div class="field">
+                  <label>Glucose <scan style="font-size : 10px;">(혈당)</scan></label>
+                  <input type="number" id="past-bloodGlucose" name="bloodGlucose">
+              </div>
+
+              <div class="field">
+                  <label>식후</label>
+                  <input type="text" id="past-mealTerm" name="mealTerm">
+              </div>
+          </div>
+      </form>
+      <div class="ui segment">
+        <h3 class="ui dividing header">C.C<scan style="font-size : 10px;">(Chief Complaint)</scan></h3>
+        <div class="field">
+          <div id="past-originalDiagnosisCCsegment" class="CCsegment"></div>
+        </div>
+      </div>
+    </div>
+</div>

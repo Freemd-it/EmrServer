@@ -57,7 +57,7 @@ $('.management-medicine-history-search-button').on('click', () => {
         .getMethod(`/prescription/history/${startTime}/${endTime}/${medicineCategory}?word=${searchWord}`)
         .then(result => {
 
-            const { code } = result;
+            const { code, data } = result;
 
             if (!_.eq(code, resultCode.success)) {
                 return Promise.reject(`fail get use medicine history ${data.error}`);
@@ -71,8 +71,17 @@ $('.management-medicine-history-search-button').on('click', () => {
 
 function setHistoryTable (result) {
 
+  $('#history-management-table-body').empty()
+
   const { data } = result
   if (data.length === 0) {
+    $('#history-management-table-body').append(
+      `<tr>
+        <td class="defaultHistoryForManagementTableBody" style="text-align:center;" colspan="7">
+        날짜를 지정한 뒤 약품 또는 성분명을 입력하지 않고 검색 버튼을 누르면 해당 기간 내 사용한 전체 약품 데이터가 조회됩니다.
+        </td>
+      </tr>`
+    );
     return $.uiAlert({
       textHead: '[알림]',
       text: '검색 결과가 없습니다. 약품명 또는 성분명을 다시 확인해주세요.',
@@ -81,14 +90,6 @@ function setHistoryTable (result) {
       position: 'top-left',
       time: 2
     })
-
-    $('#history-management-table-body').append(
-      `<tr>
-        <td class="defaultHistoryForManagementTableBody" style="text-align:center;" colspan="7">
-        날짜를 지정한 뒤 약품 또는 성분명을 입력하지 않고 검색 버튼을 누르면 해당 기간 내 사용한 전체 약품 데이터가 조회됩니다.
-        </td>
-      </tr>`
-    );
   }
 
   $('#history-management-table-body').empty()
@@ -107,6 +108,14 @@ function setHistoryTable (result) {
         </tr>`
     })
   );
+  return $.uiAlert({
+    textHead: '[알림]',
+    text: '검색 결과 조회가 완료되었습니다.',
+    bgcolor: '#55a9ee',
+    textcolor: '#fff',
+    position: 'top-left',
+    time: 2
+  })
 }
 
 function setDatePicker () {
@@ -141,12 +150,13 @@ function dateValidationCheck(startTimeDom, endTimeDom) {
 }
 
 function dataInit(startTimeDom, endTimeDom) {
-    const date = new Date();
+    const date = moment().format("YYYY-MM-DD HH:mm:ss");
+
     if (!startTimeDom.value) {
-        startTimeDom.value = date.toISOString().slice(0, 10);
+        startTimeDom.value = date.slice(0, 10);
     }
     if (!endTimeDom.value) {
-        endTimeDom.value = date.toISOString().slice(0, 10);
+        endTimeDom.value = date.slice(0, 10);
     }
 }
 
