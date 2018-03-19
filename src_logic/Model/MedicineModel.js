@@ -12,7 +12,7 @@ MedicineModel.list = function(data, callback){
 
     medicine.findAll({
       attributes: [
-        'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity', 'available'
+        'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity', 'available', 'expiry', 'memo', 'capacity', 'totalAmount'
       ]
     })
     .then(result => {
@@ -33,7 +33,7 @@ MedicineModel.search = function(data, callback){
     if (data.option === '1') {
       medicine.findAll({
         attributes: [
-          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity', 'available'
+          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity', 'available', 'expiry', 'memo', 'capacity'
         ],
         where: {
           name: { like: '%'+data.searchText+'%' }
@@ -48,7 +48,7 @@ MedicineModel.search = function(data, callback){
     } else {
       medicine.findAll({
         attributes: [
-          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity', 'available'
+          'id', 'name', 'primaryCategory', 'secondaryCategory', 'medication', 'property', 'ingredient', 'amount', 'quantity', 'available', 'expiry', 'memo', 'capacity', 'totalAmount'
         ],
         where: {
           ingredient: { like: '%'+data.searchText+'%' }
@@ -98,21 +98,33 @@ MedicineModel.delete = async function(options){
 }
 
 MedicineModel.update = async function(options){
-  const { id, name, ingredient, amount, quantity, medication, property, available, primaryCategory, secondaryCategory} = options;
-  const totalAmount = quantity * amount;
 
-  return await medicine.update({
+  const { id, name, ingredient, amount, quantity, totalAmount } = options;
+
+  let record = {
     name: name,
-    primaryCategory: primaryCategory,
-    secondaryCategory: secondaryCategory,
     ingredient: ingredient,
     amount: amount,
     quantity: quantity,
-    medication: medication,
-    property: property,
-    available: available,
-    totalAmount: totalAmount
-  },{
+    totalAmount: totalAmount%amount + quantity*amount
+  }
+
+  if(!options.primaryCategory){
+    const { capacity, totalAmount, expiry, memo } = options
+    record.capacity = capacity
+    record.totalAmount = totalAmount
+    record.expiry = expiry
+    record.memo = memo
+  }else{
+    const { available, primaryCategory, secondaryCategory, medication, property } = options
+    record.primaryCategory = primaryCategory
+    record.secondaryCategory = secondaryCategory
+    record.medication = medication
+    record.property = property
+    record.available = available
+  }
+
+  return await medicine.update(record, {
     where : { id: id }
   });
 

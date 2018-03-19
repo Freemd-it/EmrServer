@@ -453,6 +453,8 @@ function updateMedicineInManagement(target){
   docs.available = target.children().eq(9).children().children().val();
   docs.primaryCategory = $('.main-category-select3 option:selected').attr('value');
   docs.secondaryCategory = update_small_category_value;
+  let medicines = JSON.parse(window.localStorage.getItem('medicine'));
+  docs.totalAmount =  _.filter(medicines, ['id', parseInt(id)])[0].totalAmount;
    // $('.small-category-select3 option:selected').attr('value');
   console.table(docs);
   http
@@ -817,6 +819,8 @@ function openConfirmModal (target, message, gotoFunction) {
 }
 
 $('#select-all-medicine-button').click(function(){
+  $("#management-main-category-select").val('').prop("selected", true);
+  $("#management-small-category-select").val('').prop("selected", true);
 
   let medicines = JSON.parse(window.localStorage.getItem('medicine'));
 
@@ -824,6 +828,14 @@ $('#select-all-medicine-button').click(function(){
     $('#medicine-management-table-body *').remove();
 
   setMedicineTableBody(medicines);
+  $.uiAlert({
+    textHead: '[알림]',
+    text: ' 전체 약품 정보가 조회되었습니다 ',
+    bgcolor: '#55a9ee',
+    textcolor: '#fff',
+    position: 'top-left',
+    time: 2,
+  });
 })
 
 function updateLocalStorage(callback, target){

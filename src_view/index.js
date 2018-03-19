@@ -22,4 +22,5 @@ import './resources/js/pharmacy.js';
 import './resources/js/prediagnosis.js';
 import './resources/js/receipt.js';
 import './resources/js/management.js';
+import './resources/js/inventory.js';
 import './resources/js/history.js';
