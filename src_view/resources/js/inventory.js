@@ -41,7 +41,7 @@ function getPharmacopoeia () {
 
 getPharmacopoeia();
 
-//재고표 수정시 유효성 검사
+//재고표 수정시 유효성 검사 (총량 여기서 해주자)
 $('#medicine-inventory-form').validate({
   onkeyup:false,
   onfocusout : function(element){
@@ -56,6 +56,9 @@ $('#medicine-inventory-form').validate({
       required: true,
       maxlength: 100
     },
+    capacity:{
+      maxlength: 45
+    },
     amount:{
       required: true,
       digits: true,
@@ -67,6 +70,13 @@ $('#medicine-inventory-form').validate({
       digits: true,
       min: 0,
       max: 999
+    },
+    expiry: {
+      required: true,
+      dateISO: true
+    },
+    totalAmount:{
+      min: element => $('#amount').val() * $('#quantity').val()
     }
   },
   messages:{
@@ -78,6 +88,9 @@ $('#medicine-inventory-form').validate({
       required: "성분명 및 함량을 입력해 주세요",
       maxlength: "성분명 및 함량은 최대 100자까지 입력 가능합니다"
     },
+    capacity:{
+      maxlength: "용량은 최대 45자까지 입력 가능합니다"
+    },
     amount:{
       required: "약품 1통당 개수를 입력해 주세요",
       digits: "약품 1통당 개수를 0 이상의 정수로 입력해 주세요",
@@ -87,6 +100,13 @@ $('#medicine-inventory-form').validate({
       required: "재고량을 입력해 주세요",
       digits: "재고량을 0 이상의 정수로 입력해 주세요",
       max: "재고량은 최대 999까지 입력 가능합니다"
+    },
+    expiry:{
+      required: "유효기간을 정확히 입력해주세요 ^0^",
+      dateISO: "유효기간을 정확히 입력해주세요"
+    },
+    totalAmount:{
+      min: "총량이 재고수보다 적습니다. 총량 및 재고를 확인해주세요"
     }
   },
   showErrors:function(errorMap, errorList){
@@ -188,7 +208,7 @@ $('.inventory-pharmacy-search-button').on('click', () => {
   $('.inventory-main-category-select > select').nextAll('div.text').text('대분류');
   $('.inventory-small-category-select > select').nextAll('div.text').text('소분류');
 
-  var searchText = $('input[name=managementMedicineSearchText]').val();
+  var searchText = $('input[name=inventoryMedicineSearchText]').val();
   var option = $('.inventory-medicine-search-select option:selected').val();
   var param = {
     searchText: searchText,
@@ -294,9 +314,9 @@ $(document).on('click', '.configure-medicine-by-inventory', (e) => {
     target.children().eq(2).empty().append(`<input value="${name}" name="name" />`)
     target.children().eq(3).empty().append(`<input value="${ingredient}" name="ingredient" />`)
     target.children().eq(4).empty().append(`<input value="${capacity}" name="capacity"  />`)
-    target.children().eq(5).empty().append(`<input value="${amount}" name="amount"  />`)
+    target.children().eq(5).empty().append(`<input value="${amount}" name="amount" id="amount" />`)
     target.children().eq(6).empty().append(`<input type="date" name="expiry" value="${expiry}"/>`)
-    target.children().eq(7).empty().append(`<input type="text" value="${quantity}" name="quantity" />`)
+    target.children().eq(7).empty().append(`<input type="text" value="${quantity}" name="quantity" id="quantity" />`)
     target.children().eq(8).empty().append(`<input value="${totalAmount}" name="totalAmount"  />`)
     target.children().eq(9).empty().append(`<textarea name="memo" style="resize: none; overflow-x:hidden;">${memo}</textarea>`)
 
@@ -325,7 +345,17 @@ function updateMedicineInManagement(target){
   for(var i in v){
     docs[v[i].name] = v[i].value;
   }
-
+  // if(docs.totalAmount < (docs.quantity * docs.amount)){
+  //   $.uiAlert({
+  //       textHead: '[경고]',
+  //       text: "총량이 재고 수보다 적습니다. 재고 및 총량의 개수를 확인해주세요!",
+  //       bgcolor: '#FF5A5A',
+  //       textcolor: '#fff',
+  //       position: 'top-center',
+  //       time: 2
+  //   });
+  //   return false;
+  // }
    // $('.small-category-select3 option:selected').attr('value');
   console.table(docs);
   http
@@ -368,6 +398,56 @@ function updateMedicineInManagement(target){
     });
 }
 
+
+$(document).on('click', '.delete-medicine-by-inventory', (e) => {
+  const medicineId = [];
+  medicineId.push($(e.target).parent().parent().attr('id'));
+  let name = $(e.target).parent().parent().children().eq(3).text()
+  let target = {"medicineIds" : JSON.stringify(medicineId) };
+  openConfirmModal(target, { confirmMessage: `'${name}'을(를) 삭제하시겠습니까?` }, deleteMedicine);
+});
+
+function deleteMedicine (data) {
+    http
+      .postMethod(`/medicine/delete`, data)
+      .then(result => {
+          const { data, code } = result;
+
+          if (!_.eq(code, resultCode.success)) {
+              return Promise.reject(`delete fail medicine data ${data.error}`);
+          }
+
+          return Promise.resolve(data);
+      })
+      .then(function(){
+        let ids = JSON.parse(data.medicineIds);
+        $('#'+ids[0]).remove();
+
+
+        $.uiAlert({
+          textHead: '[알림]',
+          text: '약정보 삭제 완료',
+          bgcolor: '#55a9ee',
+          textcolor: '#fff',
+          position: 'top-center',
+          time: 2,
+        });
+
+        updateLocalStorage();
+
+      })
+      .catch(error => {
+        console.log(error);
+        $.uiAlert({
+          textHead: '[ERROR-CODE 7010]',
+          text: '시스템에 문제가 발생하였습니다! 아이티 본부 단원에게 위 에러 코드를 전달해주세요.',
+          bgcolor: '#F2711C',
+          textcolor: '#fff',
+          position: 'top-center',
+          time: 10,
+        });
+      });
+}
 
 $('#select-all-inventory-button').click(function(){
   $("#inventory-main-category-select").val('').prop("selected", true);

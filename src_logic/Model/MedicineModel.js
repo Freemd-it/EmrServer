@@ -99,14 +99,14 @@ MedicineModel.delete = async function(options){
 
 MedicineModel.update = async function(options){
 
-  const { id, name, ingredient, amount, quantity } = options;
+  const { id, name, ingredient, amount, quantity, totalAmount } = options;
 
   let record = {
     name: name,
     ingredient: ingredient,
     amount: amount,
     quantity: quantity,
-    totalAmount: quantity * amount
+    totalAmount: totalAmount%amount + quantity*amount
   }
 
   if(!options.primaryCategory){
