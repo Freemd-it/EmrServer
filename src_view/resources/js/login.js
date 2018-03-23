@@ -39,14 +39,7 @@ function fadeButtonAnimation (outContent, inContent) {
   }, 300)
 }
 
-$('#login-special').on('click', () => {
-
-  fadeButtonAnimation('#login-special', '.special-login-form-wrap')
-})
-
-$('#login-special-cancel-btn').on('click', () => {
-
-  fadeButtonAnimation('.special-login-form-wrap', '#login-special')
-})
+$('#login-special').on('click', () => fadeButtonAnimation('#login-special', '.special-login-form-wrap'))
+$('#login-special-cancel-btn').on('click', () => fadeButtonAnimation('.special-login-form-wrap', '#login-special'))
 
 init()

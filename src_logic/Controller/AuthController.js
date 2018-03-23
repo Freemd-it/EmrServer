@@ -15,22 +15,26 @@ router.use(function log(req, res, next) {
 
 /* 로그인 부분 ajax로 처리하면 에러남, 무조건 form action으로 처리할 것 */
 router.get('/login', passportService.passport.authenticate('google', { scope:
-    ['https://www.googleapis.com/auth/plus.login',
-    'profile',
-    'email',
-    'https://www.googleapis.com/auth/plus.profile.emails.read',
-    'https://www.googleapis.com/auth/user.birthday.read',
-    'https://www.googleapis.com/auth/profile.language.read',
-    'https://www.googleapis.com/auth/user.phonenumbers.read']
+    // ['https://www.googleapis.com/auth/plus.login',
+    // 'profile',
+    // 'email',
+    // 'https://www.googleapis.com/auth/plus.profile.emails.read',
+    // 'https://www.googleapis.com/auth/user.birthday.read',
+    // 'https://www.googleapis.com/auth/profile.language.read',
+    // 'https://www.googleapis.com/auth/user.phonenumbers.read']
+    ['profile', 'email']
 }));
 
 
 router.get('/google/callback', passportService.passport.authenticate('google'), function(req, res){
+    console.log(req.session)
     if (req.user._json.domain !== 'freemed.or.kr') {
-        req.logout();
+        // req.logOut();
+        req.session.destroy();
         return res.redirect('http://localhost:3000/login?err=account');
     }
-
+    req.session.destroy();
+    // req.logOut();
     res.redirect('http://localhost:3000/receipt');
 });
 
