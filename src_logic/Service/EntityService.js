@@ -59,19 +59,19 @@ EntityService.Init = function(){
         });
     });
 
-    // medicine.sync().then(() => {
+    medicine.sync().then(() => {
 
-    //   prescription.sync();
-    //   // const trigger = `create trigger medicine_disable
-    //   //                  before update on medicines
-    //   //                  for each row
-    //   //                  begin if new.amount < 20 then
-    //   //                  set new.available = 0;
-    //   //                  elseif new.amount >= 20 then
-    //   //                  set new.available = 1; end if;
-    //   //                  end;`;
-    //   // sequelize.query(trigger);
-    // });
+      prescription.sync();
+      // const trigger = `create trigger medicine_disable
+      //                  before update on medicines
+      //                  for each row
+      //                  begin if new.amount < 20 then
+      //                  set new.available = 0;
+      //                  elseif new.amount >= 20 then
+      //                  set new.available = 1; end if;
+      //                  end;`;
+      // sequelize.query(trigger);
+    });
 
     medicineCategory.sync();
     waiting.sync();
