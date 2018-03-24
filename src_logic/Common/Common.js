@@ -11,7 +11,7 @@ var Common = function () { };
 
 Common.Encryption = function (description, algorithm) {
 
-    var cipher = crypto.createCipher(algorithm, config.serverConfig.auth_key);
+    var cipher = crypto.createCipher(algorithm, config.server.auth_key);
     var encipherContent = cipher.update(description, 'utf8', 'hex');
     encipherContent += cipher.final('hex');
     return encipherContent;
@@ -21,7 +21,7 @@ Common.Encryption = function (description, algorithm) {
 
 Common.Decryption = function (description, algorithm) {
 
-    var decipher = crypto.createDecipher(algorithm, config.serverConfig.auth_key);
+    var decipher = crypto.createDecipher(algorithm, config.server.auth_key);
     var decipherContent = decipher.update(description, 'hex', 'utf8');
     decipherContent += decipher.final('utf8');
     return decipherContent;
@@ -32,7 +32,7 @@ Common.Decryption = function (description, algorithm) {
 Common.Hashing = function (description, algorithm) {
 
     var hash = crypto.createHash(algorithm);
-    var hashedContent = hash.update(config.serverConfig.auth_key + description);
+    var hashedContent = hash.update(config.server.auth_key + description);
     hashedContent = hash.digest('hex');
     return hashedContent;
 }

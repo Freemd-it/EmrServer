@@ -32,6 +32,17 @@ RoutesService.Init = function () {
 
     app.use(function log(req, res, next) {
 
+        const pattern1 = /^\/login*/
+        const pattern2 = /^\/auth*/
+        const authResult = pattern1.test(req.originalUrl) || pattern2.test(req.originalUrl)
+
+        console.log(req.session.auth);
+        if (!req.session.passport){
+            if (!authResult) {
+               res.redirect('/login')
+            }
+        }
+
         res.header('Access-Control-Allow-Origin', config.server.accept_domain);
         res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         console.log(util.format("## URL : %s / IP : %s ##", req.originalUrl, req.ip));

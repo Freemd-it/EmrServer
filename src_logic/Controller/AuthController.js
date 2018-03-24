@@ -1,9 +1,13 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var util = require('util');
+var session = require('express-session');
+var redisStore = require('connect-redis')(session);
 
+var config = require('../../Config');
 var common = require('../Common/Common.js');
-var passportService = require('../Service/PassportService.js');
+var passportService = require('../Service/PassportService');
+var sessionService = require('../Service/SessionService');
 
 var router = express.Router();
 
@@ -25,18 +29,26 @@ router.get('/login', passportService.passport.authenticate('google', { scope:
     ['profile', 'email']
 }));
 
-
-router.get('/google/callback', passportService.passport.authenticate('google'), function(req, res){
-    console.log(req.session)
+router.get('/google/callback',
+  passportService.passport.authenticate('google',
+  { failureFlash: false, failureRedirect: '/login?error=invalid_domain_' }),
+  function(req, res){
     if (req.user._json.domain !== 'freemed.or.kr') {
-        // req.logOut();
-        req.session.destroy();
-        return res.redirect('http://localhost:3000/login?err=account');
+        return res.redirect('/login?error=invalid_domain_');
     }
-    req.session.destroy();
-    // req.logOut();
-    res.redirect('http://localhost:3000/receipt');
+    // req.session.auth = 'normal'
+    // req.session.auth = '3partLeader'
+    // req.session.auth = 'doctor'
+    // req.session.auth = 'pharmacist'
+    req.session.auth = 'super'
+    res.redirect('/receipt');
 });
+
+router.get('/logout', (req, res) => {
+
+    req.session.destroy();
+    res.redirect('/login');
+})
 
 // router.get('/login', function(req, res){
 //

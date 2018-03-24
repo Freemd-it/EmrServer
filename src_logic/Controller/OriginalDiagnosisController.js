@@ -9,7 +9,7 @@ router.use(function log(req, res, next) {
 
 
 router.get('/', (req, res, next) => {
-    respondHtml(res, 'originalDiagnosis');
+    respondHtml(res, 'originalDiagnosis', { auth : req.session.auth });
 })
 
 module.exports = router;

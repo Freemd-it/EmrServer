@@ -11,7 +11,7 @@ router.use(function log(req, res, next) {
 });
 
 router.get('/', function (req, res, next) {
-    respondHtml(res,'pharmacy');
+    respondHtml(res, 'pharmacy', { auth : req.session.auth });
 })
 
 router.post('/update', function (req, res) {

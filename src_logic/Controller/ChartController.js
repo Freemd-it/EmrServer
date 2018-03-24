@@ -127,7 +127,7 @@ router.get('/detail/:chartId/:patientId/:chartNumber', function (req, res, next)
     chartModel
         .findAll(options)
         .then(result => respondJson(res, resultCode.success, result))
-        .catch(error => respondOnError(res, resultCode.fail, error))
+        .catch(error => { console.log(error); respondOnError(res, resultCode.fail, error)})
 });
 
 module.exports = router;

@@ -25,7 +25,7 @@ router.use(function log(req, res, next) {
 
 
 router.get('/', (req, res, next) => {
-    respondHtml(res, 'ocs');
+    respondHtml(res, 'ocs', { auth : req.session.auth });
 })
 
 /**

@@ -1,5 +1,7 @@
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var redis = require('./RedisService')
+
 const _ = require('lodash')
 
 var config = require('../../Config');
@@ -15,36 +17,32 @@ PassportService.Init = function(app){
         },
         function(accessToken, refreshToken, profile, done) {
 
-            /* TODO 1. User.findAndCreate */
-            /* TODO 2. Session Managing */
-
-            console.log('### in passport service')
             if(profile._json.domain) {
-              accessToken = ''
-              refreshToken = ''
-              return done(null, profile);
+
+              return done(null, profile)
+
+              // const key = profile._json.emails[0].value
+              // redis.findAndCreate(key)
+              //   .then(result => {
+              //     if(result === 'OK' || 'ALREADY') return done(null, profile)
+              //   })
+              //   .catch(error => {
+              //     console.log(error)
+              //   })
             } else {
-              accessToken = ''
-              refreshToken = ''
               profile._json.domain = 'other.domain'
-              done(null, profile)
+              done(null, false, {'message' : 'invalid domain'})
             }
-            console.log('### out passport service')
-            // console.log(profile.user._json.domain);
-
-
         }
     ));
 };
 
 passport.serializeUser(function(user, done) {
-
     done(null, user);
 });
 
-passport.deserializeUser(function(obj, done) {
-
-    done(null, obj);
+passport.deserializeUser(function(user, done) {
+    done(null, user);
 });
 
 PassportService.passport = passport;

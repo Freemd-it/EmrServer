@@ -16,7 +16,7 @@ router.use(function log(req, res, next) {
 });
 
 router.get('/', (req, res, next) => {
-    respondHtml(res, 'management');
+    respondHtml(res, 'management', { auth : req.session.auth });
 });
 
 

@@ -138,6 +138,7 @@ router.get('/history/:startTime/:endTime/:category', (req, res)=>{
       respondJson(res, resultCode.success, result)
     })
     .catch(error => {
+      console.log(error)
       respondOnError(res, resultCode.fail, error)
     })
 });
