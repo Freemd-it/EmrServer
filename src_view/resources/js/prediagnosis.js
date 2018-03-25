@@ -112,7 +112,7 @@ $('#preDiagonosisWaitingList').on('click', () => {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/waitingList',
+        url: '/waitingList',
         data: docs,
         dataType: 'json',
         cache: false,
@@ -148,7 +148,7 @@ $(document).on('click', '.pre-diagnosis-table-content', (e) => {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/chart',
+        url: '/chart',
         data: docs,
         dataType: 'json',
         cache: false,
@@ -194,7 +194,7 @@ $(document).on('click', '.negative.send.ui.button', () => {
 
     $.ajax({
         type: 'POST',
-        url: 'http://localhost:3000/chart/update',
+        url: '/chart/update',
         data: docs,
         dataType: 'json',
         cache: false,
@@ -260,7 +260,7 @@ $('#getPastCC').on('click', () => {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/chart/pastAll',
+        url: '/chart/pastAll',
         data: docs,
         dataType: 'json',
         cache: false,
@@ -289,7 +289,7 @@ $(document).on('click', '.tbody-content', (e) => {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/chart/pastOne',
+        url: '/chart/pastOne',
         data: docs,
         dataType: 'json',
         cache: false,
