@@ -59,10 +59,9 @@ router.get('/medicine/excel', async (req, res, next) => {
         if (categorySmall) {
             options.where.secondaryCategory = categorySmall;
         }
-    } else {
+    } else if (searchText) {
         options.where[searchSet] = searchText;
     }
-
     try {
         const medicines = await medicineModel.listTwo(options);
         conf.rows = _.map(medicines, medicine => {
@@ -116,7 +115,7 @@ router.get('/inventory/excel', async (req, res, next) => {
         if (categorySmall) {
             options.where.secondaryCategory = categorySmall;
         }
-    } else {
+    } else if (searchText) {
         options.where[searchSet] = searchText;
     }
 
