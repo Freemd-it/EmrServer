@@ -3,12 +3,10 @@ var dbService = require('../Service/SequelizeService.js');
 
 const User = dbService.define('user', {
 
-    account : { type : sequelize.STRING(255), allowNull : false},
-    password : { type : sequelize.STRING(255), allowNull : false},
-    oridinal : { type : sequelize.CHAR(5), allowNull : true},
-    name : { type : sequelize.STRING(50), allowNull : true},
-    phone : { type : sequelize.CHAR(13), allowNull : true},
-    mail : { type : sequelize.STRING(70), allowNull : true}
+    account : { type : sequelize.STRING(255), allowNull : false },
+    password : { type : sequelize.STRING(300), allowNull : false },
+    permission : { type : sequelize.CHAR(4), allowNull : false },
+    description : { type : sequelize.STRING(150), allowNull : true },
 });
 
 module.exports = User;

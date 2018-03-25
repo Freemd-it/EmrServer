@@ -52,7 +52,8 @@ RoutesService.Init = function () {
     /* 테스트 화면 출력용 */
     app.get('/', (req, res, callback) => {
 
-        res.render('index')
+        res.redirect('/login')
+        // res.render('index')
         // var height = "175";
         // var weight = "60";
         // var result = (Number(weight) / (Number(height / 100) * Number(height / 100))).toFixed(1);

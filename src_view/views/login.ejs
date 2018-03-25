@@ -24,7 +24,7 @@
             </div>
 
             <div class="login-form">
-                <form class="ui form login">
+                <div class="ui form login">
                   <div class="login-button-link">
                     <a class="ui google plus button login-act-tag" href="/auth/login" id="login-member">
                       <i class="google plus icon"></i>
@@ -39,32 +39,34 @@
                   </div>
 
                   <div class="special-login-form-wrap">
-                    <div class="ui form">
-                      <div class="special-login-input-wrap">
-                          <input type="text" class="special-login-input" name="special-account" placeholder="Input Doctor or Pharmacist Account">
-                      </div>
-                      <div class="special-login-input-wrap">
-                          <input type="password" class="special-login-input" name="special-account-password" placeholder="Input Doctor or Pharmacist Password">
-                      </div>
-                    </div>
-
-                    <div class="login-button-link">
-                      <div class="special_button-wrap">
-                        <a class="ui vk button login-act-tag" id="login-special-cancel-btn">
-                          <i class="reply icon"></i>
-                          Cancel
-                        </a>
-                      </div>
-                      <div class="special_button-wrap">
-                        <a class="ui vk button login-act-tag" id="login-special-btn">
-                          <i class="address card outline icon"></i>
-                          Sign In
-                        </a>
+                      <div class="ui form">
+                        <form id="special-login-form" action="/auth/login" method="post">
+                          <div class="special-login-input-wrap">
+                              <input type="text" class="special-login-input" name="special_account" placeholder="Input Doctor or Pharmacist Account">
+                          </div>
+                          <div class="special-login-input-wrap">
+                              <input type="password" class="special-login-input" name="special_password" placeholder="Input Doctor or Pharmacist Password">
+                          </div>
+                        </form>
                       </div>
 
-                    </div>
+                      <div class="login-button-link">
+                        <div class="special_button-wrap">
+                          <a class="ui vk button login-act-tag" id="login-special-cancel-btn">
+                            <i class="reply icon"></i>
+                            Cancel
+                          </a>
+                        </div>
+                        <div class="special_button-wrap">
+                          <!-- <a class="ui vk button login-act-tag" id="login-special-btn" href="#" onclick="document.getElementById('special-login-form').submit();"> -->
+                          <a class="ui vk button login-act-tag" id="login-special-btn">
+                            <i class="address card outline icon"></i>
+                            Sign In
+                          </a>
+                        </div>
+                      </div>
                   </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

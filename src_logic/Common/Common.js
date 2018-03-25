@@ -9,7 +9,7 @@ var Common = function () { };
 
 /* freemed 소문자 -> sha512 해시 = auth_key  */
 
-Common.Encryption = function (description, algorithm) {
+Common.encrypt = function (description, algorithm) {
 
     var cipher = crypto.createCipher(algorithm, config.server.auth_key);
     var encipherContent = cipher.update(description, 'utf8', 'hex');
@@ -19,7 +19,7 @@ Common.Encryption = function (description, algorithm) {
 
 /* EX) common.Encryption(description, 'aes-256-ctr') */
 
-Common.Decryption = function (description, algorithm) {
+Common.decrypt = function (description, algorithm) {
 
     var decipher = crypto.createDecipher(algorithm, config.server.auth_key);
     var decipherContent = decipher.update(description, 'hex', 'utf8');
@@ -29,7 +29,7 @@ Common.Decryption = function (description, algorithm) {
 
 /* EX) common.Decryption(description, 'aes-256-ctr') */
 
-Common.Hashing = function (description, algorithm) {
+Common.hash = function (description, algorithm) {
 
     var hash = crypto.createHash(algorithm);
     var hashedContent = hash.update(config.server.auth_key + description);
