@@ -137,7 +137,7 @@ Cluster.ProcessRun = function (workerId) {
     sessionService.Init();
     routesService.Init();
     passportService.Init();
-    entityService.Init(); // 테이블 생성
+    entityService.Init();
 
     http.createServer(app).listen(app.get('port'), function () {
         console.log(util.format('## [processRun] [pid:%d] [childNo:%d] Server running at %d ##', process.pid, workerId, config.server.port));

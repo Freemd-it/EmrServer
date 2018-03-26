@@ -74,7 +74,7 @@ RoutesService.Init = function () {
 
     app.use('/waitingList', waitingController);
     app.use('/chart', chartController);
-    app.use('/views', viewsController);
+    // app.use('/views', viewsController);
     app.use('/medicine', medicineController);
     app.use('/ocs', ocsController);
     app.use('/prescription', prescriptionController);

@@ -7,6 +7,12 @@
     <link href="/vscode.ico" rel="shortcut icon">
     <link href="/dist/index.css" rel="stylesheet">
     <style>
+        .guide-modal {
+          height: 650px;
+        }
+        .guide-image {
+          width: 858px;
+        }
     </style>
 </head>
 
@@ -14,7 +20,6 @@
   <div class="content-wrap">
     <div class="login-container">
         <div class="login-wrapper">
-
             <div class="login-logo">
                 <img class="logo-img" src="/img/freemed_logo_eng.png" alt="">
                 <b><h4>Welcome to Freemed EMR</h4></b>
@@ -22,7 +27,6 @@
                     <b>Freemed ID</b>
                 </h5>
             </div>
-
             <div class="login-form">
                 <div class="ui form login">
                   <div class="login-button-link">
@@ -37,7 +41,6 @@
                       For Doctor, Pharmacist
                     </a>
                   </div>
-
                   <div class="special-login-form-wrap">
                       <div class="ui form">
                         <form id="special-login-form" action="/auth/login" method="post">
@@ -49,7 +52,6 @@
                           </div>
                         </form>
                       </div>
-
                       <div class="login-button-link">
                         <div class="special_button-wrap">
                           <a class="ui vk button login-act-tag" id="login-special-cancel-btn">
@@ -58,7 +60,6 @@
                           </a>
                         </div>
                         <div class="special_button-wrap">
-                          <!-- <a class="ui vk button login-act-tag" id="login-special-btn" href="#" onclick="document.getElementById('special-login-form').submit();"> -->
                           <a class="ui vk button login-act-tag" id="login-special-btn">
                             <i class="address card outline icon"></i>
                             Sign In
@@ -76,6 +77,30 @@
             <img class="slide-img" src="/img/freemed_autumn.jpg" alt="">
             <img class="slide-img" src="/img/freemed_winter.jpg" alt="">
         </div>
+    </div>
+  </div>
+
+  <div class="ui longer modal guide-modal">
+    <div class="header">
+      쿠키 삭제 방법
+    </div>
+    <div class="scrolling content">
+        <img class="guide-image" src="/img/invalid_login_guide.jpg">
+        <div>
+          <p>
+            <div>1. 크롬 브라우저 우측 상단에 있는 아이콘을 클릭</div>
+            <div>2. 도구 더보기 메뉴 클릭 </div>
+            <div>3. 인터넷 사용 기록 삭제 메뉴 클릭</div>
+            <div>4. 새창에 출력되는 오른쪽 인터넷 사용 기록 삭제 팝업에 모두 체크한 뒤, 인터넷 사용 기록 삭제 클릭 </div>
+          </p>
+        </div>
+    </div>
+
+    <div class="actions">
+      <div class="ui primary approve button">
+        확인
+      </div>
+
     </div>
   </div>
   <script src="/dist/index.bundle.js"></script>

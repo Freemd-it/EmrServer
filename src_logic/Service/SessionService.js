@@ -9,11 +9,16 @@ var SessionService = function () {};
 SessionService.Init = function(){
 
     var sessionSetting = {
-        cookie: { expires: new Date(Date.now() + config.server.session_expire), maxAge: new Date(Date.now() + config.server.session_expire)},
+        secret: config.server.session_secret,
+        cookie: {
+          expires: new Date(moment().add('hours', 9).add('hours', config.server.session_expire)),
+          maxAge: new Date(moment().add('hours', 9).add('hours', config.server.session_expire))
+        },
         store: new redisStore({
           port: config.redis.redisPort,
           host: config.redis.redisHost,
-          password: config.redis.redisPassword
+          password: config.redis.redisPassword,
+          ttl: 7200 // redis를 2시간마다 검사하며 파기 시간이 지난 토큰 삭제
         }),
         secret: config.server.auth_key,
         resave: false,
@@ -21,13 +26,7 @@ SessionService.Init = function(){
     };
 
     app.set('trust proxy', 1);
-    // sessionSetting.cookie.secure = true;
     app.use(session(sessionSetting));
-}
-
-SessionService.Check = function(token){
-
-    var token = token;
 }
 
 module.exports = SessionService;

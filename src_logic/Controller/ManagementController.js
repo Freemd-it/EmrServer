@@ -11,6 +11,9 @@ const router = express.Router();
 
 
 router.use(function log(req, res, next) {
+    if (req.session.auth === 'normal' || 'doctor') {
+      return res.redirect('back')
+    }
     console.log('## [Management] Management started ##');
     next();
 });

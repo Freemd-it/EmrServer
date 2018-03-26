@@ -2,7 +2,7 @@ module.exports = {
     server: {
         trust_proxy_host: "127.0.0.1",
         port: 3000,
-        session_expire: 1080000,
+        session_expire: 12,
         single_cluster: false,
         data_read_time: 3600000,
         accept_domain: "http://127.0.0.1:3000",
