@@ -65,6 +65,10 @@ $('#login-special-btn').on('click', () => {
   document.getElementById('special-login-form').submit();
 })
 
+$('input[name=special_password], input[name=special_account]').keyup((e) => {
+  if(_.eq(e.keyCode, 13)) document.getElementById('special-login-form').submit();
+})
+
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -98,17 +102,7 @@ function printError(error) {
 }
 
 function showGuidePopup() {
-
-    // TODO 인터넷 사용 기록 삭제 가이드 팝업 띄워주기
-    // return $.uiAlert({
-    //   textHead: '[InSide]',
-    //   text: '여기서 보여주자',
-    //   bgcolor: '#4d4dff',
-    //   textcolor: '#fff',
-    //   position: 'top-left',
-    //   time: 3,
-    // });
-    $('.guide-modal').modal({closable: false}).modal('show');
+  $('.guide-modal').modal({closable: false}).modal('show');
 }
 
 init()

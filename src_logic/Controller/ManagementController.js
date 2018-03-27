@@ -1,6 +1,6 @@
 
-const _ = require('lodash');
 const express = require('express');
+const _ = require('lodash');
 const sequelize = require('sequelize');
 const Medicine = require('../Entity/Medicine');
 const Prescription = require('../Entity/Prescription');
@@ -20,7 +20,6 @@ router.use(function log(req, res, next) {
     }
 
     console.log('## [Management] Management started ##');
-    console.log(Prescription)
     next();
 });
 
@@ -71,8 +70,6 @@ router.get('/medicine/excel', async (req, res, next) => {
     } else if (searchText) {
         options.where[searchSet] = searchText;
     }
-
-    console.log(options)
 
     try {
         const medicines = await medicineModel.listTwo(options);
@@ -147,21 +144,19 @@ router.get('/inventory/excel', async (req, res, next) => {
 
 
 
-router.get('/history/excel', (req, res, next) => {
+router.get('/history/excel', async (req, res) => {
 
     const { searchSet, searchText } = req.query;
     let { startTime, endTime } = req.query;
-    const options = {};
     const conf = {};
     startTime += ' 00:00:00';
     endTime += ' 23:59:59';
 
-    options.where = { useFlag: '1', createdAt: { between: [startTime, endTime] } }
-    options.raw = true
+    const options = {};
+    options.include = { model: Medicine, attributes: ['primaryCategory', 'secondaryCategory', 'totalAmount', 'quantity'] }
+    options.where = { useFlag: '1', createdAt: {between: [startTime, endTime] } }
     options.attributes = ['medicineName', 'medicineIngredient', [sequelize.fn('SUM', sequelize.col('prescription.useTotal')), 'total']]
     options.group = ['prescription.medicine_id']
-    // options.include = { model: Medicine, required: true };
-    // options.include = { model: Medicine }
 
     if (searchText) {
         searchSet === 'name'
@@ -179,24 +174,50 @@ router.get('/history/excel', (req, res, next) => {
         { caption: '잔여 총량', type: 'number' },
         { caption: '재고', type: 'number' },
     ];
-    prescriptionModel
-        .history(options)
-    // Prescription
-    //     .findAll(options)
-        .then((results) => {
-          console.log(results)
-            conf.rows = _.map(results, result => {
 
-                // const historyMedicine = result.get({ plain: true });
-                // const { medicine } = historyMedicine;
+    try {
+        const results = await prescriptionModel.history(options)
+        conf.rows = _.map(results, result => {
+          console.log(result);
+          const { primaryCategory, secondaryCategory, medicineName, medicineIngredient, total, totalAmount, quantity } = result
+          return [
+             primaryCategory, secondaryCategory, medicineName, medicineIngredient,
+             total, totalAmount, quantity
+          ];
+        });
+
+        const excelFile = require('excel-export').execute(conf);
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+        res.setHeader("Content-Disposition", `attachment; filename=history.xlsx`);
+        res.status(200).end(excelFile, 'binary');
+
+    } catch (error) {
+        res.json(error)
+    }
+
+    // TODO SEARCH [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+
+    // prescriptionModel
+    //     .history(options)
+    //     .then((results) => {
+    //         conf.rows = _.map(results, result => {
+    //             const historyMedicine = result.get({ plain: true });
+    //             const { medicine } = historyMedicine;
+    //             return [
+    //                medicine.primaryCategory, medicine.secondaryCategory,
+    //                historyMedicine.medicineName, historyMedicine.medicineIngredient,
+    //                historyMedicine.total,
+    //                medicine.totalAmount, medicine.quantity
+    //             ];
+
                 // return [
-                //    medicine.primaryCategory, medicine.secondaryCategory,
-                //    historyMedicine.medicineName, historyMedicine.medicineIngredient,
-                //    historyMedicine.total,
-                //    medicine.totalAmount, medicine.quantity
+                //     medicine.primaryCategory, medicine.secondaryCategory,
+                //     historyMedicine.medicineName, historyMedicine.medicineIngredient,
+                //     historyMedicine.total,
+                //     medicine.totalAmount, medicine.quantity
                 // ];
 
-                const { medicineName, medicineIngredient, total } = result
+                // const { medicineName, medicineIngredient, total } = result
                 // const primaryCategory = result['medicine.primaryCategory']
                 // const secondaryCategory = result['medicine.secondaryCategory']
                 // const totalAmount = result['medicine.totalAmount']
@@ -214,25 +235,22 @@ router.get('/history/excel', (req, res, next) => {
                 // const { medicine } = historyMedicine;
                 // console.log(result.medicine.primaryCategory)
                 // return [ primaryCategory, secondaryCategory, medicineName, medicineIngredient, total, totalAmount, quantity ]
-                return [ medicineName, medicineIngredient, total ]
-                // return [
-                //     medicine.primaryCategory, medicine.secondaryCategory,
-                //     historyMedicine.medicineName, historyMedicine.medicineIngredient,
-                //     historyMedicine.total,
-                //     medicine.totalAmount, medicine.quantity
-                // ];
-            });
+                // return [ medicineName, medicineIngredient, total ]
+            // });
 
-            const excelFile = require('excel-export').execute(conf);
+            // const excelFile = require('excel-export').execute(conf);
+            // console.log(excelFile);
+            //
+            // res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+            // res.setHeader('Content-Disposition', 'attachment; filename=history.xlsx');
+            // res.end(excelFile, 'binary');
 
-            res.setHeader('Content-Type', 'application/vnd.openxmlformats');
-            res.setHeader("Content-Disposition", `attachment; filename=history.xlsx`);
-            res.end(excelFile, 'binary');
-        })
-        .catch((error) => {
-            console.log('error', error)
-            res.send(error);
-        })
+            // respondJson(res, resultCode.success, excelFile)
+        // })
+        // .catch((error) => {
+        //     console.log('error', error)
+        //     res.send(error);
+        // })
 })
 
 

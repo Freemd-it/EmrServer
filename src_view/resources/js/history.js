@@ -190,7 +190,7 @@ import moment from 'moment'
         time: 2
       })
     }
-    // 선택된 약전 
+    // 선택된 약전
     const { searchSet, searchText } = selectedCondition;
     let message = '';
     let searchName = searchSet === 'name' ? '약품명' : '성분명';

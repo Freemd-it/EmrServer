@@ -1,10 +1,8 @@
 const sequelize = require('sequelize');
 const prescription = require('../Entity/Prescription.js');
-const medicine = require('../Entity/Medicine');
+var dbService = require('../Service/SequelizeService.js');
 
-var PrescriptionModel = function (data) {
-    this.data = data;
-}
+var PrescriptionModel = function () {}
 
 PrescriptionModel.createAll = function (data, callback) {
 
@@ -14,14 +12,6 @@ PrescriptionModel.createAll = function (data, callback) {
 
 PrescriptionModel.find = async function (options) {
 
-    // const { where = {}, include = {}, order = [] } = options;
-    // return await prescription.findAll({
-    //     where: where,
-    //     order: order
-    // })
-    console.log(typeof prescription)
-    console.log(prescription.toString())
-    console.log(options)
     return await prescription.findAll(options)
 }
 
@@ -58,10 +48,15 @@ PrescriptionModel.delete = async function (options) {
 
 PrescriptionModel.history = async function(options) {
 
-  // console.log(typeof prescription)
-  // console.log(prescription.toString())
-  // console.log(typeof options.include.model)
-  return await prescription.findAll(options)
+  return await dbService.query(historyCustomQuery(options), { type: sequelize.QueryTypes.SELECT })
+}
+
+function historyCustomQuery (options) {
+  return `select p.id, p.medicineName, p.medicineIngredient, sum(p.useTotal) as total, p.createdAt,
+  m.id, m.primaryCategory, m.secondaryCategory, m.totalAmount, m.quantity
+  from prescriptions as p inner join medicines as m on p.medicine_id = m.id where p.useFlag = '1' and
+  p.createdAt between '${options.where.createdAt.between[0]}' and '${options.where.createdAt.between[1]}'
+  group by p.medicine_id`;
 }
 
 module.exports = PrescriptionModel;
