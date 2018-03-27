@@ -1,4 +1,6 @@
+const sequelize = require('sequelize');
 const prescription = require('../Entity/Prescription.js');
+const medicine = require('../Entity/Medicine');
 
 var PrescriptionModel = function (data) {
     this.data = data;
@@ -12,11 +14,15 @@ PrescriptionModel.createAll = function (data, callback) {
 
 PrescriptionModel.find = async function (options) {
 
-    const { where = {}, include = {}, order = [] } = options;
-    return await prescription.findAll({
-        where: where,
-        order: order
-    })
+    // const { where = {}, include = {}, order = [] } = options;
+    // return await prescription.findAll({
+    //     where: where,
+    //     order: order
+    // })
+    console.log(typeof prescription)
+    console.log(prescription.toString())
+    console.log(options)
+    return await prescription.findAll(options)
 }
 
 PrescriptionModel.findOne = async function (options) {
@@ -52,6 +58,9 @@ PrescriptionModel.delete = async function (options) {
 
 PrescriptionModel.history = async function(options) {
 
+  // console.log(typeof prescription)
+  // console.log(prescription.toString())
+  // console.log(typeof options.include.model)
   return await prescription.findAll(options)
 }
 

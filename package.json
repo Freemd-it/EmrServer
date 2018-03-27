@@ -41,7 +41,7 @@
     "passport-google-oauth": "^1.0.0",
     "passport-google-oauth2": "^0.1.6",
     "query-string": "^6.0.0",
-    "sequelize": "^4.1.0",
+    "sequelize": "^4.37.4",
     "serve-favicon": "~2.3.0",
     "traceback": "^0.3.1",
     "trackback": "0.0.3"

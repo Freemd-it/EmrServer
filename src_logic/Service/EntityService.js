@@ -34,7 +34,8 @@ EntityService.Init = function(){
       차트 : 처방 = 1 : 1
     */
 
-    medicine.hasMany( prescription, { foreignKey : 'medicine_id', onUpdate : 'CASCADE'});
+    medicine.hasMany( prescription, { foreignKey : 'medicine_id', sourceKey : 'id', onUpdate : 'CASCADE'});
+    // medicine.hasMany( prescription, { foreignKey : 'medicine_id', onUpdate : 'CASCADE'});
     prescription.belongsTo(medicine, { foreignKey : 'medicine_id'});
     prescription.belongsTo(chart, { foreignKey: 'chartNumber' });
 

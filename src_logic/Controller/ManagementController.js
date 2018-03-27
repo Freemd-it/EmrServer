@@ -4,6 +4,7 @@ const express = require('express');
 const sequelize = require('sequelize');
 const Medicine = require('../Entity/Medicine');
 const Prescription = require('../Entity/Prescription');
+const prescriptionModel = require('../Model/PrescriptionModel');
 const medicineModel = require('../Model/medicineModel.js');
 const resultCode = require('../Common/ResultCode');
 const { respondHtml, respondJson } = require('../Utils/respond');
@@ -11,10 +12,15 @@ const router = express.Router();
 
 
 router.use(function log(req, res, next) {
-    if (req.session.auth === 'normal' || 'doctor') {
-      return res.redirect('back')
+
+    var invalid = ['normal', 'doctor']
+
+    if(invalid.includes(req.session.auth)) {
+      return res.redirect('back');
     }
+
     console.log('## [Management] Management started ##');
+    console.log(Prescription)
     next();
 });
 
@@ -65,6 +71,9 @@ router.get('/medicine/excel', async (req, res, next) => {
     } else if (searchText) {
         options.where[searchSet] = searchText;
     }
+
+    console.log(options)
+
     try {
         const medicines = await medicineModel.listTwo(options);
         conf.rows = _.map(medicines, medicine => {
@@ -139,6 +148,7 @@ router.get('/inventory/excel', async (req, res, next) => {
 
 
 router.get('/history/excel', (req, res, next) => {
+
     const { searchSet, searchText } = req.query;
     let { startTime, endTime } = req.query;
     const options = {};
@@ -147,9 +157,11 @@ router.get('/history/excel', (req, res, next) => {
     endTime += ' 23:59:59';
 
     options.where = { useFlag: '1', createdAt: { between: [startTime, endTime] } }
+    options.raw = true
     options.attributes = ['medicineName', 'medicineIngredient', [sequelize.fn('SUM', sequelize.col('prescription.useTotal')), 'total']]
     options.group = ['prescription.medicine_id']
-    options.include = { model: Medicine, required: true };
+    // options.include = { model: Medicine, required: true };
+    // options.include = { model: Medicine }
 
     if (searchText) {
         searchSet === 'name'
@@ -167,19 +179,48 @@ router.get('/history/excel', (req, res, next) => {
         { caption: '잔여 총량', type: 'number' },
         { caption: '재고', type: 'number' },
     ];
-
-    Prescription
-        .findAll(options)
+    prescriptionModel
+        .history(options)
+    // Prescription
+    //     .findAll(options)
         .then((results) => {
+          console.log(results)
             conf.rows = _.map(results, result => {
-                const historyMedicine = result.get({ plain: true });
-                const { medicine } = historyMedicine;
-                return [
-                    medicine.primaryCategory, medicine.secondaryCategory,
-                    historyMedicine.medicineName, historyMedicine.medicineIngredient,
-                    historyMedicine.total,
-                    medicine.totalAmount, medicine.quantity
-                ];
+
+                // const historyMedicine = result.get({ plain: true });
+                // const { medicine } = historyMedicine;
+                // return [
+                //    medicine.primaryCategory, medicine.secondaryCategory,
+                //    historyMedicine.medicineName, historyMedicine.medicineIngredient,
+                //    historyMedicine.total,
+                //    medicine.totalAmount, medicine.quantity
+                // ];
+
+                const { medicineName, medicineIngredient, total } = result
+                // const primaryCategory = result['medicine.primaryCategory']
+                // const secondaryCategory = result['medicine.secondaryCategory']
+                // const totalAmount = result['medicine.totalAmount']
+                // const quantity = result['medicine.quantity']
+                // console.log(medicineName)
+                // console.log(medicineIngredient)
+                // console.log(total)
+                // console.log(primaryCategory)
+                // console.log(secondaryCategory)
+                // console.log(totalAmount)
+                // console.log(quantity)
+                // console.log(typeof result)
+                // console.log(result)
+                // const historyMedicine = result.get({ plain: true });
+                // const { medicine } = historyMedicine;
+                // console.log(result.medicine.primaryCategory)
+                // return [ primaryCategory, secondaryCategory, medicineName, medicineIngredient, total, totalAmount, quantity ]
+                return [ medicineName, medicineIngredient, total ]
+                // return [
+                //     medicine.primaryCategory, medicine.secondaryCategory,
+                //     historyMedicine.medicineName, historyMedicine.medicineIngredient,
+                //     historyMedicine.total,
+                //     medicine.totalAmount, medicine.quantity
+                // ];
             });
 
             const excelFile = require('excel-export').execute(conf);

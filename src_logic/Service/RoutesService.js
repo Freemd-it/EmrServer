@@ -36,7 +36,6 @@ RoutesService.Init = function () {
         const pattern2 = /^\/auth*/
         const authResult = pattern1.test(req.originalUrl) || pattern2.test(req.originalUrl)
 
-        console.log(req.session.auth);
         if (!req.session.passport){
             if (!authResult) {
                res.redirect('/login')
@@ -50,18 +49,7 @@ RoutesService.Init = function () {
     });
 
     /* 테스트 화면 출력용 */
-    app.get('/', (req, res, callback) => {
-
-        res.redirect('/login')
-        // res.render('index')
-        // var height = "175";
-        // var weight = "60";
-        // var result = (Number(weight) / (Number(height / 100) * Number(height / 100))).toFixed(1);
-        // result = new Date();
-
-        // res.status(200).json({ "result" : result });
-
-    });
+    app.get('/', (req, res) => { res.redirect('/login') })
     app.use('/login',loginController);
     app.use('/user', userController);
     app.use('/auth', authController);

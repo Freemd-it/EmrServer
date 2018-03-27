@@ -25,6 +25,9 @@ MedicineModel.list = function(data, callback){
 
 MedicineModel.listTwo = async function(options){
 
+    console.log(typeof medicine)
+    console.log(medicine.toString())
+    console.log(options)
     return await medicine.findAll(options)
 }
 

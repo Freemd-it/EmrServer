@@ -525,10 +525,13 @@
 
         <div class="ui grid" style="margin-top: 1%">
             <div class="left floated six wide column" style="margin-left:.1%"></div>
-
+            <%
+              const invalidDoctorSign = ['normal', '3partLeader', 'pharmacist']
+              if(!invalidDoctorSign.includes(auth)) {%>
             <div>
                 <button id="doctorSignedComplete" class="huge negative ui button"> 처방하기 </button>
             </div>
+            <% } %>
         </div>
 
 
