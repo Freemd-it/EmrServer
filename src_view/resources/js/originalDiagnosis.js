@@ -101,10 +101,12 @@ $('#prescriptionForm').validate({
   onkeyup : false,
   rules: {
     currentDoses:{
+      required: true,
       digits: true,
       min: 1
     },
     currentDosesDay:{
+      required: true,
       digits: true,
       min: 1
     },
@@ -114,10 +116,12 @@ $('#prescriptionForm').validate({
   },
   messages: {
     currentDoses: {
+      required: "1회 투약량을 입력해주세요!",
       digits: "1회 투약량은 1이상의 정수만 입력 가능합니다.",
       min: "1회 투약량은 1이상의 정수만 입력 가능합니다."
     },
     currentDosesDay: {
+      required: "복용 일수를 입력해주세요!",
       digits: "복용 일수는 1이상의 정수만 입력 가능합니다.",
       min: "복용 일수는 1이상의 정수만 입력 가능합니다."
     },
@@ -431,9 +435,9 @@ function renderCompleteChart(data) {
   $('#pharmacopoeia').attr('disabled', true);
 }
 
-$('#doctorSignedComplete').on('click', function () {
+$(document).on('click', '#doctorSignedComplete', (e) => {
+    if(!$('#diagonosisChartForm').valid() || !$('#Treatmentform').valid() || !$('#prescriptionForm').valid()) return;
 
-    if(!$('#diagonosisChartForm').valid() || !$('#Treatmentform').valid() || !$('#prescriptionForm').valid()) return false;
 
     var prescriptionLength = $('#prescription-table-body').children().length - 1;
     var prescription = [];
