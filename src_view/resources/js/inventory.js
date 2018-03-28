@@ -2,6 +2,7 @@ import _ from 'lodash';
 import queryString from 'query-string';
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
+import exportFunc from '../utils/excel';
 import $ from 'jquery';
 import 'jquery-validation';
 
@@ -143,7 +144,7 @@ import 'jquery-validation';
   $('.inventory-main-category-select').change(() => {
     management_main_category_value = $('.inventory-main-category-select option:selected').attr('value');
 
-    // excel download 검색 조건 추가 
+    // excel download 검색 조건 추가
     selectedCondition.categoryMain = management_main_category_value;
     selectedCondition.searchText = '';
 
@@ -205,7 +206,7 @@ import 'jquery-validation';
     management_small_category_value = $('.inventory-small-category-select option:selected').text();
     tableRenderMedicineInventory = [];
 
-    // excel download 검색 조건 추가 
+    // excel download 검색 조건 추가
     selectedCondition.categoryMain = management_main_category_value;
     selectedCondition.categorySmall = management_small_category_value;
     selectedCondition.searchText = '';
@@ -541,11 +542,8 @@ import 'jquery-validation';
     }).modal('show')
   }
 
-  /**
-   * Excel download
-   */
-  $('#select-inventory-excel-button').click(function () {
-    // 선택된 재고
+  $('#select-inventory-excel-button').click(function (e) {
+
     const { searchSet, searchText } = selectedCondition;
     let { categoryMain, categorySmall } = selectedCondition;
 
@@ -555,27 +553,17 @@ import 'jquery-validation';
     categorySmall = categorySmall.trim();
 
     if (searchText) {
-      message = `검색 조건 : ${searchName} - ${searchText}`;
+      message = `${searchName}_${searchText}_`;
     } else if (categoryMain) {
-      message = `대분류 : ${categoryMain} ${categorySmall && `\n소분류 : ${categorySmall}`}`;
+      message = `${categoryMain}_${categorySmall}_`;
     } else {
-      message = '약국 재고 전부';
+      message = '재고표_전체_';
     }
-    message += '\n엑셀 다운로드 하시겠습니까?';
 
-    const stringified = queryString.stringify(selectedCondition);
+    const inventoryFileName = `${message}inventory.xls`;
+    const inventoryTable = 'medicine-inventory-table';
 
-    if (confirm(message)) {
-      window.location.href = `/management/inventory/excel?${stringified}`;
-      $.uiAlert({
-        textHead: '[알림]',
-        text: ' Excel 다운로드 ',
-        bgcolor: '#55a9ee',
-        textcolor: '#fff',
-        position: 'top-left',
-        time: 2,
-      });
-    }
-  })
+    $('#select-inventory-excel-button').attr('download', inventoryFileName)
+    return exportFunc.excel(this, inventoryTable, '재고표');
+  });
 })()
-

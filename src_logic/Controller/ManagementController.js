@@ -29,6 +29,13 @@ router.get('/', (req, res, next) => {
 
 
 router.get('/medicine/excel', async (req, res, next) => {
+
+    /**
+     * 서버 excel 로직으로 인해 시퀄라이즈 참조 모델이 모두 깨지는 현상 발생
+     * 프론트에서 테이블을 엑셀 파일로 export 시키는 방법으로 변경
+     */
+    res.redirect('back');
+
     const { searchSet, searchText } = req.query;
     let { categoryMain, categorySmall } = req.query;
 
@@ -89,6 +96,13 @@ router.get('/medicine/excel', async (req, res, next) => {
 })
 
 router.get('/inventory/excel', async (req, res, next) => {
+
+    /**
+     * 서버 excel 로직으로 인해 시퀄라이즈 참조 모델이 모두 깨지는 현상 발생
+     * 프론트에서 테이블을 엑셀 파일로 export 시키는 방법으로 변경
+     */
+    res.redirect('back');
+
     const { categoryMain, categorySmall, searchSet, searchText } = req.query;
     const options = {};
     const conf = {};
@@ -144,7 +158,13 @@ router.get('/inventory/excel', async (req, res, next) => {
 
 
 
-router.get('/history/excel', async (req, res) => {
+router.get('/history/excel', (req, res) => {
+
+    /**
+     * 서버 excel 로직으로 인해 시퀄라이즈 참조 모델이 모두 깨지는 현상 발생
+     * 프론트에서 테이블을 엑셀 파일로 export 시키는 방법으로 변경
+     */
+    res.redirect('back');
 
     const { searchSet, searchText } = req.query;
     let { startTime, endTime } = req.query;
@@ -176,9 +196,8 @@ router.get('/history/excel', async (req, res) => {
     ];
 
     try {
-        const results = await prescriptionModel.history(options)
+        const results = prescriptionModel.history(options)
         conf.rows = _.map(results, result => {
-          console.log(result);
           const { primaryCategory, secondaryCategory, medicineName, medicineIngredient, total, totalAmount, quantity } = result
           return [
              primaryCategory, secondaryCategory, medicineName, medicineIngredient,
@@ -194,68 +213,6 @@ router.get('/history/excel', async (req, res) => {
     } catch (error) {
         res.json(error)
     }
-
-    // TODO SEARCH [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
-
-    // prescriptionModel
-    //     .history(options)
-    //     .then((results) => {
-    //         conf.rows = _.map(results, result => {
-    //             const historyMedicine = result.get({ plain: true });
-    //             const { medicine } = historyMedicine;
-    //             return [
-    //                medicine.primaryCategory, medicine.secondaryCategory,
-    //                historyMedicine.medicineName, historyMedicine.medicineIngredient,
-    //                historyMedicine.total,
-    //                medicine.totalAmount, medicine.quantity
-    //             ];
-
-                // return [
-                //     medicine.primaryCategory, medicine.secondaryCategory,
-                //     historyMedicine.medicineName, historyMedicine.medicineIngredient,
-                //     historyMedicine.total,
-                //     medicine.totalAmount, medicine.quantity
-                // ];
-
-                // const { medicineName, medicineIngredient, total } = result
-                // const primaryCategory = result['medicine.primaryCategory']
-                // const secondaryCategory = result['medicine.secondaryCategory']
-                // const totalAmount = result['medicine.totalAmount']
-                // const quantity = result['medicine.quantity']
-                // console.log(medicineName)
-                // console.log(medicineIngredient)
-                // console.log(total)
-                // console.log(primaryCategory)
-                // console.log(secondaryCategory)
-                // console.log(totalAmount)
-                // console.log(quantity)
-                // console.log(typeof result)
-                // console.log(result)
-                // const historyMedicine = result.get({ plain: true });
-                // const { medicine } = historyMedicine;
-                // console.log(result.medicine.primaryCategory)
-                // return [ primaryCategory, secondaryCategory, medicineName, medicineIngredient, total, totalAmount, quantity ]
-                // return [ medicineName, medicineIngredient, total ]
-            // });
-
-            // const excelFile = require('excel-export').execute(conf);
-            // console.log(excelFile);
-            //
-            // res.setHeader('Content-Type', 'application/vnd.openxmlformats');
-            // res.setHeader('Content-Disposition', 'attachment; filename=history.xlsx');
-            // res.end(excelFile, 'binary');
-
-            // respondJson(res, resultCode.success, excelFile)
-        // })
-        // .catch((error) => {
-        //     console.log('error', error)
-        //     res.send(error);
-        // })
 })
-
-
-
-
-
 
 module.exports = router;

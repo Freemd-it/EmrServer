@@ -9,7 +9,6 @@ import './vendors/js/semantic.js';
 import './vendors/js/semantic.js';
 import './vendors/js/Semantic-UI-Alert.js';
 
-
 //css
 import './resources/css/index.scss';
 

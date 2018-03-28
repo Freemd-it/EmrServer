@@ -2,6 +2,7 @@ import _ from 'lodash';
 import queryString from 'query-string';
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
+import exportFunc from '../utils/excel';
 import moment from 'moment'
 
 (function () {
@@ -123,7 +124,7 @@ import moment from 'moment'
       textcolor: '#fff',
       position: 'top-left',
       time: 2
-    })
+    });
   }
 
   function setDatePicker() {
@@ -171,53 +172,17 @@ import moment from 'moment'
     }
   }
 
-  /**
-   * history excel download
-   */
   $('#select-history-excel-button').click(function () {
 
     const startTimeDom = document.getElementById('startTime');
     const endTimeDom = document.getElementById('endTime');
-    const { isCheck, errMessage, startTime, endTime } = dateValidationCheck(startTimeDom, endTimeDom);
+    const { startTime, endTime } = dateValidationCheck(startTimeDom, endTimeDom);
+    const historyFileName = `${startTime}_${endTime}_history.xls`;
+    const historyTable = 'history-management-table';
 
-    if (!isCheck) {
-      return $.uiAlert({
-        textHead: '[경고]',
-        text: errMessage,
-        bgcolor: '#FF5A5A',
-        textcolor: '#fff',
-        position: 'top-left',
-        time: 2
-      })
-    }
-    // 선택된 약전
-    const { searchSet, searchText } = selectedCondition;
-    let message = '';
-    let searchName = searchSet === 'name' ? '약품명' : '성분명';
+    $('#select-history-excel-button').attr('download', historyFileName)
+    return exportFunc.excel(this, historyTable, '약 사용 히스토리');
+  });
 
-    if (searchText) {
-      message = `검색 조건 : ${searchName} - ${searchText}`;
-    } else {
-      message = 'history 전부';
-    }
-    message += `\n${startTime} ~ ${endTime} 엑셀 다운로드 하시겠습니까?`;
-
-    selectedCondition.startTime = startTime;
-    selectedCondition.endTime = endTime;
-
-    const stringified = queryString.stringify(selectedCondition);
-
-    if (confirm(message)) {
-      window.location.href = `/management/history/excel?${stringified}`;
-      $.uiAlert({
-        textHead: '[알림]',
-        text: ' Excel 다운로드 ',
-        bgcolor: '#55a9ee',
-        textcolor: '#fff',
-        position: 'top-left',
-        time: 2,
-      });
-    }
-  })
   init();
 })();
