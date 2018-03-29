@@ -104,7 +104,7 @@ router.get('/excel', function (req, res, next) {
     const formatedStartTime = Date.parse(moment(startTime).format());
     const formatedEndTime = Date.parse(moment(endTime).add(1, 'day').format());
 
-    const STATUS = ['', '처방대기', '처방중', '완료'];
+    const STATUS = ['접수 완료', '예진 완료', '처방 완료', '조제중', '검수 대기', '검수 완료', '복약지도 완료'];
     conf.name = "OCS";
 
     conf.cols = [
@@ -126,17 +126,44 @@ router.get('/excel', function (req, res, next) {
     ocsModel
         .findAll(options)
         .then(results => {
-            conf.rows = _.map(results, result => {
-                const row = result.get({ plain: true });
-                row.status = STATUS[row.status];
-                return _.values(row)
-            });
-            const excelFile = require('excel-export').execute(conf);
 
-            res.setHeader('Content-Type', 'application/vnd.openxmlformats');
-            res.setHeader("Content-Disposition", `attachment; filename=OCS-${startTime}_${endTime}.xlsx`);
-            res.end(excelFile, 'binary');
+            const rows = _.map(results, result => {
+                var row = {
+                  '차트번호': result.chartNumber,
+                  '이름': result.name,
+                  '성별': result.gender,
+                  '생년월일': result.birth,
+                  '차트상태': getStatus(result.status)
+                }
+                return row
+            });
+
+            console.log(rows);
+
+            respondJson(res, resultCode.success, rows);
+            // return
+            // const excelFile = require('excel-export').execute(conf);
+            //
+            // res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+            // res.setHeader("Content-Disposition", `attachment; filename=OCS-${startTime}_${endTime}.xlsx`);
+            // res.end(excelFile, 'binary');
+        })
+        .catch(error => {
+          console.log(error);
+          respondOnError(res, resultCode.fail, error)
         })
 })
+
+function getStatus(status) {
+  switch (status) {
+    case 1: return '접수 완료'; break;
+    case 2: return '예진 완료'; break;
+    case 3: return '조제 대기'; break;
+    case 4: return '조제중'; break;
+    case 5: return '검수 대기'; break;
+    case 6: return '검수 완료'; break;
+    case 7: return '복약지도 완료'; break;
+  }
+}
 
 module.exports = router;

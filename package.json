@@ -45,7 +45,8 @@
     "sequelize": "^4.37.4",
     "serve-favicon": "~2.3.0",
     "traceback": "^0.3.1",
-    "trackback": "0.0.3"
+    "trackback": "0.0.3",
+    "xlsexport": "^1.5.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

@@ -299,7 +299,7 @@ function getStatus(status) {
     case 4: return '조제중'; break;
     case 5: return '검수 대기'; break;
     case 6: return '검수 완료'; break;
-    case 7: return '처방 완료'; break;
+    case 7: return '완료'; break;
   }
 }
 
