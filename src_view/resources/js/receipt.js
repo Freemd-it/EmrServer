@@ -19,10 +19,15 @@ $('#patient_form').validate({
           dateISO: true
         },
         height: {
-            digits: true
+          min: 1,
+          digits: true
         },
         weight: {
-            digits: true
+          min: 1,
+          digits: true
+        },
+        bmi: {
+          number: true
         },
         smoking: {
             number: true,
@@ -49,24 +54,29 @@ $('#patient_form').validate({
           dateISO: "생년월일을 정확히 입력해주세요"
         },
         height: {
-            digits: "신장을 양의 정수 형식으로 입력해주세요"
+          min: "신장은 0이 될 수 없습니다.",
+          digits: "신장을 양의 정수 형식으로 입력해주세요"
         },
         weight: {
-            digits: "체중을 양의 정수 형식으로 입력해주세요"
+          min: "체중은 0이 될 수 없습니다.",
+          digits: "체중을 양의 정수 형식으로 입력해주세요"
+        },
+        bmi: {
+          number: "bmi 지수가 정확하기 않습니다. 신장과 체중을 다시 확인해주세요!"
         },
         smoking: {
-            number: "흡연량을 숫자 형식으로 입력해주세요",
-            min: "흡연량은 음수를 입력할 수 없습니다"
+          number: "흡연량을 숫자 형식으로 입력해주세요",
+          min: "흡연량은 음수를 입력할 수 없습니다"
         },
         smokingPeriod: {
-            digits: "흡연경력을 양의 정수 형식으로 입력해주세요"
+          digits: "흡연경력을 양의 정수 형식으로 입력해주세요"
         },
         drinking: {
-            number: "음주량을 숫자 형식으로 입력해주세요",
-            min: "음주량은 음수를 입력할 수 없습니다"
+          number: "음주량을 숫자 형식으로 입력해주세요",
+          min: "음주량은 음수를 입력할 수 없습니다"
         },
         drinkingPeriod: {
-            digits: "음주경력을 양의 정수 형식으로 입력해주세요"
+          digits: "음주경력을 양의 정수 형식으로 입력해주세요"
         }
     },
     showErrors:function(errorMap, errorList){
