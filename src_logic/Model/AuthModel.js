@@ -1,16 +1,15 @@
 var config = require('../../Config');
+const user = require('../Entity/User');
 
 var AuthModel = function (data) {
     this.data = data;
 }
 
-var table = "users";
+AuthModel.login = async function(options) {
+    return await user.findOne(options)
+}
 
-AuthModel.prototype.data = {};
-
-AuthModel.Auth = function(insertValues, stamp, callback){
-
-    // TODO Login Logic
+AuthModel.createUser = async function(options) {
 
 }
 

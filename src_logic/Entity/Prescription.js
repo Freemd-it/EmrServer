@@ -1,5 +1,5 @@
-var sequelize = require('sequelize');
-var dbService = require('../Service/SequelizeService.js');
+const sequelize = require('sequelize');
+const dbService = require('../Service/SequelizeService.js');
 
 const Prescription = dbService.define('prescription', {
 

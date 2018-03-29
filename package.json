@@ -36,14 +36,17 @@
     "morgan": "~1.7.0",
     "mysql": "^2.13.0",
     "mysql2": "^1.3.5",
+    "ng-table-excel-export": "^1.0.0",
     "node-uuid": "^1.4.8",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
     "passport-google-oauth2": "^0.1.6",
-    "sequelize": "^4.1.0",
+    "query-string": "^6.0.0",
+    "sequelize": "^4.37.4",
     "serve-favicon": "~2.3.0",
     "traceback": "^0.3.1",
-    "trackback": "0.0.3"
+    "trackback": "0.0.3",
+    "xlsexport": "^1.5.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

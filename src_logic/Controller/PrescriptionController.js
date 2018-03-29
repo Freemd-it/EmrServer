@@ -29,14 +29,20 @@ router.get('/:chartNumber', (req, res) => {
       .find(options)
       .then(result => {
 
+        const viewPermission = ['super', 'pharmacist', '3partLeader'];
         const prescriptions = result
-        options.include = { model: patient }
+        options.include = [{ model: patient, required: true }]
 
         chartModel
             .find(options)
             .then(result => {
+                viewPermission.includes(req.session.auth) ? result[0].dataValues.viewPermission = true : result[0].dataValues.viewPermission = false
                 result[0].dataValues.prescriptions = prescriptions
                 respondJson(res, resultCode.success, result[0]);
+            })
+            .catch(error => {
+                console.log(error)
+                respondOnError(res, resultCode.fail, error)
             })
       })
       .catch((error) =>{
@@ -123,7 +129,7 @@ router.get('/history/:startTime/:endTime/:category', (req, res)=>{
   endTime += ' 23:59:59'
 
   const options = {}
-  options.include = { model: medicine, attributes: ['primaryCategory', 'secondaryCategory', 'totalAmount', 'quantity'] }
+  options.include = [{ model: medicine, attributes: ['primaryCategory', 'secondaryCategory', 'totalAmount', 'quantity'], required: true }]
   options.where = { useFlag: '1', createdAt: {between: [startTime, endTime]} }
   options.attributes = ['medicineName', 'medicineIngredient', [sequelize.fn('SUM', sequelize.col('prescription.useTotal')), 'total'], 'createdAt']
   options.group = ['prescription.medicine_id']
@@ -133,11 +139,12 @@ router.get('/history/:startTime/:endTime/:category', (req, res)=>{
   }
 
   prescriptionModel
-    .history(options)
+    .find(options)
     .then(result => {
       respondJson(res, resultCode.success, result)
     })
     .catch(error => {
+      console.log(error)
       respondOnError(res, resultCode.fail, error)
     })
 });

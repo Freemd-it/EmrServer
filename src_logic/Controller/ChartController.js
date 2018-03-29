@@ -5,6 +5,7 @@
 const express = require('express');
 const chartModel = require('../Model/ChartModel');
 const waitingModel = require('../Model/WaitingModel');
+const ocsModel = require('../Model/OCSModel');
 const resultCode = require('../Common/ResultCode');
 const { respondJson, respondOnError } = require('../Utils/respond');
 
@@ -29,7 +30,6 @@ router.use(function log(req, res, next) {
 router.get('/', function (req, res) {
 
     chartModel.getChartByChartNumber(req.query, result => {
-        //console.log(result);
         res.send(result);
     });
 });
@@ -38,12 +38,22 @@ router.post('/update', function (req, res) {
 
     const data = {
         status: req.body.updateStatus,
-        chart_id: req.body.chartNumber,
+        chartNumber: req.body.chartNumber,
     };
 
     chartModel.updateChartByChartNumber(req.body, result => {
         waitingModel.Update(data, result => {
-            res.send(result);
+
+            const options = {};
+            options.update = { status: data.status };
+            options.where = { chartNumber: data.chartNumber }
+            ocsModel.update(options)
+                    .then(result => {
+                        res.send(result);
+                    })
+                    .catch(error => {
+                        res.send(error);
+                    })
         });
     })
 });
@@ -127,7 +137,7 @@ router.get('/detail/:chartId/:patientId/:chartNumber', function (req, res, next)
     chartModel
         .findAll(options)
         .then(result => respondJson(res, resultCode.success, result))
-        .catch(error => respondOnError(res, resultCode.fail, error))
+        .catch(error => { console.log(error); respondOnError(res, resultCode.fail, error)})
 });
 
 module.exports = router;

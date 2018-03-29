@@ -64,10 +64,12 @@ router.get('/pharmacy/now/:page', (req, res) => {
       endPage = totalPage;
     }
 
+    const viewPermission = ['super'];
     const options = {};
     options.order = [['chartNumber', 'ASC']];
-    // options.where = { createdAt: {gt: Date.parse(nowDay)}, status: {ne: 7} } // 조건 : 오늘 날짜이고, 상태가 7이 아닌
-    options.where = { createdAt: {gt: Date.parse(nowDay)} } // 개발 모드, 완료 후 삭제 및 윗 라인 조건으로 변경 예정
+
+    options.where = { createdAt: {gt: Date.parse(nowDay)} }
+    if (!viewPermission.includes(req.session.auth)) options.where.status = {ne: 7}
     options.offset = BEGIN;
     options.limit = SIZE;
 
@@ -85,11 +87,17 @@ router.get('/pharmacy/now/:page', (req, res) => {
               endPage : endPage,
               totalPage : totalPage,
               max : max,
-              datas : datas
+              datas : (req.session.auth === 'normal') ? toNormalMember(datas) : datas
             }
             respondJson(res, resultCode.success, result)
           })
           .catch((error) => respondOnError(res, resultCode.fail, error))
 });
+
+function toNormalMember (datas) {
+  return _.filter(datas, data => {
+    return data.status === 4
+  })
+}
 
 module.exports = router;

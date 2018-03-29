@@ -7,9 +7,8 @@ router.use(function log(req, res, next) {
     next();
 });
 
-
 router.get('/', (req, res, next) => {
-    respondHtml(res, 'prediagnosis');
+    respondHtml(res, 'prediagnosis', { auth : req.session.auth });
 })
 
 module.exports = router;

@@ -1,11 +1,19 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var util = require('util');
+const express = require('express');
+const bodyParser = require('body-parser');
+const util = require('util');
+const session = require('express-session');
+const redisStore = require('connect-redis')(session);
+const resultCode = require('../Common/ResultCode');
+const _ = require('lodash');
 
-var common = require('../Common/Common.js');
-var passportService = require('../Service/PassportService.js');
+const { respondJson, respondOnError, respondHtml } = require('../Utils/respond');
+const config = require('../../Config');
+const common = require('../Common/Common.js');
+const passportService = require('../Service/PassportService');
+const sessionService = require('../Service/SessionService');
+const authModel = require('../Model/AuthModel')
 
-var router = express.Router();
+const router = express.Router();
 
 router.use(function log(req, res, next) {
 
@@ -13,40 +21,56 @@ router.use(function log(req, res, next) {
     next();
 });
 
-/* 로그인 부분 ajax로 처리하면 에러남, 무조건 form action으로 처리할 것 */
-router.get('/login', passportService.passport.authenticate('google', { scope:
-    ['https://www.googleapis.com/auth/plus.login',
-    'profile',
-    'email',
-    'https://www.googleapis.com/auth/plus.profile.emails.read',
-    'https://www.googleapis.com/auth/user.birthday.read',
-    'https://www.googleapis.com/auth/profile.language.read',
-    'https://www.googleapis.com/auth/user.phonenumbers.read']
-}));
+router.get('/login', passportService.passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-
-router.get('/google/callback', passportService.passport.authenticate('google'), function(req, res){
+router.get('/google/callback',
+  passportService.passport.authenticate('google',
+  { failureFlash: false, failureRedirect: '/login?error=invalid_domain_' }),
+  function(req, res){
     if (req.user._json.domain !== 'freemed.or.kr') {
-        req.logout();
-        return res.redirect('http://localhost:3000/login?err=account');
+        return res.redirect('/login?error=invalid_domain_');
     }
-
-    res.redirect('http://localhost:3000/receipt');
+    req.session.auth = 'normal'
+    res.redirect('/receipt');
 });
 
-// router.get('/login', function(req, res){
-//
-//     // console.log(req.body);
-//     //var text = common.Encryption(req.query.password, 'aes-256-ctr');
-//     // console.log("-------암호화-------");
-//     // console.log(text);
-//     // console.log("-------복호화-------");
-//     // console.log(common.Decryption(text, 'aes-256-ctr'));
-//     // console.log("-------해싱-------");
-//     // console.log(common.Hashing(req.body.password, 'ripemd160WithRSA'));
-//
-//     res.status(200).json("Test");
-// });
+router.get('/logout', (req, res) => {
+
+    req.session.destroy();
+    res.redirect('/login');
+})
+
+router.post('/login', (req, res) => {
+
+    const { special_account, special_password } = req.body
+    const options = {}
+    options.where = {
+      account : special_account,
+      password : common.hash(special_password, 'ripemd160WithRSA')
+    }
+
+    authModel
+        .login(options)
+        .then(result => {
+          if(_.eq(result, null)) return res.redirect('/login?error=auth_error_')
+          const { permission } = result.dataValues
+          req.session.passport = { 'auth' : 'true' }
+          req.session.auth = authConvert(permission)
+          res.redirect('/receipt')
+        })
+        .catch(error => {
+          res.redirect('/login?error=unknown_error_')
+        })
+})
+
+function authConvert(param) {
+  switch (param) {
+    case '6000' : return 'doctor'; break;
+    case '7000' : return '3partLeader'; break;
+    case '8000' : return 'pharmacist'; break;
+    case '9000' : return 'super'; break;
+  }
+}
 
 
 module.exports = router;

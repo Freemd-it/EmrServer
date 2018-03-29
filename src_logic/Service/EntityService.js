@@ -4,7 +4,6 @@ var history = require('../Entity/History.js');
 var medicine = require('../Entity/Medicine.js');
 var ocs = require('../Entity/OCS.js');
 var patient = require('../Entity/Patient.js');
-var permission = require('../Entity/Permission.js');
 var prescription = require('../Entity/Prescription.js');
 var user = require('../Entity/User.js');
 var waiting = require('../Entity/Waiting.js');
@@ -15,11 +14,6 @@ const sequelize = require('./SequelizeService.js');
 var EntityService = function(){};
 
 EntityService.Init = function(){
-
-    permission.hasMany( user, { foreignKey : 'permission_id' });
-    /*
-      권한 : 사용자 = 1 : N
-    */
 
     patient.hasMany( complaint, { foreignKey : 'patient_id', onUpdate : 'CASCADE' });
     patient.hasMany( history, { foreignKey : 'patient_id', onUpdate : 'CASCADE' });
@@ -40,15 +34,12 @@ EntityService.Init = function(){
       차트 : 처방 = 1 : 1
     */
 
-    medicine.hasMany( prescription, { foreignKey : 'medicine_id', onUpdate : 'CASCADE'});
+    medicine.hasMany( prescription, { foreignKey : 'medicine_id', sourceKey : 'id', onUpdate : 'CASCADE'});
+    // medicine.hasMany( prescription, { foreignKey : 'medicine_id', onUpdate : 'CASCADE'});
     prescription.belongsTo(medicine, { foreignKey : 'medicine_id'});
     prescription.belongsTo(chart, { foreignKey: 'chartNumber' });
 
-    permission.sync().then(() => {
-
-        user.sync();
-    });
-
+    user.sync();
     patient.sync().then(() => {
 
         history.sync();

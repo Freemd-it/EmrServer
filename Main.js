@@ -17,7 +17,7 @@ var process = require('process');
 var config = require('./Config');
 var sessionService = require('./src_logic/Service/SessionService.js');
 var passportService = require('./src_logic/Service/PassportService.js');
-// var redisService = require('./src_logic/Service/RedisService.js');
+var redisService = require('./src_logic/Service/RedisService.js');
 var routesService = require('./src_logic/Service/RoutesService.js');
 var entityService = require('./src_logic/Service/EntityService.js');
 
@@ -129,19 +129,15 @@ Cluster.ProcessRun = function (workerId) {
     app.use(methodOverride());
     app.set('trust proxy', config.server.trust_proxy_host);
 
-
     // Static files moddleware
     app.use(express.static(__dirname + '/public'))
     app.set('views', path.join(__dirname, 'src_view', 'views'));
     app.set('view engine', 'ejs');
 
-
     sessionService.Init();
     routesService.Init();
     passportService.Init();
-    entityService.Init(); // 테이블 생성
-
- 
+    entityService.Init();
 
     http.createServer(app).listen(app.get('port'), function () {
         console.log(util.format('## [processRun] [pid:%d] [childNo:%d] Server running at %d ##', process.pid, workerId, config.server.port));

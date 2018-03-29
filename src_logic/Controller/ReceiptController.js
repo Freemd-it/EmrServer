@@ -20,7 +20,7 @@ router.use(function log(req, res, next) {
 });
 
 router.get('/', (req, res, next) => {
-    respondHtml(res, 'receipt');
+    respondHtml(res, 'receipt', { auth : req.session.auth });
 })
 
 router.get('/patients',function (req, res) {

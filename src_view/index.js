@@ -14,6 +14,7 @@ import './vendors/js/calendar.min.js';
 import './resources/css/index.scss';
 
 //js
+import './resources/js/login.js';
 import './resources/js/ocs.js';
 import './resources/js/originalDiagnosis.js';
 import './resources/js/pastDiagnosisList.js';

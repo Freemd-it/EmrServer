@@ -119,7 +119,13 @@
         </div>
         <div class="twelve wide column">
           <div class="ui segment pharmacy-segment">
-            <button id="pharmacopoeia" class="ui primary button" style="float: right;">약전</button>
+            <%
+            var invalidPharmacyInPharmacyPage = ['normal', 'doctor']
+            if (invalidPharmacyInPharmacyPage.includes(auth)) {%>
+              <button id="pharmacopoeia" class="ui primary button" style="float:right;" disabled>약전</button>
+            <% } else { %>
+              <button id="pharmacopoeia" class="ui primary button" style="float:right;">약전</button>
+            <% } %>
             <h2 class="ui dividing header"><span class="h3-header-bottom-margin">조제</span></h2>
 
             <div class="ui form">
@@ -146,7 +152,11 @@
                   <th width="10%">1일<br />복용횟수</th>
                   <th width="10%">복용일수</th>
                   <th width="15%">비고</th>
-                  <th width="10%">기타</th>
+                  <%
+                  var invalidDoctorSign = ['normal', 'doctor']
+                  if (!invalidDoctorSign.includes(auth)) {
+                   %><th width="10%">기타</th>
+                   <% } %>
                 </tr>
               </thead>
               <tbody id="prescription-table-body">
@@ -185,10 +195,19 @@
         <div class="left floated six wide column" style="margin-left:.1%"></div>
 
         <div>
+          <% if (auth === 'normal') {%>
+            <button id="pharmaceutical-end" class="huge negative ui button"> 조제 완료 </button>
+          <% } else if (auth === '3partLeader') {%>
+            <button id="pharmaceutical-start" class="huge negative ui button"> 조제 시작 </button>
+            <button id="inspection-complete" class="huge negative ui button"> 검수 완료 </button>
+          <% } else if (auth === 'pharmacist') {%>
+            <button id="prescription-complete" class="huge negative ui button"> 복약지도 완료 </button>
+          <% } else if (auth === 'super') {%>
             <button id="pharmaceutical-start" class="huge negative ui button"> 조제 시작 </button>
             <button id="pharmaceutical-end" class="huge negative ui button"> 조제 완료 </button>
             <button id="inspection-complete" class="huge negative ui button"> 검수 완료 </button>
             <button id="prescription-complete" class="huge negative ui button"> 복약지도 완료 </button>
+          <% } %>
         </div>
     </div>
   </section>
