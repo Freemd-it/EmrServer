@@ -126,7 +126,6 @@ router.get('/excel', function (req, res, next) {
     ocsModel
         .findAll(options)
         .then(results => {
-
             const rows = _.map(results, result => {
                 var row = {
                   '차트번호': result.chartNumber,
@@ -137,9 +136,6 @@ router.get('/excel', function (req, res, next) {
                 }
                 return row
             });
-
-            console.log(rows);
-
             respondJson(res, resultCode.success, rows);
             // return
             // const excelFile = require('excel-export').execute(conf);

@@ -703,7 +703,6 @@ import exportFunc from '../utils/excel';
         return Promise.resolve(data);
       })
       .then(function () {
-        console.log('11');
         $.uiAlert({
           textHead: '[알림]',
           text: '약정보 추가 완료',
