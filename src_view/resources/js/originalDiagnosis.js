@@ -473,7 +473,7 @@ $(document).on('click', '#doctorSignedComplete', (e) => {
         cache: false,
     }).done(result => {
 
-        if (result[0] === 1) {
+        if (result[0] === 0) {
 
             $('.treatmentNote').val('');
             $('#diagonosisChartForm, #preDiagonosisChartForm, #patientChartForm').each(function(){
