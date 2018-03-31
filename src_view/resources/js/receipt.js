@@ -135,7 +135,7 @@ $('#btn-name-send').on('click', () => {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/receipt/patients',
+        url: '/receipt/patients',
         data: docs,
         dataType: 'json',
         cache: false,
@@ -314,7 +314,7 @@ $(document).on('click', '.homonym-item', (e) => {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/receipt/patient',
+        url: '/receipt/patient',
         data: docs,
         dataType: 'json',
         cache: false,
@@ -523,7 +523,7 @@ $('#sendToPart2').on('click', () => {
 
     $.ajax({
         type: 'POST',
-        url: 'http://localhost:3000/receipt/patient',
+        url: '/receipt/patient',
         data: docs,
         dataType: 'json',
         cache: false,

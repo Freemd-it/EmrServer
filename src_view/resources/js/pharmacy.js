@@ -121,7 +121,7 @@ $('.main-category-select').change(() => {
 
   $.ajax({
     type: 'GET',
-    url: 'http://localhost:3000/medicine/category/small',
+    url: '/medicine/category/small',
     data: param,
     dataType: 'json',
     cache: false,
@@ -218,7 +218,7 @@ $('.pharmacySearchButton').on('click', () => {
 
   $.ajax({
     type: 'GET',
-    url: 'http://localhost:3000/medicine/search',
+    url: '/medicine/search',
     data: param,
     dataType: 'json',
     cache: false,
