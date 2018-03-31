@@ -30,7 +30,10 @@ RoutesService.Init = function () {
         console.log(util.format('Use Middleware csrf'));
     }
 
+
     app.use(function log(req, res, next) {
+
+
 
         const pattern1 = /^\/login*/
         const pattern2 = /^\/auth*/
@@ -42,7 +45,8 @@ RoutesService.Init = function () {
             }
         }
 
-        res.header('Access-Control-Allow-Origin', config.server.accept_domain);
+        // res.header('Access-Control-Allow-Origin', config.server.accept_domain);
+        res.header("Access-Control-Allow-Origin" , "*");
         res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         console.log(util.format("## URL : %s / IP : %s ##", req.originalUrl, req.ip));
         next();
