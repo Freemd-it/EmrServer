@@ -289,7 +289,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/chart',
+        url: '/chart',
         data: docs,
         dataType: 'json',
         cache: false,
@@ -473,7 +473,7 @@ $(document).on('click', '#doctorSignedComplete', (e) => {
         cache: false,
     }).done(result => {
 
-        if (result[0] === 1) {
+        if (result[0] === 0) {
 
             $('.treatmentNote').val('');
             $('#diagonosisChartForm, #preDiagonosisChartForm, #patientChartForm').each(function(){
@@ -534,7 +534,7 @@ $('#pharmacopoeia').on('click', () => {
 
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:3000/medicine/category/main',
+        url: '/medicine/category/main',
         dataType: 'json',
         cache: false,
     }).done(results => {
