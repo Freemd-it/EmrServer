@@ -55,7 +55,7 @@ $('#login-special-btn').on('click', () => {
   if(!($('input[name=special_account]').val()) || !($('input[name=special_password]').val())) {
     return $.uiAlert({
       textHead: '[경고]',
-      text: '로그인에 실패하였습니다. 아이디 또는 비밀번호를 다시 확인해주세요!',
+      text: '아이디 또는 비밀번호를 정확하게 입력해주세요!',
       bgcolor: '#4d4dff',
       textcolor: '#fff',
       position: 'top-left',
@@ -63,6 +63,10 @@ $('#login-special-btn').on('click', () => {
     });
   }
   document.getElementById('special-login-form').submit();
+})
+
+$('input[name=special_password], input[name=special_account]').keyup((e) => {
+  if(_.eq(e.keyCode, 13)) document.getElementById('special-login-form').submit();
 })
 
 function getParameterByName(name, url) {
@@ -78,15 +82,27 @@ function getParameterByName(name, url) {
 function printError(error) {
     switch (error) {
       case 'invalid_domain_' : showGuidePopup(); break;
-      case 'auth_error_' : alert('ID와 비밀번호를 다시 확인해주세요!'); break;
-      case 'unknown_error_' : alert('알 수 없는 에러가 발생했습니다. IT 본부 단원에게 문의해주세요!'); break;
+      case 'auth_error_' : return $.uiAlert({
+        textHead: '[경고]',
+        text: '로그인에 실패하였습니다. 아이디 또는 비밀번호를 다시 확인해주세요!',
+        bgcolor: '#4d4dff',
+        textcolor: '#fff',
+        position: 'top-left',
+        time: 3,
+      }); break;
+      case 'unknown_error_' : return $.uiAlert({
+        textHead: '[경고]',
+        text: '알 수 없는 에러가 발생하였습니다. IT본부 단원에게 문의해주세요!',
+        bgcolor: '#4d4dff',
+        textcolor: '#fff',
+        position: 'top-left',
+        time: 5,
+      }); break;
     }
 }
 
 function showGuidePopup() {
-
-    // TODO 인터넷 사용 기록 삭제 가이드 팝업 띄워주기
-    console.log('in guide')
+  $('.guide-modal').modal({closable: false}).modal('show');
 }
 
 init()

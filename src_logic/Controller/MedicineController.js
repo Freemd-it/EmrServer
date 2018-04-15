@@ -1,5 +1,5 @@
 const express = require('express');
-const medicineModel = require('../Model/medicineModel.js');
+const medicineModel = require('../Model/MedicineModel.js');
 const medicineCategoryModel = require('../Model/MedicineCategoryModel.js');
 const router = express.Router();
 const resultCode = require('../Common/ResultCode');

@@ -1,16 +1,24 @@
 
-const _ = require('lodash');
 const express = require('express');
+const _ = require('lodash');
 const sequelize = require('sequelize');
 const Medicine = require('../Entity/Medicine');
 const Prescription = require('../Entity/Prescription');
-const medicineModel = require('../Model/medicineModel.js');
+const prescriptionModel = require('../Model/PrescriptionModel');
+const medicineModel = require('../Model/MedicineModel.js');
 const resultCode = require('../Common/ResultCode');
 const { respondHtml, respondJson } = require('../Utils/respond');
 const router = express.Router();
 
 
 router.use(function log(req, res, next) {
+
+    var invalid = ['normal', 'doctor']
+
+    if(invalid.includes(req.session.auth)) {
+      return res.redirect('back');
+    }
+
     console.log('## [Management] Management started ##');
     next();
 });
@@ -21,6 +29,13 @@ router.get('/', (req, res, next) => {
 
 
 router.get('/medicine/excel', async (req, res, next) => {
+
+    /**
+     * 서버 excel 로직으로 인해 시퀄라이즈 참조 모델이 모두 깨지는 현상 발생
+     * 프론트에서 테이블을 엑셀 파일로 export 시키는 방법으로 변경
+     */
+    res.redirect('back');
+
     const { searchSet, searchText } = req.query;
     let { categoryMain, categorySmall } = req.query;
 
@@ -62,6 +77,7 @@ router.get('/medicine/excel', async (req, res, next) => {
     } else if (searchText) {
         options.where[searchSet] = searchText;
     }
+
     try {
         const medicines = await medicineModel.listTwo(options);
         conf.rows = _.map(medicines, medicine => {
@@ -80,6 +96,13 @@ router.get('/medicine/excel', async (req, res, next) => {
 })
 
 router.get('/inventory/excel', async (req, res, next) => {
+
+    /**
+     * 서버 excel 로직으로 인해 시퀄라이즈 참조 모델이 모두 깨지는 현상 발생
+     * 프론트에서 테이블을 엑셀 파일로 export 시키는 방법으로 변경
+     */
+    res.redirect('back');
+
     const { categoryMain, categorySmall, searchSet, searchText } = req.query;
     const options = {};
     const conf = {};
@@ -135,18 +158,25 @@ router.get('/inventory/excel', async (req, res, next) => {
 
 
 
-router.get('/history/excel', (req, res, next) => {
+router.get('/history/excel', (req, res) => {
+
+    /**
+     * 서버 excel 로직으로 인해 시퀄라이즈 참조 모델이 모두 깨지는 현상 발생
+     * 프론트에서 테이블을 엑셀 파일로 export 시키는 방법으로 변경
+     */
+    res.redirect('back');
+
     const { searchSet, searchText } = req.query;
     let { startTime, endTime } = req.query;
-    const options = {};
     const conf = {};
     startTime += ' 00:00:00';
     endTime += ' 23:59:59';
 
-    options.where = { useFlag: '1', createdAt: { between: [startTime, endTime] } }
+    const options = {};
+    options.include = { model: Medicine, attributes: ['primaryCategory', 'secondaryCategory', 'totalAmount', 'quantity'] }
+    options.where = { useFlag: '1', createdAt: {between: [startTime, endTime] } }
     options.attributes = ['medicineName', 'medicineIngredient', [sequelize.fn('SUM', sequelize.col('prescription.useTotal')), 'total']]
     options.group = ['prescription.medicine_id']
-    options.include = { model: Medicine, required: true };
 
     if (searchText) {
         searchSet === 'name'
@@ -165,35 +195,24 @@ router.get('/history/excel', (req, res, next) => {
         { caption: '재고', type: 'number' },
     ];
 
-    Prescription
-        .findAll(options)
-        .then((results) => {
-            conf.rows = _.map(results, result => {
-                const historyMedicine = result.get({ plain: true });
-                const { medicine } = historyMedicine;
-                return [
-                    medicine.primaryCategory, medicine.secondaryCategory,
-                    historyMedicine.medicineName, historyMedicine.medicineIngredient,
-                    historyMedicine.total,
-                    medicine.totalAmount, medicine.quantity
-                ];
-            });
+    try {
+        const results = prescriptionModel.history(options)
+        conf.rows = _.map(results, result => {
+          const { primaryCategory, secondaryCategory, medicineName, medicineIngredient, total, totalAmount, quantity } = result
+          return [
+             primaryCategory, secondaryCategory, medicineName, medicineIngredient,
+             total, totalAmount, quantity
+          ];
+        });
 
-            const excelFile = require('excel-export').execute(conf);
+        const excelFile = require('excel-export').execute(conf);
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+        res.setHeader("Content-Disposition", `attachment; filename=history.xlsx`);
+        res.status(200).end(excelFile, 'binary');
 
-            res.setHeader('Content-Type', 'application/vnd.openxmlformats');
-            res.setHeader("Content-Disposition", `attachment; filename=history.xlsx`);
-            res.end(excelFile, 'binary');
-        })
-        .catch((error) => {
-            console.log('error', error)
-            res.send(error);
-        })
+    } catch (error) {
+        res.json(error)
+    }
 })
-
-
-
-
-
 
 module.exports = router;

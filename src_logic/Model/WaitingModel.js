@@ -35,7 +35,7 @@ WaitingModel.Update = function(data, callback) {
     status: data.status
   }, {
     where: {
-      chartNumber: data.chart_id
+      chartNumber: data.chartNumber
     }
   }).then(results => {
     callback(results);

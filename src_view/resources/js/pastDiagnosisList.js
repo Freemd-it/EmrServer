@@ -64,8 +64,6 @@ function getPastChart(id, patient, chartNumber) {
 
 function renderPastOriginalDiagnosis(data) {
 
-  // console.log(data)
-
   $('#past-originChartId').val(data.chartNumber);
   $('#past-originName').val(data.patient.name);
   $('.past-impression').val(data.impression);

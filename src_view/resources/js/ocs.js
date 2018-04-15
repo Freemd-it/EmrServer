@@ -4,6 +4,7 @@ import { resultCode } from '../utils/constant';
 import $ from 'jquery';
 import { F_OK } from 'constants';
 import moment from 'moment';
+import xlsExport from 'xlsexport';
 
 function init() {
     if (!_.eq(location.pathname, '/ocs')) return;
@@ -107,7 +108,7 @@ function ocsTableDataSetting(result) {
     const {
         endPage, startPage, totalPage, max, page, pageSize, datas
     } = result;
-    const changeToHangle = ['접수 완료', '예진 완료', '조제 대기', '조제중', '처방 대기', '완료'];
+    const changeToHangle = ['접수 완료', '예진 완료', '처방 완료', '조제중', '검수 대기', '검수 완료', '복약지도 완료'];
     const START_NUM = 1;
     const footEle = [];
     /**
@@ -115,13 +116,14 @@ function ocsTableDataSetting(result) {
      */
     $('table tbody').append(
         _.map(datas, data => {
-            const { chartNumber, name, gender, birth, status } = data;
+            const { chartNumber, name, gender, birth } = data;
+            const status = getStatus(data.status);
             return ` <tr>
                 <td>${chartNumber}</td>
                 <td>${name}</td>
                 <td>${gender}</td>
                 <td>${birth}</td>
-                <td>${changeToHangle[status - 1]}</td>
+                <td>${status}</td>
             </tr>`
         })
     );
@@ -181,6 +183,7 @@ $('.ocs-reload__btn ').click((e) => {
  * Excel Download
  */
 $('.ocs-excel').click((e) => {
+
     const startTimeDom = document.getElementById('startTime');
     const endTimeDom = document.getElementById('endTime');
     const { isCheck, message } = dateValidationCheck(startTimeDom, endTimeDom);
@@ -193,6 +196,37 @@ $('.ocs-excel').click((e) => {
     if (!isCheck) {
         return alert(message);
     }
-    location.href = `/ocs/excel?startTime=${startTime}&endTime=${endTime}`;
+
+    http
+        .getMethod(`/ocs/excel?startTime=${startTime}&endTime=${endTime}`)
+        .then(result => {
+            const { data, code } = result;
+
+            if (!_.eq(code, resultCode.success)) {
+                return Promise.reject(`fail ocs data ${data.error}`);
+            }
+            return Promise.resolve(data);
+        })
+        .then(data => {
+            const xls = new xlsExport(data, 'ocs');
+            const fileName = `${startTime}_${endTime}_ocs.xls`;
+            xls.exportToXLS(fileName)
+        })
+        .catch(error => console.log(error))
+
+    // location.href = `/ocs/excel?startTime=${startTime}&endTime=${endTime}`;
 })
+
+function getStatus(status) {
+  switch (status) {
+    case 1: return '접수 완료'; break;
+    case 2: return '예진 완료'; break;
+    case 3: return '조제 대기'; break;
+    case 4: return '조제중'; break;
+    case 5: return '검수 대기'; break;
+    case 6: return '검수 완료'; break;
+    case 7: return '복약지도 완료'; break;
+  }
+}
+
 init();

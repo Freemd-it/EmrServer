@@ -2,7 +2,8 @@ module.exports = {
     server: {
         trust_proxy_host: "127.0.0.1",
         port: 3000,
-        session_expire: 1080000,
+        cookie_expire: 6,
+        cookie_max_age: 15000,
         single_cluster: false,
         data_read_time: 3600000,
         accept_domain: "http://127.0.0.1:3000",
@@ -27,8 +28,8 @@ module.exports = {
         redisPassword: "test123$"
     },
     google: {
-        google_client_id: "132166996823-gb903hunh1l6mpgn7q5eqtnk29q9if5d.apps.googleusercontent.com",
-        google_client_password: "GN6YIasE1d0daJFggB-VhDAj"
+        google_client_id: "979047584146-72ng4egamv87mreke3d5ttmnpgosiiev.apps.googleusercontent.com",
+        google_client_password: "5K8Sx_K29T2Vsofa_bxMkJwi"
     }
 
 };

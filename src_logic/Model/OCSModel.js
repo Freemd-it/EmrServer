@@ -64,4 +64,10 @@ OCSModel.count = async function (options) {
   return ocs.count({ where });
 }
 
+OCSModel.update = async function (options) {
+
+  const { where = {}, update = {} } = options;
+  return await ocs.update(update, { where: where })
+}
+
 module.exports = OCSModel;

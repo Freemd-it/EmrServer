@@ -1,5 +1,6 @@
 var csurf = require('csurf');
 var util = require('util');
+var moment = require('moment');
 
 var config = require('../../Config');
 var userController = require('../Controller/UserController.js');
@@ -30,38 +31,22 @@ RoutesService.Init = function () {
         console.log(util.format('Use Middleware csrf'));
     }
 
-    app.use(function log(req, res, next) {
+
+    app.use((req, res, next) => {
 
         const pattern1 = /^\/login*/
         const pattern2 = /^\/auth*/
         const authResult = pattern1.test(req.originalUrl) || pattern2.test(req.originalUrl)
 
-        console.log(req.session.auth);
-        if (!req.session.passport){
-            if (!authResult) {
-               res.redirect('/login')
-            }
+        if (!req.session.passport && !authResult){
+          res.redirect('/login')
         }
-
-        res.header('Access-Control-Allow-Origin', config.server.accept_domain);
         res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-        console.log(util.format("## URL : %s / IP : %s ##", req.originalUrl, req.ip));
         next();
     });
 
     /* 테스트 화면 출력용 */
-    app.get('/', (req, res, callback) => {
-
-        res.redirect('/login')
-        // res.render('index')
-        // var height = "175";
-        // var weight = "60";
-        // var result = (Number(weight) / (Number(height / 100) * Number(height / 100))).toFixed(1);
-        // result = new Date();
-
-        // res.status(200).json({ "result" : result });
-
-    });
+    app.get('/', (req, res) => { res.redirect('/login') })
     app.use('/login',loginController);
     app.use('/user', userController);
     app.use('/auth', authController);
@@ -74,7 +59,7 @@ RoutesService.Init = function () {
 
     app.use('/waitingList', waitingController);
     app.use('/chart', chartController);
-    app.use('/views', viewsController);
+    // app.use('/views', viewsController);
     app.use('/medicine', medicineController);
     app.use('/ocs', ocsController);
     app.use('/prescription', prescriptionController);

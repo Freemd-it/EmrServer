@@ -22,7 +22,11 @@ function init() {
 
 $(document).ready(() => {
 
-  getPharmacyOcsData('now');
+  const accessLocalPath = ['/management', '/originalDiagnosis', '/pharmacy']
+  if (!accessLocalPath.includes(window.location.pathname)) return;
+  if (window.location.pathname === '/pharmacy') {
+    getPharmacyOcsData('now');
+  }
 
   $.ajax({
     type: 'GET',
@@ -121,7 +125,7 @@ $('.main-category-select').change(() => {
 
   $.ajax({
     type: 'GET',
-    url: 'http://localhost:3000/medicine/category/small',
+    url: '/medicine/category/small',
     data: param,
     dataType: 'json',
     cache: false,
@@ -218,7 +222,7 @@ $('.pharmacySearchButton').on('click', () => {
 
   $.ajax({
     type: 'GET',
-    url: 'http://localhost:3000/medicine/search',
+    url: '/medicine/search',
     data: param,
     dataType: 'json',
     cache: false,
@@ -299,7 +303,7 @@ function getStatus(status) {
     case 4: return '조제중'; break;
     case 5: return '검수 대기'; break;
     case 6: return '검수 완료'; break;
-    case 7: return '처방 완료'; break;
+    case 7: return '완료'; break;
   }
 }
 
@@ -423,7 +427,12 @@ function getPrescription(chartNumber) {
 
 function prescriptionDataSetting(data) {
 
-  const { prescriptions, chartNumber, name = data.patient.name, impression, presentIllness, treatmentNote } = data;
+  const { prescriptions, chartNumber, name = data.patient.name, impression, presentIllness, treatmentNote, viewPermission } = data;
+  let updateIcon
+  viewPermission ? updateIcon = `<td>
+    <i class="configure-medicine configure link icon" disabled></i>
+    <i class="delete-medicine trash link icon" disabled></i>
+  </td>` : updateIcon = ''
 
   if (prescriptions.length === 0) {
     $('#prescription-table-body').append(
@@ -434,7 +443,7 @@ function prescriptionDataSetting(data) {
   } else {
     $('#prescription-table-body').append(
         _.map(prescriptions, data => {
-          const { id, medicineName, medicineIngredient, doses, dosesCountByDay, dosesDay, remarks } = data;
+          const { id, medicineName, medicineIngredient, doses, dosesCountByDay, dosesDay, remarks, viewPermission } = data;
           return ` <tr prescription-id="${id}" class="ui fluid">
             <td>${medicineName}</td>
             <td>${medicineIngredient}</td>
@@ -442,10 +451,7 @@ function prescriptionDataSetting(data) {
             <td>${dosesCountByDay}</td>
             <td>${dosesDay}</td>
             <td>${remarks === '' ? '-' : remarks}</td>
-            <td>
-              <i class="configure-medicine configure link icon"></i>
-              <i class="delete-medicine trash link icon"></i>
-            </td>
+            ${updateIcon}
           </tr>`
         })
     );

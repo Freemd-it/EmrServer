@@ -4,6 +4,7 @@ import http from '../utils/http';
 import { resultCode } from '../utils/constant';
 import $ from 'jquery';
 import 'jquery-validation';
+import exportFunc from '../utils/excel';
 
 (function () {
   let tableRenderMedicineManagement = [];
@@ -25,7 +26,7 @@ import 'jquery-validation';
     $('#inventory-management').hide();
     $('#history-management').hide();
     showAndHide('content-list', 'pharmacopoeia-management');
-    getPharmacopoeia();
+    if (window.location.pathname === '/management') getPharmacopoeia();
   }
 
   function setValidate(formId) {
@@ -193,7 +194,7 @@ import 'jquery-validation';
           const categorySmall = $('.management-small-category-select option:selected').text();
           tableRenderMedicineManagement = [];
 
-          // excel download 검색 조건 추가 
+          // excel download 검색 조건 추가
           selectedCondition.categoryMain = categoryMain;
           selectedCondition.categorySmall = categorySmall;
           selectedCondition.searchText = '';
@@ -225,7 +226,7 @@ import 'jquery-validation';
     management_small_category_value = $('.management-small-category-select option:selected').text();
     tableRenderMedicineManagement = [];
 
-    // excel download 검색 조건 추가 
+    // excel download 검색 조건 추가
     selectedCondition.categoryMain = categoryMain;
     selectedCondition.categorySmall = categorySmall;
     selectedCondition.searchText = '';
@@ -702,7 +703,6 @@ import 'jquery-validation';
         return Promise.resolve(data);
       })
       .then(function () {
-        console.log('11');
         $.uiAlert({
           textHead: '[알림]',
           text: '약정보 추가 완료',
@@ -866,40 +866,29 @@ import 'jquery-validation';
     });
   })
 
-  /**
-   * 약전 재고 Excel download
-   */
-  $('#select-medicine-excel-button').click(function () {
-    // 선택된 약전 
-    const {
-      searchSet, searchText, categoryMain, categorySmall
-    } = selectedCondition;
+  $('#select-medicine-excel-button').click(function (e) {
+
+    const { searchSet, searchText } = selectedCondition;
+    let { categoryMain, categorySmall } = selectedCondition;
 
     let message = '';
     let searchName = searchSet === 'name' ? '약품명' : '성분명';
+    categoryMain = categoryMain.trim();
+    categorySmall = categorySmall.trim();
 
     if (searchText) {
-      message = `검색 조건 : ${searchName} - ${searchText}`;
+      message = `${searchName}_${searchText}_`;
     } else if (categoryMain) {
-      message = `대분류 : ${categoryMain} ${categorySmall && `\n소분류 : ${categorySmall}`}`;
+      message = `${categoryMain}_${categorySmall}_`;
     } else {
-      message = '약전 전부';
+      message = '약전_전체_';
     }
-    message += '\n엑셀 다운로드 하시겠습니까?';
 
-    const stringified = queryString.stringify(selectedCondition);
+    const medicineFileName = `${message}medicine.xls`;
+    const medicineFileNameTable = 'medicine-management-table';
 
-    if (confirm(message)) {
-      window.location.href = `/management/medicine/excel?${stringified}`;
-      $.uiAlert({
-        textHead: '[알림]',
-        text: ' Excel 다운로드 ',
-        bgcolor: '#55a9ee',
-        textcolor: '#fff',
-        position: 'top-left',
-        time: 2,
-      });
-    }
+    $('#select-medicine-excel-button').attr('download', medicineFileName)
+    return exportFunc.excel(this, medicineFileNameTable, '약전');
   });
 
   function updateLocalStorage(callback, target) {

@@ -30,7 +30,7 @@ router.get('/google/callback',
     if (req.user._json.domain !== 'freemed.or.kr') {
         return res.redirect('/login?error=invalid_domain_');
     }
-    req.session.auth = 'normal'
+    req.session.auth = 'normal';
     res.redirect('/receipt');
 });
 

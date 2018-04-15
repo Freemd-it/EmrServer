@@ -153,8 +153,6 @@ $(document).on('click', '.pre-diagnosis-table-content', (e) => {
         dataType: 'json',
         cache: false,
     }).done(result => {
-        console.log(result)
-
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
 
