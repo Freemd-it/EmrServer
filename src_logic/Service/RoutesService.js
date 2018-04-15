@@ -34,31 +34,13 @@ RoutesService.Init = function () {
 
     app.use((req, res, next) => {
 
-        console.log(util.format("## URL : %s / IP : %s ##", req.originalUrl, req.ip));
-        console.log('### originak Url :: ' + req.originalUrl)
         const pattern1 = /^\/login*/
         const pattern2 = /^\/auth*/
         const authResult = pattern1.test(req.originalUrl) || pattern2.test(req.originalUrl)
-        console.log(authResult);
-
-        console.log('### currentTime :: ' + new Date(moment()))
-        console.log(req.session)
-
-        // if (!req.session.passport){
-        //     console.log(req.session.passport)
-        //     if (!authResult) {
-        //        console.log(authResult)
-        //        res.redirect('/login')
-        //     }
-        // }
 
         if (!req.session.passport && !authResult){
-          console.log('### in redirect logic');
           res.redirect('/login')
         }
-
-        // res.header('Access-Control-Allow-Origin', config.server.accept_domain);
-        // res.header("Access-Control-Allow-Origin" , "*");
         res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         next();
     });
