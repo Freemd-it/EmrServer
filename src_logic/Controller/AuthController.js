@@ -30,8 +30,37 @@ router.get('/google/callback',
     if (req.user._json.domain !== 'freemed.or.kr') {
         return res.redirect('/login?error=invalid_domain_');
     }
-    req.session.auth = 'normal'
+    req.session.auth = 'normal';
+    console.log('#### in authcontroller last logic start');
+    console.log(req.sessionID);
+    console.log(req.sessionID);
+    console.log(req.sessionID);
+    console.log(req.sessionID);
+    console.log(req.sessionID);
+    console.log(req.sessionID);
+    console.log(req.sessionID);
+    console.log(req.sessionID);
+    console.log(req.sessionID);
+    console.log(req.sessionID);
+    console.log(req.sessionID);
+    console.log('#### in authcontroller last logic end');
     res.redirect('/receipt');
+    // console.log('### in member login session ###')
+    // console.log(req.session)
+    // console.log('### member login session END ###')
+
+    // req.session.touch()
+    // req.session.save((error) => {
+    //   console.log('### in session save function')
+    //   console.log(error)
+    //   res.redirect('/receipt')
+    // })
+    // req.session.save((error) => {
+    //   console.log('### in session save function')
+    //   console.log(req.login)
+    //   console.log(error)
+    //   res.redirect('/receipt')
+    // })
 });
 
 router.get('/logout', (req, res) => {
@@ -57,6 +86,14 @@ router.post('/login', (req, res) => {
           req.session.passport = { 'auth' : 'true' }
           req.session.auth = authConvert(permission)
           res.redirect('/receipt')
+          // console.log('### in special login session ###')
+          // console.log(req.session)
+          // console.log('### special login session END ###')
+          // req.session.save((error) => {
+          //   console.log('### in session save function')
+          //   console.log(error)
+          //   res.redirect('/receipt')
+          // })
         })
         .catch(error => {
           res.redirect('/login?error=unknown_error_')

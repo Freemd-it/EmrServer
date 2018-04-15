@@ -120,10 +120,23 @@ Cluster.ProcessRun = function (workerId) {
 
     app.set('port', process.env.PORT || config.server.port);
 
-    app.use(compression());
+    /**
+     * @description by Jo
+     * Passport & Session Initialize Start
+     * 1. passport serializeUser & deserializeUser
+     * 2. passport.user()
+     * 3. app.use(session)
+     * 4. app.use(passport.initialize & passport.session)
+     */
+    app.use(cookieParser(config.server.auth_key));
+    passportService.Init();
+    sessionService.Init();
     app.use(passportService.passport.initialize());
     app.use(passportService.passport.session());
-    app.use(cookieParser(config.server.cookie_secret));
+
+    /* * Passport & Session Initialize End  */
+
+    app.use(compression());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(methodOverride());
@@ -134,9 +147,7 @@ Cluster.ProcessRun = function (workerId) {
     app.set('views', path.join(__dirname, 'src_view', 'views'));
     app.set('view engine', 'ejs');
 
-    sessionService.Init();
     routesService.Init();
-    passportService.Init();
     entityService.Init();
 
     http.createServer(app).listen(app.get('port'), function () {

@@ -22,7 +22,11 @@ function init() {
 
 $(document).ready(() => {
 
-  getPharmacyOcsData('now');
+  const accessLocalPath = ['/management', '/originalDiagnosis', '/pharmacy']
+  if (!accessLocalPath.includes(window.location.pathname)) return;
+  if (window.location.pathname === '/pharmacy') {
+    getPharmacyOcsData('now');
+  }
 
   $.ajax({
     type: 'GET',

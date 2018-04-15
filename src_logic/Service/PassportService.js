@@ -10,6 +10,14 @@ var PassportService = function(){};
 
 PassportService.Init = function(app){
 
+    passport.serializeUser(function(user, done) {
+        done(null, user);
+    });
+
+    passport.deserializeUser(function(user, done) {
+        done(null, user);
+    });
+
     passport.use(new GoogleStrategy({
           clientID : config.google.google_client_id,
           clientSecret : config.google.google_client_password,
@@ -36,14 +44,6 @@ PassportService.Init = function(app){
         }
     ));
 };
-
-passport.serializeUser(function(user, done) {
-    done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-    done(null, user);
-});
 
 PassportService.passport = passport;
 module.exports = PassportService;

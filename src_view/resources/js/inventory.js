@@ -37,6 +37,13 @@ import 'jquery-validation';
       )
     }
 
+    if (window.location.pathname === '/management') getMedicineCategoryByInventory();
+    $('.dropdown').dropdown()
+  }
+
+  getPharmacopoeia();
+
+  function getMedicineCategoryByInventory() {
     $.ajax({
       type: 'GET',
       url: '/medicine/category/main',
@@ -50,11 +57,7 @@ import 'jquery-validation';
         _.map(results, result => `<option value='${result.primaryCategory}'> ${result.primaryCategory} </option>`)
       );
     });
-
-    $('.dropdown').dropdown()
   }
-
-  getPharmacopoeia();
 
   //재고표 수정시 유효성 검사 (총량 여기서 해주자)
   $('#medicine-inventory-form').validate({

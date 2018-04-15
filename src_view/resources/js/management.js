@@ -26,7 +26,7 @@ import exportFunc from '../utils/excel';
     $('#inventory-management').hide();
     $('#history-management').hide();
     showAndHide('content-list', 'pharmacopoeia-management');
-    getPharmacopoeia();
+    if (window.location.pathname === '/management') getPharmacopoeia();
   }
 
   function setValidate(formId) {
