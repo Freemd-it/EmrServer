@@ -498,6 +498,19 @@ $('#sendToPart2').on('click', () => {
     const pastMedicationType = $('#pastMedicationType').val();
     const pastMedication = $('input[name=pastMedication]:checked').val();
 
+    if(!gender || gender === ''){
+      $.uiAlert({
+          textHead: '[경고]',
+          text: '성별을 입력해주세요!',
+          bgcolor: '#FF5A5A',
+          textcolor: '#fff',
+          position: 'top-center',
+          time: 2
+      });
+
+      return;
+    }
+
     docs = {
         name,
         birth,
