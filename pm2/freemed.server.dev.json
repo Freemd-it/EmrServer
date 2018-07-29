@@ -1,6 +1,6 @@
 {
   "apps" : [{
-    "name": "mocam.server.dev",
+    "name": "freemed.server.dev",
     "script": "Main.js",
     "ignore_watch" : ["node_modules", "logs"],
     "env": {
