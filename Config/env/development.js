@@ -13,19 +13,18 @@ module.exports = {
     },
     store: {
         storeDBMS: "mysql",
-        mysqlHost: "52.78.111.151",
+        mysqlHost: "freemed-emr.cc6k6eitb2mt.ap-northeast-2.rds.amazonaws.com",
         mysqlPort: "3306",
-        mysqlUser: "user",
-        mysqlPassword: "test123$",
+        mysqlUser: "freemed",
+        mysqlPassword: "sR{gf`qXd.c68h~G",
         mysqlDatabase: "freemed",
         ConnectionLimit: 100,
         ConnectionMinimum: 0,
         ConnectionIdle: 10000
     },
     redis: {
-        redisHost: "52.78.111.151",
-        redisPort: 6379,
-        redisPassword: "test123$"
+        redisHost: "localhost",
+        redisPort: 32769
     },
     google: {
         google_client_id: "979047584146-72ng4egamv87mreke3d5ttmnpgosiiev.apps.googleusercontent.com",

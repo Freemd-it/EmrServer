@@ -1,0 +1,15 @@
+{
+  "apps" : [{
+    "name": "mocam.server.dev",
+    "script": "Main.js",
+    "ignore_watch" : ["node_modules", "logs"],
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "merge_logs": true,
+    "log_date_format": "YYYY-MM-DD HH:mm:ss",
+    "error_file": "./logs/mocam.server.dev.stderr.log",
+    "out_file": "./logs/mocam.server.dev.stdout.log",
+    "pid_file": "./logs/mocam.server.dev.pid"
+  }]
+}
