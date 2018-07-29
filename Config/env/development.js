@@ -13,7 +13,7 @@ module.exports = {
     },
     store: {
         storeDBMS: "mysql",
-        mysqlHost: "freemed-emr.cc6k6eitb2mt.ap-northeast-2.rds.amazonaws.com",
+        mysqlHost: "freemed.cc6k6eitb2mt.ap-northeast-2.rds.amazonaws.com",
         mysqlPort: "3306",
         mysqlUser: "freemed",
         mysqlPassword: "sR{gf`qXd.c68h~G",
