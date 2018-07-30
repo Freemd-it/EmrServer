@@ -1,5 +1,5 @@
 module.exports = {
-    serverConfig: {
+    server: {
         trust_proxy_host: "",
         port: 3000,
         session_expire: 1080000,
@@ -21,7 +21,7 @@ module.exports = {
         ConnectionMinimum: 0,
         ConnectionIdle: 10000
     },
-    redisConfig: {
+    redis: {
         redisHost: "localhost",
         redisPort: 32769,
         redisPassword: ""

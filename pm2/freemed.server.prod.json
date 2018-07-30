@@ -1,6 +1,6 @@
 {
   "apps" : [{
-    "name": "freemed.server.dev",
+    "name": "freemed.server.prod",
     "script": "Main.js",
     "ignore_watch" : ["node_modules", "logs"],
     "env": {
@@ -8,8 +8,8 @@
     },
     "merge_logs": true,
     "log_date_format": "YYYY-MM-DD HH:mm:ss",
-    "error_file": "./logs/freemed.server.dev.stderr.log",
-    "out_file": "./logs/freemed.server.dev.stdout.log",
-    "pid_file": "./logs/freemed.server.dev.pid"
+    "error_file": "./logs/freemed.server.prod.stderr.log",
+    "out_file": "./logs/freemed.server.prod.stdout.log",
+    "pid_file": "./logs/freemed.server.prod.pid"
   }]
 }
