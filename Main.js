@@ -10,7 +10,7 @@ var compression = require('compression');
 var util = require('util');
 var domain = require('domain').create();
 var methodOverride = require('method-override');
-var traceback = require('traceback');
+// var traceback = require('traceback');
 var http = require('http');
 var process = require('process');
 
@@ -60,11 +60,11 @@ Cluster.Master = function () {
         console.log("## [master] uncaughtexception : " + error + " ##");
         console.log("## [master] error call stack : " + error.stack + " ##");
 
-        var stack = traceback();
-        for (var i = 0; i < stack.length; i++) {
+        // var stack = traceback();
+        // for (var i = 0; i < stack.length; i++) {
 
-            console.log("## [master] callbackstack : " + i + " function : " + stack[i].name + " at line : " + stack[i].line + " ##");
-        }
+        //     console.log("## [master] callbackstack : " + i + " function : " + stack[i].name + " at line : " + stack[i].line + " ##");
+        // }
     });
 }
 
@@ -77,11 +77,11 @@ Cluster.Worker = function (workerId) {
             console.log(util.format("## [worker][%d] uncaughtexception : " + error + " ##", workerId));
             console.log(util.format("## [worker][%d] error call stack : " + error.stack + " ##", workerId));
 
-            var stack = traceback();
-            for (var i = 0; i < stack.length; i++) {
+            // var stack = traceback();
+            // for (var i = 0; i < stack.length; i++) {
 
-                console.log("## [worker] callbackstack : " + i + " function : " + stack[i].name + " at line : " + stack[i].line + " ##");
-            }
+            //     console.log("## [worker] callbackstack : " + i + " function : " + stack[i].name + " at line : " + stack[i].line + " ##");
+            // }
             cluster.worker.disconnect();
         }
         catch (exception) {
@@ -90,11 +90,11 @@ Cluster.Worker = function (workerId) {
             console.log(util.format("## [worker][%d] uncaughtexception : " + error + " ##", workerId));
             console.log(util.format("## [worker][%d] error call stack : " + error.stack + " ##", workerId));
 
-            var stack = traceback();
-            for (var i = 0; i < stack.length; i++) {
+            // var stack = traceback();
+            // for (var i = 0; i < stack.length; i++) {
 
-                console.log("## [worker] callbackstack : " + i + " function : " + stack[i].name + " at line : " + stack[i].line + " ##");
-            }
+            //     console.log("## [worker] callbackstack : " + i + " function : " + stack[i].name + " at line : " + stack[i].line + " ##");
+            // }
         }
     });
 

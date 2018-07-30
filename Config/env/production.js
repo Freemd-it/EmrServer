@@ -24,7 +24,6 @@ module.exports = {
     redis: {
         redisHost: "localhost",
         redisPort: 32769,
-        redisPassword: ""
     },
     google: {
         google_client_id: "868774816296-8gs47ji7d76ht5s10asp76il5nh0a2p1.apps.googleusercontent.com",
