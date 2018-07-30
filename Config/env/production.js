@@ -27,8 +27,8 @@ module.exports = {
         redisPassword: ""
     },
     google: {
-        google_client_id: "979047584146-72ng4egamv87mreke3d5ttmnpgosiiev.apps.googleusercontent.com",
-        google_client_password: "5K8Sx_K29T2Vsofa_bxMkJwi"
+        google_client_id: "868774816296-8gs47ji7d76ht5s10asp76il5nh0a2p1.apps.googleusercontent.com",
+        google_client_password: "DVZNWCGUdzy4zsXCmh3I7I4V"
     }
 
 };

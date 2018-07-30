@@ -27,8 +27,8 @@ module.exports = {
         redisPort: 32769
     },
     google: {
-        google_client_id: "979047584146-72ng4egamv87mreke3d5ttmnpgosiiev.apps.googleusercontent.com",
-        google_client_password: "5K8Sx_K29T2Vsofa_bxMkJwi"
+        google_client_id: "868774816296-mnucqd576pu004hmdc2fk9blv7oikkl3.apps.googleusercontent.com",
+        google_client_password: "g4HCXAGLruPno6IXquFNcWko"
     }
 
 };
