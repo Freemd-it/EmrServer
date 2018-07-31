@@ -7,8 +7,9 @@
     "start": "set NODE_ENV=development && nodemon Main.js",
     "start_pro": "set NODE_ENV=production && node Main.js",
     "start:pm2": "yarn status && pm2 start pm2/freemed.server.dev.json && pm2 logs freemed.server.dev",
-    "start:stg": "yarn status && pm2 start pm2/freemed.server.stg.json && pm2 logs freemed.server.stg",
-    "start:prod": "yarn status && pm2 start pm2/freemed.server.prod.json && pm2 logs freemed.server.prod",
+    "start:prod": "yarn docker && yarn _sync && yarn status && pm2 start pm2/freemed.server.prod.json && pm2 logs freemed.server.prod",
+    "docker": "docker-compose up --build -d",
+    "_sync": "git status && git pull",
     "build": "webpack --watch --config ./scripts/webpack.config.dev.js",
     "build:prod": "webpack -p --config ./scripts/webpack.config.prod.js",
     "status": "pm2 status"
