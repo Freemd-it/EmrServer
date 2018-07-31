@@ -1,0 +1,116 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Freemed-EMR</title>
+    <link href="/vscode.ico" rel="shortcut icon">
+    <link href="/dist/index.css" rel="stylesheet">
+    <style>
+        .guide-modal {
+          height: 646px;
+        }
+        .guide-image {
+          width: 858px;
+        }
+        .guide-content-text {
+          margin-top: 5px;
+          margin-left: 5px;
+        }
+        .guide-content-box {
+          margin-bottom: -4px;
+        }
+    </style>
+</head>
+
+<body>
+  <div class="content-wrap">
+    <div class="login-container">
+        <div class="login-wrapper">
+            <div class="login-logo">
+                <img class="logo-img" src="/img/freemed_logo_eng.png" alt="">
+                <b><h4>Welcome to Freemed EMR</h4></b>
+                <h5 class="login-logo-desc">Login with your
+                    <b>Freemed ID</b>
+                </h5>
+            </div>
+            <div class="login-form">
+                <div class="ui form login">
+                  <div class="login-button-link">
+                    <a class="ui google plus button login-act-tag" href="/auth/login" id="login-member">
+                      <i class="google plus icon"></i>
+                      Sign In With Google
+                    </a>
+                  </div>
+                  <div class="login-button-link">
+                    <a class="ui vk button login-act-tag" id="login-special">
+                      <i class="address card outline icon"></i>
+                      For Doctor, Pharmacist
+                    </a>
+                  </div>
+                  <div class="special-login-form-wrap">
+                      <div class="ui form">
+                        <form id="special-login-form" action="/auth/login" method="post">
+                          <div class="special-login-input-wrap">
+                              <input type="text" class="special-login-input" name="special_account" placeholder="Input Doctor or Pharmacist Account">
+                          </div>
+                          <div class="special-login-input-wrap">
+                              <input type="password" class="special-login-input" name="special_password" placeholder="Input Doctor or Pharmacist Password">
+                          </div>
+                        </form>
+                      </div>
+                      <div class="login-button-link">
+                        <div class="special_button-wrap">
+                          <a class="ui vk button login-act-tag" id="login-special-cancel-btn">
+                            <i class="reply icon"></i>
+                            Cancel
+                          </a>
+                        </div>
+                        <div class="special_button-wrap">
+                          <a class="ui vk button login-act-tag" id="login-special-btn">
+                            <i class="address card outline icon"></i>
+                            Sign In
+                          </a>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="silde-container">
+        <div class="silde-wrapper">
+            <img class="slide-img" src="/img/freemed_spring.jpeg" alt="">
+            <img class="slide-img" src="/img/freemed_summer.jpg" alt="">
+            <img class="slide-img" src="/img/freemed_autumn.jpg" alt="">
+            <img class="slide-img" src="/img/freemed_winter.jpg" alt="">
+        </div>
+    </div>
+  </div>
+
+  <div class="ui longer modal guide-modal">
+    <div class="header">
+      로그인 문제 해결 방법
+    </div>
+    <div class="scrolling content guide-content-box">
+        <img class="guide-image" src="/img/invalid_login_guide.jpg">
+        <div>
+          <p>
+            <div class="guide-content-text"><b>1. 크롬 브라우저 우측 상단에 있는 아이콘을 클릭</b></div>
+            <div class="guide-content-text"><b>2. 도구 더보기 메뉴 클릭</b></div>
+            <div class="guide-content-text"><b>3. 인터넷 사용 기록 삭제 메뉴 클릭</b></div>
+            <div class="guide-content-text"><b>4. 새창에 출력되는 체크박스들을 모두 체크한 뒤, 인터넷 사용 기록 삭제 클릭</b></div>
+            <div class="guide-content-text"><b>5. 아래 확인 버튼을 눌러 팝업창을 닫아준 뒤, 다시 로그인 (위 방법대로 수행해도 안된다면 IT본부 단원에게 문의)</b></div>
+          </p>
+        </div>
+    </div>
+    <div class="actions">
+      <div class="ui primary approve button">
+        확인
+      </div>
+    </div>
+  </div>
+  <script src="/dist/index.bundle.js"></script>
+</body>
+
+</html>
