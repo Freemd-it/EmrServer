@@ -37,9 +37,7 @@ router.get('/patient', function (req, res){
 });
 
 router.post('/patient', function (req, res){
-
     let waitingInsertBirth = req.body.birth;
-
     receiptModel.UpdateOrCreate (req.body, result => {
         if(result.sqlStatus === 200) {
             chartModel.create(result.dataValues, chartResult => {
@@ -48,7 +46,8 @@ router.post('/patient', function (req, res){
                     res.send(result);
                 });
             });
-        }else{
+        } else {
+            console.log('access else ')
         }
     });
 });

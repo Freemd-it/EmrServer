@@ -148,6 +148,7 @@ Cluster.ProcessRun = function (workerId) {
     app.set('view engine', 'ejs');
 
     routesService.Init();
+    console.log('tttttttt')
     entityService.Init();
 
     http.createServer(app).listen(app.get('port'), function () {
