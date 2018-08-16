@@ -96,7 +96,7 @@ docker rmi "image-name"
 - [ ] document 작업
 
 ### Description For Database permission
-```
+
 각각의 권한은 해당 4자리의 정수 코드를 따른다.
 
 ```
