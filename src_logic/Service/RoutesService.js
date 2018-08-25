@@ -25,12 +25,11 @@ var RoutesService = function () { };
 
 RoutesService.Init = function () {
 
-    if (app.get('env') === 'production') {
+    // if (app.get('env') === 'production') {
         
 //        app.use(csrfProtection);
 //        console.log(util.format('Use Middleware csrf'));
     }
-
 
     app.use((req, res, next) => {
 
@@ -38,8 +37,6 @@ RoutesService.Init = function () {
         const pattern2 = /^\/auth*/
         const authResult = pattern1.test(req.originalUrl) || pattern2.test(req.originalUrl)
 
-        console.log('session', req.session.passport)
-        console.log('authResult', authResult)
         if (!req.session.passport && !authResult){
           res.redirect('/login')
         } else {

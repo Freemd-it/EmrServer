@@ -138,7 +138,7 @@ Cluster.ProcessRun = function (workerId) {
 
     app.use(compression());
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.urlencoded({ extended: true }));
     app.use(methodOverride());
     app.set('trust proxy', config.server.trust_proxy_host);
 
@@ -148,7 +148,6 @@ Cluster.ProcessRun = function (workerId) {
     app.set('view engine', 'ejs');
 
     routesService.Init();
-    console.log('tttttttt')
     entityService.Init();
 
     http.createServer(app).listen(app.get('port'), function () {
