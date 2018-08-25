@@ -27,8 +27,8 @@ RoutesService.Init = function () {
 
     if (app.get('env') === 'production') {
         
-        app.use(csrfProtection);
-        console.log(util.format('Use Middleware csrf'));
+//        app.use(csrfProtection);
+//        console.log(util.format('Use Middleware csrf'));
     }
 
 

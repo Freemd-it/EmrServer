@@ -26,8 +26,8 @@ EntityService.Init = function(){
 
     chart.hasMany( complaint, { foreignKey : 'chart_id', onUpdate : 'CASCADE'});
     chart.hasMany( ocs, { foreignKey : 'chart_id', onUpdate : 'CASCADE'});
-    // chart.hasMany( prescription, { foreignKey: 'chartNumber', sourceKey: 'chartNumber' });
-    chart.hasMany( prescription, { foreignKey: 'chartNumber' });
+    chart.hasMany( prescription, { foreignKey: 'chartNumber', sourceKey: 'chartNumber' });
+    //chart.hasMany( prescription, { foreignKey: 'chartNumber' });
     chart.belongsTo(patient, { foreignKey : 'patient_id'});
     /*
       차트 : CC = 1 : N
@@ -60,15 +60,15 @@ EntityService.Init = function(){
     medicine.sync().then(() => {
 
       prescription.sync();
-      // const trigger = `create trigger medicine_disable
-      //                  before update on medicines
-      //                  for each row
-      //                  begin if new.amount < 20 then
-      //                  set new.available = 0;
-      //                  elseif new.amount >= 20 then
-      //                  set new.available = 1; end if;
-      //                  end;`;
-      // sequelize.query(trigger);
+       // const trigger = `create trigger medicine_disable
+       //                before update on medicines
+       //               for each row
+       //               begin if new.amount < 20 then
+       //               set new.available = 0;
+       //               elseif new.amount >= 20 then
+       //               set new.available = 1; end if;
+       //               end;`;
+       // sequelize.query(trigger);
     });
 
     medicineCategory.sync();
