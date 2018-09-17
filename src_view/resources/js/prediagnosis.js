@@ -155,9 +155,46 @@ $(document).on('click', '.pre-diagnosis-table-content', (e) => {
     }).done(result => {
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
-
+        $('#patient_id').val(result.patient_id);
         $('#getPastCC').attr('disabled', false);
         $('#pastDiagnosisRecord').attr('disabled', false);
+
+        let idx = 1; /* 과거력 조회용 인덱스 */
+        
+        for (let i of result.patient.histories[0].pastHistory) {
+                let id = '#disease'+idx;
+                if(i == 1) {
+                    $(id).prop("checked", true);
+                }
+                idx++;
+            }
+
+            idx = 1;
+            for (let i of result.patient.histories[0].allergy) {
+                let id = '#allergy'+idx;
+                if(i == 1) {
+                    $(id).prop("checked", true);
+                }
+                idx++;
+            }
+            let value = result.patient.histories[0].pastMedical;
+
+            $('input[name="pastMedical"][value=' + value + ']').prop('checked', true).trigger("change");
+
+            $('#pastMedicalTime').val(result.patient.histories[0].pastMedicalTime);
+            $('#pastMedicalArea').val(result.patient.histories[0].pastMedicalArea);
+
+            value = result.patient.histories[0].pastMedication;
+
+            $('input[name="pastMedication"][value=' + value + ']').prop('checked', true).trigger("change");
+
+            $('#pastMedicationPeriod').val(result.patient.histories[0].pastMedicationPeriod);
+            $('#pastMedicationType').val(result.patient.histories[0].pastMedicationType);
+
+            $('#diseaseDescription').val(result.patient.histories[0].pastHistoryComment);
+
+            $('#allergyDescription').val(result.patient.histories[0].allergyComment)
+
     }).fail((jq, txt)=>{
         alert(txt);
     })
@@ -166,7 +203,10 @@ $(document).on('click', '.pre-diagnosis-table-content', (e) => {
     $('.ui.longer.modal').modal('hide');
 });
 
+
+/* 예진 완료시 데이터 전송하기 */
 $(document).on('click', '.negative.send.ui.button', () => {
+    const patient_id = $('#patient_id').val();
     const heartRate = $('#heartRate').val();
     const pulseRate = $('#pulseRate').val();
     const bodyTemporature = $('#bodyTemporature').val();
@@ -176,8 +216,19 @@ $(document).on('click', '.negative.send.ui.button', () => {
     const mealTerm = $('#mealTerm').val();
     const chartNumber = $('#preChartId').val();
     const ccData = $('#CCform').serializeArray();
+    const pastHistory = getDiseaseHistory();
+    const pastHistoryComment = $('#diseaseDescription').val();
+    const allergy = getAllergyHistory();
+    const allergyComment = $('#allergyDescription').val();
+    const pastMedical = $('input[name=pastMedical]:checked').val();
+    const pastMedicalTime = $('#pastMedicalTime').val();
+    const pastMedicalArea = $('#pastMedicalArea').val();
+    const pastMedicationPeriod = $('#pastMedicationPeriod').val();
+    const pastMedicationType = $('#pastMedicationType').val();
+    const pastMedication = $('input[name=pastMedication]:checked').val();
 
     const docs = {
+        patient_id,
         heartRate,
         pulseRate,
         bodyTemporature,
@@ -187,7 +238,17 @@ $(document).on('click', '.negative.send.ui.button', () => {
         mealTerm,
         chartNumber,
         ccArray: JSON.stringify(ccData),
-        updateStatus: 2
+        updateStatus: 2,
+        pastHistory,
+        pastHistoryComment,
+        allergy,
+        allergyComment,
+        pastMedical,
+        pastMedicalTime,
+        pastMedicalArea,
+        pastMedicationPeriod,
+        pastMedicationType,
+        pastMedication,
     };
 
     $.ajax({
@@ -218,11 +279,9 @@ $(document).on('click', '.negative.send.ui.button', () => {
             })
 
             window.scrollTo(0, 0);
-
             return 0;
         }
     })
-
 });
 
 $('#CCbutton').on('click', () => {
@@ -338,3 +397,24 @@ $(document).on('click', '.ui.red.inverted', function(e) {
 
     e.target.parentNode.remove();
 });
+
+
+const getDiseaseHistory = () => {
+    let check = '';
+
+    $('.disease').each(function () {
+        $(this).is(':checked') ? check += "1" : check+= "0";
+    });
+
+    return check;
+};
+
+const getAllergyHistory = () => {
+    let check = '';
+
+    $('.allergy').each(function () {
+        $(this).is(':checked') ? check += "1" : check+= "0";
+    });
+
+    return check;
+};

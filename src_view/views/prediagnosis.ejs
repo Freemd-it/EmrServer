@@ -34,6 +34,11 @@
 
         <form id="chartForm" class="ui segment">
             <div class="two fields">
+                <div class="field" style="display: none">
+                    <label>ID</label>
+                    <input type="text" id="patient_id" style="border-color: #fc0a0e; background: #fcf4f1" disabled>
+                </div>
+
                 <div class="field">
                     <label>CHART ID</label>
                     <input type="text" id="preChartId" style="border-color: #fc0a0e; background: #fcf4f1" disabled>
@@ -98,6 +103,226 @@
             </div>
         </form>
 
+        <div class="ui segment">
+            <h3 class="ui dividing header">과거력</h3>
+
+            <div class="ui segment">
+                <div class="ui grid">
+
+                    <div class="two wide column" align="middle">
+                        <label style="text-align: center">병력</label>
+                    </div>
+
+                    <div class="fourteen wide column">
+                        <div class="ui checkbox">
+                            <input id="disease1" class="disease" type="checkbox" name="H blood pressure">
+                            <label>고혈압</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="disease2" class="disease" type="checkbox" name="glucose">
+                            <label>당뇨</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="disease3" class="disease" type="checkbox" name="hepatitis A">
+                            <label>A형 간염</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="disease4" class="disease" type="checkbox" name="hepatitis B">
+                            <label>B형 간염</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="disease5" class="disease" type="checkbox" name="hepatitis C">
+                            <label>C형 간염</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="disease6" class="disease" type="checkbox" name="tuberculosis">
+                            <label>결핵</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="disease7" class="disease" type="checkbox" name="heart disease">
+                            <label>심질환</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="disease8" class="disease" type="checkbox" name="kidney disease">
+                            <label>신장질환</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="disease9" class="disease" type="checkbox" name="tumor">
+                            <label>종양</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="disease10" class="disease" type="checkbox" name="infectious disease">
+                            <label>감영성 질환</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="disease11" class="disease" type="checkbox" name="venereal disease">
+                            <label>성병</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui grid">
+                    <div class="two wide column" align="middle">
+                        <label style="text-align: center">상세설명</label>
+                    </div>
+
+                    <div class="fourteen wide column">
+                        <div class="ui fluid input focus">
+                            <input id="diseaseDescription" type="text" placeholder="Description">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui segment">
+                <div class="ui grid">
+
+                    <div class="two wide column" align="middle">
+                        <label style="text-align: center">알레르기</label>
+                    </div>
+
+                    <div class="fourteen wide column">
+                        <div class="ui checkbox">
+                            <input id="allergy1" class="allergy" type="checkbox" name="example">
+                            <label>음식</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="allergy2" class="allergy" type="checkbox" name="example">
+                            <label>환경</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="allergy3" class="allergy" type="checkbox" name="example">
+                            <label>약물</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="allergy4" class="allergy" type="checkbox" name="example">
+                            <label>물질</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input id="allergy5" class="allergy" type="checkbox" name="example">
+                            <label>기타</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui grid">
+                    <div class="two wide column" align="middle">
+                        <label style="text-align: center">상세설명</label>
+                    </div>
+
+                    <div class="fourteen wide column">
+                        <div class="ui fluid input focus">
+                            <input id="allergyDescription" type="text" placeholder="Description">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui segment">
+                <div class="ui grid">
+
+                    <div class="two wide column" align="middle">
+                        <label style="text-align: center; font-size: small">입원, 상해 및 수술력</label>
+                    </div>
+
+                    <div class="fourteen wide column">
+                        <div class="ui checkbox">
+                            <input type="radio" value="Y" name="pastMedical" checked>
+                            <label>있음</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input type="radio" value="N" name="pastMedical">
+                            <label>없음</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui grid">
+                    <div class="two wide column" align="middle">
+                        <label style="text-align: center">시기</label>
+                    </div>
+
+                    <div class="fourteen wide column">
+                        <div class="ui fluid input focus">
+                            <input id="pastMedicalTime" name="pastMedicalDescription" type="text" placeholder="Description">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="ui grid">
+                    <div class="two wide column" align="middle">
+                        <label style="text-align: center">부위</label>
+                    </div>
+
+                    <div class="fourteen wide column">
+                        <div class="ui fluid input focus">
+                            <input id="pastMedicalArea" name="pastMedicalDescription" type="text" placeholder="Description">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui segment">
+                <div class="ui grid">
+
+                    <div class="two wide column" align="middle">
+                        <label style="text-align: center">약물 복용</label>
+                    </div>
+
+                    <div class="fourteen wide column">
+                        <div class="ui checkbox">
+                            <input type="radio" value="Y" name="pastMedication" checked>
+                            <label>있음</label>
+                        </div>
+
+                        <div class="ui checkbox">
+                            <input type="radio" value="N" name="pastMedication">
+                            <label>없음</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui grid">
+                    <div class="two wide column" align="middle">
+                        <label style="text-align: center">종류</label>
+                    </div>
+
+                    <div class="fourteen wide column">
+                        <div class="ui fluid input focus">
+                            <input id="pastMedicationType" name="pastMedicationDescription" type="text" placeholder="Description">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui grid">
+                    <div class="two wide column" align="middle">
+                        <label style="text-align: center">기간</label>
+                    </div>
+
+                    <div class="fourteen wide column">
+                        <div class="ui fluid input focus">
+                            <input id="pastMedicationPeriod" name="pastMedicationDescription" type="text" placeholder="Description">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="ui segment">
             <button id="CCbutton" class="ui primary button" style="float: right;">C.C 항목 추가</button>

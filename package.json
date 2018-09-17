@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "window_dev": "nodemon Main.js",
-    "start": "set NODE_ENV=development && nodemon Main.js",
-    "start_pro": "set NODE_ENV=production && node Main.js",
+    "start:local": "NODE_ENV=localhost && nodemon Main.js",
+    "start:dev": "NODE_ENV=development && nodemon Main.js",
     "start:pm2": "yarn status && pm2 start pm2/freemed.server.dev.json && pm2 logs freemed.server.dev",
     "start:prod": "yarn docker && yarn status && pm2 start pm2/freemed.server.prod.json && pm2 logs freemed.server.prod",
     "docker": "docker-compose up --build -d",

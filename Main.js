@@ -22,7 +22,8 @@ var routesService = require('./src_logic/Service/RoutesService.js');
 var entityService = require('./src_logic/Service/EntityService.js');
 
 
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV;
+console.log('현재 환경 상태', process.env.NODE_ENV)
 
 global.app = new express();
 

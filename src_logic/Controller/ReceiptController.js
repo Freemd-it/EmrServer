@@ -36,7 +36,12 @@ router.get('/patient', function (req, res){
     });
 });
 
+/*
+  접수에서 넘어온 환자 정보 받아오기
+*/
 router.post('/patient', function (req, res){
+
+    console.log('예진으로 보내기 결과 => ', req.body)
     let waitingInsertBirth = req.body.birth;
     receiptModel.UpdateOrCreate (req.body, result => {
         if(result.sqlStatus === 200) {

@@ -79,13 +79,13 @@ import 'jquery-validation';
       },
       amount: {
         required: true,
-        digits: true,
+        number: true,
         min: 0,
         max: 999
       },
       quantity: {
         required: true,
-        digits: true,
+        number: true,
         min: 0,
         max: 999
       },
@@ -111,12 +111,12 @@ import 'jquery-validation';
       },
       amount: {
         required: "약품 1통당 개수를 입력해 주세요",
-        digits: "약품 1통당 개수를 0 이상의 정수로 입력해 주세요",
+        numbers: "약품 1통당 개수를 0 이상의 정수로 입력해 주세요",
         max: "약품 1통당 개수는 최대 999까지 입력 가능합니다"
       },
       quantity: {
         required: "재고량을 입력해 주세요",
-        digits: "재고량을 0 이상의 정수로 입력해 주세요",
+        numbers: "재고량을 0 이상의 정수로 입력해 주세요",
         max: "재고량은 최대 999까지 입력 가능합니다"
       },
       expiry: {

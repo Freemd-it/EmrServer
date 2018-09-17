@@ -20,11 +20,11 @@ $('#patient_form').validate({
         },
         height: {
           min: 1,
-          digits: true
+          number: true
         },
         weight: {
           min: 1,
-          digits: true
+          number: true
         },
         bmi: {
           number: true
@@ -34,14 +34,14 @@ $('#patient_form').validate({
             min: 0
         },
         smokingPeriod: {
-            digits: true
+            number: true
         },
         drinking: {
             number: true,
             min: 0
         },
         drinkingPeriod: {
-            digits: true
+            number: true
         }
     },
     messages:{
@@ -55,11 +55,11 @@ $('#patient_form').validate({
         },
         height: {
           min: "신장은 0이 될 수 없습니다.",
-          digits: "신장을 양의 정수 형식으로 입력해주세요"
+          numbers: "신장을 양의 실수 형식으로 입력해주세요"
         },
         weight: {
           min: "체중은 0이 될 수 없습니다.",
-          digits: "체중을 양의 정수 형식으로 입력해주세요"
+          numbers: "체중을 양의 정수 형식으로 입력해주세요"
         },
         bmi: {
           number: "bmi 지수가 정확하기 않습니다. 신장과 체중을 다시 확인해주세요!"
@@ -69,14 +69,14 @@ $('#patient_form').validate({
           min: "흡연량은 음수를 입력할 수 없습니다"
         },
         smokingPeriod: {
-          digits: "흡연경력을 양의 정수 형식으로 입력해주세요"
+          numbers: "흡연경력을 양의 정수 형식으로 입력해주세요"
         },
         drinking: {
           number: "음주량을 숫자 형식으로 입력해주세요",
           min: "음주량은 음수를 입력할 수 없습니다"
         },
         drinkingPeriod: {
-          digits: "음주경력을 양의 정수 형식으로 입력해주세요"
+          numbers: "음주경력을 양의 정수 형식으로 입력해주세요"
         }
     },
     showErrors:function(errorMap, errorList){
@@ -168,31 +168,15 @@ $('#btn-name-send').on('click', () => {
             $('#smokingPeriod').val('');
             $('#drinkingPeriod').val('');
             $('#bmi').val('');
-            $('#diseaseDescription').val('');
-            $('#allergyDescription').val('');
-            $('input[name="pastMedical"][value="Y"]').prop("checked", true).trigger("change");
-            $('input[name="pastMedication"][value="Y"]').prop("checked", true).trigger("change");
-            $('input[name="pastMedicationDescription"]').val('');
-            $('input[name="pastMedicalDescription"]').val('');
 
             date = new Date();
             $('#firstcome').val(date.getFullYear() + ' 년 ' + (date.getMonth()+1) + ' 월 ' + date.getDate() + ' 일 ');
 
 
-            for (idx; idx < 12; idx++) {
-                let id = '#disease'+idx;
-                let id2 = '#allergy'+idx;
-
-                $(id).prop("checked", false);
-                $(id2).prop("checked", false);
-            }
-            idx = 1;
-
-
-
             return;
         }
 
+        // 검색결과가 있을 떄 
         if(result.length == 1) {
 
             $('#nameMessage').html('[ ' + result[0].name + ' ]' + ' 님이 조회됐습니다.');
@@ -240,42 +224,8 @@ $('#btn-name-send').on('click', () => {
             $('.ui.dropdown').addClass("disabled");
 
 
-            for (let i of result[0].histories[0].pastHistory) {
-                let id = '#disease'+idx;
-                if(i == 1) {
-                    $(id).prop("checked", true);
-                }
-                idx++;
-            }
-
-            idx = 1;
-            for (let i of result[0].histories[0].allergy) {
-                let id = '#allergy'+idx;
-                if(i == 1) {
-                    $(id).prop("checked", true);
-                }
-                idx++;
-            }
-            let value = result[0].histories[0].pastMedical;
-
-            $('input[name="pastMedical"][value=' + value + ']').prop('checked', true).trigger("change");
-
-            $('#pastMedicalTime').val(result[0].histories[0].pastMedicalTime);
-            $('#pastMedicalArea').val(result[0].histories[0].pastMedicalArea);
-
-            value = result[0].histories[0].pastMedication;
-
-            $('input[name="pastMedication"][value=' + value + ']').prop('checked', true).trigger("change");
-
-            $('#pastMedicationPeriod').val(result[0].histories[0].pastMedicationPeriod);
-            $('#pastMedicationType').val(result[0].histories[0].pastMedicationType);
-
-            $('#diseaseDescription').val(result[0].histories[0].pastHistoryComment);
-
-            $('#allergyDescription').val(result[0].histories[0].allergyComment)
-
         } else {
-
+            // 검색 결과가 여러명 일때 
             $('#nameInput').val('');
 
 
@@ -364,39 +314,6 @@ $(document).on('click', '.homonym-item', (e) => {
 
         $('.ui.dropdown').addClass("disabled");
 
-        for (let i of result.histories[0].pastHistory) {
-            let id = '#disease'+idx;
-            if(i == 1) {
-                $(id).prop("checked", true);
-            }
-            idx++;
-        }
-
-        idx = 1;
-        for (let i of result.histories[0].allergy) {
-            let id = '#allergy'+idx;
-            if(i == 1) {
-                $(id).prop("checked", true);
-            }
-            idx++;
-        }
-        let value = result.histories[0].pastMedical;
-
-        $('input[name="pastMedical"][value=' + value + ']').prop('checked', true).trigger("change");
-
-        $('#pastMedicalTime').val(result.histories[0].pastMedicalTime);
-        $('#pastMedicalArea').val(result.histories[0].pastMedicalArea);
-
-        value = result.histories[0].pastMedication;
-
-        $('input[name="pastMedication"][value=' + value + ']').prop('checked', true).trigger("change");
-
-        $('#pastMedicationPeriod').val(result.histories[0].pastMedicationPeriod);
-        $('#pastMedicationType').val(result.histories[0].pastMedicationType);
-
-        $('#diseaseDescription').val(result.histories[0].pastHistoryComment);
-
-        $('#allergyDescription').val(result.histories[0].allergyComment)
 
 
         $('.ui.basic.modal')
@@ -418,26 +335,6 @@ $('#weight, #height').change(() => {
 
     $('#bmi').val(bmi.toFixed(5));
 });
-
-const getDiseaseHistory = () => {
-    let check = '';
-
-    $('.disease').each(function () {
-        $(this).is(':checked') ? check += "1" : check+= "0";
-    });
-
-    return check;
-};
-
-const getAllergyHistory = () => {
-    let check = '';
-
-    $('.allergy').each(function () {
-        $(this).is(':checked') ? check += "1" : check+= "0";
-    });
-
-    return check;
-};
 
 $('input[name="pastMedical"]').on('change', () => {
     const type = $('input[name="pastMedical"]:checked').val();
@@ -487,16 +384,6 @@ $('#sendToPart2').on('click', () => {
     const smokingPeriod = $('#smokingPeriod').val();
     const drinkingAmount = $('#drinking').val();
     const drinkingPeriod = $('#drinkingPeriod').val();
-    const pastHistory = getDiseaseHistory();
-    const pastHistoryComment = $('#diseaseDescription').val();
-    const allergy = getAllergyHistory();
-    const allergyComment = $('#allergyDescription').val();
-    const pastMedical = $('input[name=pastMedical]:checked').val();
-    const pastMedicalTime = $('#pastMedicalTime').val();
-    const pastMedicalArea = $('#pastMedicalArea').val();
-    const pastMedicationPeriod = $('#pastMedicationPeriod').val();
-    const pastMedicationType = $('#pastMedicationType').val();
-    const pastMedication = $('input[name=pastMedication]:checked').val();
 
     if(!gender || gender === ''){
       $.uiAlert({
@@ -522,16 +409,6 @@ $('#sendToPart2').on('click', () => {
         smokingPeriod,
         drinkingAmount,
         drinkingPeriod,
-        pastHistory,
-        pastHistoryComment,
-        allergy,
-        allergyComment,
-        pastMedical,
-        pastMedicalTime,
-        pastMedicalArea,
-        pastMedicationPeriod,
-        pastMedicationType,
-        pastMedication,
     };
 
     $.ajax({
