@@ -24,10 +24,11 @@ MedicineCategoryModel.listSmall = function(data, callback){
     category.findAll({
       attributes: ['secondaryCategory'],
       where: {
-        primaryCategory: data.primaryCategory
+        primaryCategory: data.primaryCategory,
       }
     })
     .then(result => {
+        console.log('약품 결과는 어디서 가져오니', result)
         callback(result);
     })
     .catch(error => {

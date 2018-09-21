@@ -80,13 +80,13 @@ import 'jquery-validation';
       amount: {
         required: true,
         number: true,
-        min: 0,
+        min: -1,
         max: 999
       },
       quantity: {
         required: true,
         number: true,
-        min: 0,
+        min: -1,
         max: 999
       },
       expiry: {

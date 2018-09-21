@@ -147,7 +147,7 @@
               <thead>
                 <tr>
                   <th>약품명</th>
-                  <th>성분명 / 함량</th>
+                  <th width="15%">성분명 / 함량</th>
                   <th width="8%">1회<br />투약량</th>
                   <th width="10%">1일<br />복용횟수</th>
                   <th width="10%">복용일수</th>
@@ -196,7 +196,7 @@
 
         <div>
           <% if (auth === 'normal') {%>
-            <!-- <button id="pharmaceutical-end" class="huge negative ui button"> 조제 완료 </button> -->
+            <button id="pharmaceutical-end" class="huge negative ui button"> 조제 완료 </button>
           <% } else if (auth === '3partLeader') {%>
             <button id="pharmaceutical-start" class="huge negative ui button"> 조제 시작 </button>
             <button id="inspection-complete" class="huge negative ui button"> 검수 완료 </button>

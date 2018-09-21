@@ -47,13 +47,13 @@ import exportFunc from '../utils/excel';
         amount: {
           required: true,
           number: true,
-          min: 0,
+          min: -1,
           max: 999
         },
         quantity: {
           required: true,
           number: true,
-          min: 0,
+          min: -1,
           max: 999
         },
         property: {

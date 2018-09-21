@@ -103,12 +103,12 @@ $('#prescriptionForm').validate({
     currentDoses:{
       required: true,
       number: true,
-      min: 1
+      min: -1
     },
     currentDosesDay:{
       required: true,
       number: true,
-      min: 1
+      min: -1
     },
     currentRemarks:{
       maxlength: 100
