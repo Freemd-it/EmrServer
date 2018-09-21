@@ -19,11 +19,11 @@ $('#patient_form').validate({
           dateISO: true
         },
         height: {
-          min: 1,
+          min: -1,
           number: true
         },
         weight: {
-          min: 1,
+          min: -1,
           number: true
         },
         bmi: {
@@ -31,14 +31,14 @@ $('#patient_form').validate({
         },
         smoking: {
             number: true,
-            min: 0
+            min: -1
         },
         smokingPeriod: {
             number: true
         },
         drinking: {
             number: true,
-            min: 0
+            min: -1
         },
         drinkingPeriod: {
             number: true

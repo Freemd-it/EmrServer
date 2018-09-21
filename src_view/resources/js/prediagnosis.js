@@ -28,27 +28,27 @@ $('#chartForm').validate({
     rules: {
         heartRate: {
             number: true,
-            min: 0
+            min: -1
         },
         pulseRate: {
             number: true,
-            min: 0
+            min: -1
         },
         bodyTemporature: {
             number: true,
-            min: 0
+            min: -1
         },
         systoleBloodPressure: {
             number: true,
-            min: 0
+            min: -1
         },
         diastoleBloodPressure: {
             number: true,
-            min: 0
+            min: -1
         },
         bloodGlucose: {
             number: true,
-            min: 0
+            min: -1
         }
     },
     messages: {

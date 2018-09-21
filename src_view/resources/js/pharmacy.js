@@ -61,11 +61,11 @@ var validator = $('#prescriptionForm').validate({
   rules: {
     currentDoses:{
       number: true,
-      min: 1
+      min: -1
     },
     currentDosesDay:{
       number: true,
-      min: 1
+      min: -1
     },
     currentRemarks:{
       maxlength: 100
