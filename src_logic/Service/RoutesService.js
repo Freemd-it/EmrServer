@@ -25,12 +25,10 @@ var RoutesService = function () { };
 
 RoutesService.Init = function () {
 
-    if (app.get('env') === 'production') {
-
-        app.use(csrfProtection);
-        console.log(util.format('Use Middleware csrf'));
-    }
-
+    // if (app.get('env') === 'production') {
+    //     app.use(csrfProtection);
+    //     console.log(util.format('Use Middleware csrf'));
+    // }
 
     app.use((req, res, next) => {
 
@@ -40,8 +38,9 @@ RoutesService.Init = function () {
 
         if (!req.session.passport && !authResult){
           res.redirect('/login')
+        } else {
+          res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         }
-        res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         next();
     });
 

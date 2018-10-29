@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  redis:
+    container_name: freemed-production-redis
+    image: redis
+    ports:
+      - "32769:6379"
+  redis:
+    container_name: freemed-development-redis
+    image: redis
+    ports:
+      - "32770:6379"

@@ -55,9 +55,8 @@ ChartModel.getChartByChartNumber = function (data, callback) {
             }
         ]
     }).then(result => {
-
+        
         const chartInfo = result
-
         if (data.complaintsKey) {
             return new Promise(function GETComplaints(resolve, reject) {
                 complaintModel.findAllByChartId(result.id, result => {

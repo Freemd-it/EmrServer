@@ -60,12 +60,12 @@ var validator = $('#prescriptionForm').validate({
   onkeyup : false,
   rules: {
     currentDoses:{
-      digits: true,
-      min: 1
+      number: true,
+      min: -1
     },
     currentDosesDay:{
-      digits: true,
-      min: 1
+      number: true,
+      min: -1
     },
     currentRemarks:{
       maxlength: 100
@@ -73,11 +73,11 @@ var validator = $('#prescriptionForm').validate({
   },
   messages: {
     currentDoses: {
-      digits: "1회 투약량은 1이상의 정수만 입력 가능합니다.",
+      numbers: "1회 투약량은 1이상의 정수만 입력 가능합니다.",
       min: "1회 투약량은 1이상의 정수만 입력 가능합니다."
     },
     currentDosesDay: {
-      digits: "복용 일수는 1이상의 정수만 입력 가능합니다.",
+      numbers: "복용 일수는 1이상의 정수만 입력 가능합니다.",
       min: "복용 일수는 1이상의 정수만 입력 가능합니다."
     },
     currentRemarks:{
@@ -792,7 +792,6 @@ function updatePrescriptionStatus (params) {
   http
       .postMethod(`/chart/update`, params)
       .then(result => {
-
           result.params = params
           const { data, status } = result
 

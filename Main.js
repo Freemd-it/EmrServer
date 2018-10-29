@@ -22,7 +22,8 @@ var routesService = require('./src_logic/Service/RoutesService.js');
 var entityService = require('./src_logic/Service/EntityService.js');
 
 
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV;
+console.log('현재 환경 상태', process.env.NODE_ENV)
 
 global.app = new express();
 
@@ -138,7 +139,7 @@ Cluster.ProcessRun = function (workerId) {
 
     app.use(compression());
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.urlencoded({ extended: true }));
     app.use(methodOverride());
     app.set('trust proxy', config.server.trust_proxy_host);
 

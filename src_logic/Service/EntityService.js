@@ -26,7 +26,8 @@ EntityService.Init = function(){
 
     chart.hasMany( complaint, { foreignKey : 'chart_id', onUpdate : 'CASCADE'});
     chart.hasMany( ocs, { foreignKey : 'chart_id', onUpdate : 'CASCADE'});
-    chart.hasMany(prescription, { foreignKey: 'chartNumber', sourceKey: 'chartNumber' });
+    chart.hasMany( prescription, { foreignKey: 'chartNumber', sourceKey: 'chartNumber' });
+    // chart.hasMany( prescription, { foreignKey: 'chartNumber' });
     chart.belongsTo(patient, { foreignKey : 'patient_id'});
     /*
       차트 : CC = 1 : N
@@ -34,6 +35,12 @@ EntityService.Init = function(){
       차트 : 처방 = 1 : 1
     */
 
+    /*
+      chart.hasMany => 릴레이션 매핑간 외래키 참조에 의한 오류 발생
+      foreign Key, Source Key 동일한 컬럼을 바라보고 있어
+      Source Key 명세에 대해 제거 하였음.
+    */
+   
     medicine.hasMany( prescription, { foreignKey : 'medicine_id', sourceKey : 'id', onUpdate : 'CASCADE'});
     // medicine.hasMany( prescription, { foreignKey : 'medicine_id', onUpdate : 'CASCADE'});
     prescription.belongsTo(medicine, { foreignKey : 'medicine_id'});
@@ -53,15 +60,15 @@ EntityService.Init = function(){
     medicine.sync().then(() => {
 
       prescription.sync();
-      // const trigger = `create trigger medicine_disable
-      //                  before update on medicines
-      //                  for each row
-      //                  begin if new.amount < 20 then
-      //                  set new.available = 0;
-      //                  elseif new.amount >= 20 then
-      //                  set new.available = 1; end if;
-      //                  end;`;
-      // sequelize.query(trigger);
+       // const trigger = `create trigger medicine_disable
+       //                before update on medicines
+       //               for each row
+       //               begin if new.amount < 20 then
+       //               set new.available = 0;
+       //               elseif new.amount >= 20 then
+       //               set new.available = 1; end if;
+       //               end;`;
+       // sequelize.query(trigger);
     });
 
     medicineCategory.sync();

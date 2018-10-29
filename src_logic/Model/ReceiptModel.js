@@ -54,13 +54,9 @@ ReceiptModel.UpdateOrCreate = function(data, callback) {
         birth: data.birth
       },
       attributes: ['id', 'name', 'bmi', 'birth', 'height', 'weight', 'createdAt', 'gender', 'drinkingAmount', 'smokingAmount', 'smokingPeriod', 'drinkingPeriod', 'firstVisit'],
-      include: {
-        model: history,
-      }
     }).then(result => {
       if (result) {
         const passingResult = result;
-
         result.update({
           name: data.name,
           gender: data.gender,
@@ -72,26 +68,9 @@ ReceiptModel.UpdateOrCreate = function(data, callback) {
           smokingPeriod: data.smokingPeriod,
           drinkingAmount: data.drinkingAmount,
           drinkingPeriod: data.drinkingPeriod,
-        }, {
-          include: {
-            model: history,
-          }
         }).then(result => {
-          result.histories[0].update({
-            pastHistory: data.pastHistory,
-            pastHistoryComment: data.pastHistoryComment,
-            allergy: data.allergy,
-            allergyComment: data.allergyComment,
-            pastMedical: data.pastMedical,
-            pastMedicalTime: data.pastMedicalTime,
-            pastMedicalArea: data.pastMedicalArea,
-            pastMedicationPeriod: data.pastMedicationPeriod,
-            pastMedicationType: data.pastMedicationType,
-            pastMedication: data.pastMedication,
-          }).then(() => {
-            passingResult['sqlStatus'] = 200;
+          passingResult['sqlStatus'] = 200;
             callback(passingResult);
-          });
         })
       } else {
         patient.create({
@@ -106,21 +85,7 @@ ReceiptModel.UpdateOrCreate = function(data, callback) {
           smokingPeriod: data.smokingPeriod,
           drinkingAmount: data.drinkingAmount,
           drinkingPeriod: data.drinkingPeriod,
-          histories: {
-            pastHistory: data.pastHistory,
-            pastHistoryComment: data.pastHistoryComment,
-            allergy: data.allergy,
-            allergyComment: data.allergyComment,
-            pastMedical: data.pastMedical,
-            pastMedicalTime: data.pastMedicalTime,
-            pastMedicalArea: data.pastMedicalArea,
-            pastMedicationPeriod: data.pastMedicationPeriod,
-            pastMedicationType: data.pastMedicationType,
-            pastMedication: data.pastMedication,
-          }
-        }, {
-          include: [history]
-        }).then(result => {
+        },).then(result => {
           result['sqlStatus'] = 200;
           callback(result);
         })

@@ -41,21 +41,40 @@ router.post('/update', function (req, res) {
         chartNumber: req.body.chartNumber,
     };
 
-    chartModel.updateChartByChartNumber(req.body, result => {
-        waitingModel.Update(data, result => {
-
-            const options = {};
-            options.update = { status: data.status };
-            options.where = { chartNumber: data.chartNumber }
-            ocsModel.update(options)
-                    .then(result => {
-                        res.send(result);
-                    })
-                    .catch(error => {
-                        res.send(error);
-                    })
-        });
-    })
+    history.update({
+        pastHistory: req.body.pastHistory,
+        pastHistoryComment: req.body.pastHistoryComment,
+        allergy: req.body.allergy,
+        allergyComment: req.body.allergyComment,
+        pastMedical: req.body.pastMedical,
+        pastMedicalTime: req.body.pastMedicalTime,
+        pastMedicalArea: req.body.pastMedicalArea,
+        pastMedicationPeriod: req.body.pastMedicationPeriod,
+        pastMedicationType: req.body.pastMedicationType,
+        pastMedication: req.body.pastMedication,
+      }, {
+        where: { patient_id: req.body.patient_id},
+      })
+      .then((result) => {
+          console.log("RESULT => ", result)
+        chartModel.updateChartByChartNumber(req.body, result => {
+            waitingModel.Update(data, result => {
+                const options = {};
+                options.update = { status: data.status };
+                options.where = { chartNumber: data.chartNumber }
+                ocsModel.update(options)
+                .then(result => {
+                    res.send(result);
+                })
+                .catch(error => {
+                    res.send(error);
+                })
+            });
+        })
+      })
+      .catch(error => {
+          res.send(error)
+      })
 });
 
 router.get('/pastAll', function (req, res) {

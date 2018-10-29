@@ -115,7 +115,7 @@ MedicineModel.update = async function(options){
     record.totalAmount = totalAmount
     record.expiry = expiry
     record.memo = memo
-  }else{
+  } else {
     const { available, primaryCategory, secondaryCategory, medication, property } = options
     record.primaryCategory = primaryCategory
     record.secondaryCategory = secondaryCategory

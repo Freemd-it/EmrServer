@@ -102,13 +102,13 @@ $('#prescriptionForm').validate({
   rules: {
     currentDoses:{
       required: true,
-      digits: true,
-      min: 1
+      number: true,
+      min: -1
     },
     currentDosesDay:{
       required: true,
-      digits: true,
-      min: 1
+      number: true,
+      min: -1
     },
     currentRemarks:{
       maxlength: 100
@@ -117,12 +117,12 @@ $('#prescriptionForm').validate({
   messages: {
     currentDoses: {
       required: "1회 투약량을 입력해주세요!",
-      digits: "1회 투약량은 1이상의 정수만 입력 가능합니다.",
+      numbers: "1회 투약량은 1이상의 정수만 입력 가능합니다.",
       min: "1회 투약량은 1이상의 정수만 입력 가능합니다."
     },
     currentDosesDay: {
       required: "복용 일수를 입력해주세요!",
-      digits: "복용 일수는 1이상의 정수만 입력 가능합니다.",
+      numbers: "복용 일수는 1이상의 정수만 입력 가능합니다.",
       min: "복용 일수는 1이상의 정수만 입력 가능합니다."
     },
     currentRemarks:{
@@ -298,6 +298,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         diagnosis
           .getPastChartList(result.patient_id)
 
+        $('#patient_id').val(result.patient_id);
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
         $('#originChartId').val(result.chartNumber);

@@ -4,7 +4,7 @@ const Patient = require('./Patient');
 
 const Chart = dbService.define('chart', {
 
-    chartNumber: { type: sequelize.INTEGER(12), allowNull: false },
+    chartNumber: { type: sequelize.INTEGER(12), allowNull: false, unique: 'chartNumber' },
     status: { type: sequelize.INTEGER(1), allowNull: true },
     heartRate: { type: sequelize.INTEGER(3), allowNull: true },
     pulseRate: { type: sequelize.INTEGER(3), allowNull: true },
