@@ -92,6 +92,7 @@ docker rmi "image-name"
 
 ### TODO
 - [ ] verision 관리
+<<<<<<< HEAD
 - [x] csrf 오류 해결하기
 - [ ] document 작업
 - [ ] ocs 신규회원과 기존 수혜자를 구분할 수 있도록 만들어야할 수도(의기팀와 논의필요)
@@ -136,6 +137,13 @@ docker rmi "image-name"
     
     2. 원하는 환자에 대한 그래프 볼 수 있게
 
+
+### Description For Database permission
+
+각각의 권한은 해당 4자리의 정수 코드를 따른다.
+
+- [ ] csrf 오류 해결하기
+- [ ] document 작업
 
 ### Description For Database permission
 
