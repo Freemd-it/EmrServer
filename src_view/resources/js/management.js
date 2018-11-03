@@ -195,8 +195,8 @@ import exportFunc from '../utils/excel';
           tableRenderMedicineManagement = [];
 
           // excel download 검색 조건 추가
-          selectedCondition.categoryMain = categoryMain;
-          selectedCondition.categorySmall = categorySmall;
+          selectedCondition.categoryMain = categoryMain ? categoryMain : '';
+          selectedCondition.categorySmall = categorySmall ? categorySmall : '';
           selectedCondition.searchText = '';
 
           medicine.find(function (x) {
@@ -222,13 +222,13 @@ import exportFunc from '../utils/excel';
   $('.management-small-category-select').change(() => {
 
     var medicine = JSON.parse(window.localStorage.getItem('medicine'));
-    management_main_category_value = $('.management-main-category-select option:selected').text();
-    management_small_category_value = $('.management-small-category-select option:selected').text();
+    const categoryMain = $('.management-main-category-select option:selected').text();
+    const categorySmall = $('.management-small-category-select option:selected').text();
     tableRenderMedicineManagement = [];
 
     // excel download 검색 조건 추가
-    selectedCondition.categoryMain = categoryMain;
-    selectedCondition.categorySmall = categorySmall;
+    selectedCondition.categoryMain = categoryMain ? categoryMain : ''
+    selectedCondition.categorySmall = categorySmall ? categoryMain : ''
     selectedCondition.searchText = '';
 
     medicine.find(function (x) {
