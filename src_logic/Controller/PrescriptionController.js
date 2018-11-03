@@ -129,10 +129,14 @@ router.get('/history/:startTime/:endTime/:category', (req, res)=>{
   endTime += ' 23:59:59'
 
   const options = {}
-  options.include = [{ model: medicine, attributes: ['primaryCategory', 'secondaryCategory', 'totalAmount', 'quantity'], required: true }]
+  prescriptionModel.prescription.hasMany(medicine)
+  options.include = [{model: medicine, attributes: [], required: true}] 
+  options.raw = true
   options.where = { useFlag: '1', createdAt: {between: [startTime, endTime]} }
-  options.attributes = ['medicineName', 'medicineIngredient', [sequelize.fn('SUM', sequelize.col('prescription.useTotal')), 'total'], 'createdAt']
-  options.group = ['prescription.medicine_id']
+  options.attributes = ['medicine.primaryCategory', 'medicine.secondaryCategory', 
+    'medicine.name', 'medicine.ingredient',
+    'medicine.totalAmount', 'medicine.quantity',
+    [sequelize.fn('SUM', sequelize.col('prescription.useTotal')), 'totalUsage'], 'createdAt']
 
   if (word.length > 0) {
     (category === '1') ? options.where.medicineName = { like: `%` + word + `%` } : options.where.medicineIngredient = { like: `%` + word + `%` }

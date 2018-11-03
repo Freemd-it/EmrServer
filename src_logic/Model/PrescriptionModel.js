@@ -60,3 +60,4 @@ function historyCustomQuery (options) {
 }
 
 module.exports = PrescriptionModel;
+module.exports.prescription = prescription;

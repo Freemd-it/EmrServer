@@ -28,7 +28,7 @@ MedicineCategoryModel.listSmall = function(data, callback){
       }
     })
     .then(result => {
-        console.log('약품 결과는 어디서 가져오니', result)
+        //console.log('약품 결과는 어디서 가져오니', result)
         callback(result);
     })
     .catch(error => {
