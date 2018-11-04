@@ -1,5 +1,9 @@
+const empty = require('is-empty')
+
 exports.removeHrTag = (data) => {
-  var regex = /<br>/g
+  if (empty(data)) return data
+  
+  const regex = /<br>/g
   if (data instanceof Object) {
     Object.keys(data[0].dataValues).map(key => {
       if( key === 'impression' || key === 'presentIllness' || key === 'treatmentNote') {

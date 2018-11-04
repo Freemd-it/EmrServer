@@ -104,16 +104,15 @@ import moment from 'moment'
     $('#history-management-table-body').empty()
     $('#history-management-table-body').append(
       _.map(data, data => {
-        const { medicineName, medicineIngredient, total, medicine } = data;
-        const { primaryCategory, secondaryCategory, totalAmount, quantity } = medicine
+        const { primaryCategory, secondaryCategory, name, ingredient, totalAmount, quantity, totalUsage, createdAt} = data;
         return ` <tr>
-            <td>${medicine.primaryCategory}</td>
-            <td>${medicine.secondaryCategory}</td>
-            <td>${medicineName}</td>
-            <td>${medicineIngredient}</td>
-            <td>${total}</td>
-            <td>${medicine.totalAmount}</td>
-            <td>${medicine.quantity}</td>
+            <td>${primaryCategory}</td>
+            <td>${secondaryCategory}</td>
+            <td>${name}</td>
+            <td>${ingredient}</td>
+            <td>${totalUsage}</td>
+            <td>${totalAmount}</td>
+            <td>${quantity}</td>
         </tr>`
       })
     );
