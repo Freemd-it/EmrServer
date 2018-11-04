@@ -15,18 +15,22 @@ router.use(function log(req, res, next) {
 router.get('/', (req, res) => {
 
   const nowDay = moment('00:00:00', 'hh:mm:ss');
-  const status = req.query.status
+  let status = req.query.status
 
   if (typeof status === 'undefined') {
     waitingModel.FindAll(result => {
       res.send(result);
     });
   } else {
-
     const options = {};
     options.order = [['chartNumber', 'ASC']];
     options.attributes = ['chartNumber', 'name', 'birth', 'status'];
-    options.where = { status: status , createdAt: {gt: Date.parse(nowDay)} }
+    if (status === '7') {
+      options.where = { status: { gte: 3} , createdAt: {gt: Date.parse(nowDay)} }
+    } else {
+      options.where = { status: status , createdAt: {gt: Date.parse(nowDay)} }
+    }
+    
     waitingModel
         .FindByStatus(options)
         .then(result => {
