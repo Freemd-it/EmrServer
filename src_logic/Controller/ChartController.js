@@ -8,7 +8,7 @@ const waitingModel = require('../Model/WaitingModel');
 const ocsModel = require('../Model/OCSModel');
 const resultCode = require('../Common/ResultCode');
 const { respondJson, respondOnError } = require('../Utils/respond');
-
+const { removeHrTag } = require('../Utils/removeHrTag')
 
 /**
  * Entity
@@ -40,7 +40,7 @@ router.post('/update', function (req, res) {
         status: req.body.updateStatus,
         chartNumber: req.body.chartNumber,
     };
-
+    console.log('req.body', req.body)
     history.update({
         pastHistory: req.body.pastHistory,
         pastHistoryComment: req.body.pastHistoryComment,
@@ -155,8 +155,11 @@ router.get('/detail/:chartId/:patientId/:chartNumber', function (req, res, next)
 
     chartModel
         .findAll(options)
-        .then(result => respondJson(res, resultCode.success, result))
+        .then(result => {
+          respondJson(res, resultCode.success, removeHrTag(result))
+        })
         .catch(error => { console.log(error); respondOnError(res, resultCode.fail, error)})
 });
+
 
 module.exports = router;

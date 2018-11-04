@@ -9,6 +9,7 @@ const complaintModel = require('./ComplaintModel');
 const ocsModel = require('./OCSModel');
 const medicineModel = require('./MedicineModel');
 const prescriptionModel = require('./PrescriptionModel');
+const { removeHrTag } = require('../Utils/removeHrTag')
 const moment = require('moment');
 
 var ChartModel = function (data) {
@@ -111,9 +112,9 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
         let medicines = JSON.parse(data.prescription);
         chart.update({
             status: 3,
-            impression: data.impression,
-            presentIllness: data.presentIllness,
-            treatmentNote: data.treatmentNote,
+            impression: removeHrTag(data.impression),
+            presentIllness: removeHrTag(data.presentIllness),
+            treatmentNote: removeHrTag(data.treatmentNote),
         }, {
                 where: {
                     chartNumber: data.chartNumber
