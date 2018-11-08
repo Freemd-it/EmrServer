@@ -665,6 +665,7 @@ $('#vitalSign').on('click', () => {
         return returnToData;
 
     }, function (result) {
+        console.log(result)
         const { info, selectGraph } = result;
 
 
@@ -678,7 +679,32 @@ $('#vitalSign').on('click', () => {
             "bindto": `#${selectGraph}`
         });
 
-    })
+    });
+
+    const generateBloodGlucoseChart = (datas) => {
+        let xScale = ['x'];
+        xScale = xScale.concat(datas.map(d => d.createdAt.substring(0, 10)));
+        let mealEffectedData = ['식후 2시간 이내']
+        let normalData = ['식후 2시간 이후']
+        datas.forEach(d => {
+            mealEffectedData.push(d.mealTerm <= 2 ? d.bloodGlucose : 0);
+            normalData.push(d.mealTerm <= 2 ? 0 : d.bloodGlucose);
+        })
+        let info = {data: {}, grid: {y: {lines: []}}};
+        info.data.columns = [xScale, normalData, mealEffectedData];
+        info.data.type = 'bar';
+        info.data.x = 'x';
+        info.bar = {width: 10};
+        info.axis = {'x': {'type': 'timeseries'}};
+        info.bindto = '#bloodGlucoseChart';
+        info.regions = [
+            {axis: 'y', start: 100, end: 130, class: "region-first"}, 
+            {axis: 'y', start: 130, end: Math.max.apply(null, datas.map(d => parseInt(d.bloodGlucose))), class: "region-second"}
+        ];
+        info.grid.y.lines.push({value: 100, text: '식후 2시간 이후', class: 'grid-first'})
+        info.grid.y.lines.push({value: 130, text: '식후 2시간 이내', class: 'grid-second'})
+        bb.generate(info);
+    }
 
 
     /**
@@ -699,6 +725,7 @@ $('#vitalSign').on('click', () => {
             return Promise.resolve(data);
 
         }).then(datas => {
+            console.table(datas);
             const startArd = 'createdAt';
             // heartRate tinyint(3), # HR 심박수
             // pulseRate tinyint(3), # PR 맥박수
@@ -731,12 +758,7 @@ $('#vitalSign').on('click', () => {
             }
             chartGenerator(BloodPressureChart);
 
-            const bloodGlucoseChart = {
-                vitalDatas: datas,
-                types: ['createdAt', 'bloodGlucose'],
-                selectGraph: 'bloodGlucoseChart'
-            }
-            chartGenerator(bloodGlucoseChart);
+            generateBloodGlucoseChart(datas);
 
             const bodyTemporatureChart = {
                 vitalDatas: datas,
@@ -747,7 +769,7 @@ $('#vitalSign').on('click', () => {
 
 
         }).catch((error) => {
-
+            console.error(error);
             /**
              * TODO 실패했을 때 표시
              */
