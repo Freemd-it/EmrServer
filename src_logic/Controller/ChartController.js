@@ -107,7 +107,6 @@ router.get('/vitalSign/:patient_id', function (req, res, next) {
     options.limit = 10
     options.order = [['createdAt', 'DESC']]
 
-
     chartModel
         .find(options)
         .then(result => respondJson(res, resultCode.success, result))

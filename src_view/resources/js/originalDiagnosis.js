@@ -347,6 +347,11 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#drinkingPeriod').val(result.patient.drinkingPeriod);
 
         let idx = 1; /* 과거력 조회용 인덱스 */
+        if(completeFlag) renderCompleteChart(result)
+
+        if (result.patient.histories.length == 0) {
+            return;
+        }
 
         for (let i of result.patient.histories[0].pastHistory) {
             let id = '#disease'+idx;
@@ -380,7 +385,6 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#diseaseDescription').val(result.patient.histories[0].pastHistoryComment);
         $('#allergyDescription').val(result.patient.histories[0].allergyComment)
 
-        if(completeFlag) renderCompleteChart(result)
     })
 
     $('#doctorSignedComplete').attr('disabled', false);
