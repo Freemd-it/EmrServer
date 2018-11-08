@@ -697,9 +697,10 @@ $('#vitalSign').on('click', () => {
         info.bar = {width: 10};
         info.axis = {'x': {'type': 'timeseries'}};
         info.bindto = '#bloodGlucoseChart';
+        maxValue = Math.max.apply(null, datas.map(d => parseInt(d.bloodGlucose)));
         info.regions = [
             {axis: 'y', start: 100, end: 130, class: "region-first"}, 
-            {axis: 'y', start: 130, end: Math.max.apply(null, datas.map(d => parseInt(d.bloodGlucose))), class: "region-second"}
+            {axis: 'y', start: 130, end: Math.max(130, maxValue), class: "region-second"}
         ];
         info.grid.y.lines.push({value: 100, text: '식후 2시간 이후', class: 'grid-first'})
         info.grid.y.lines.push({value: 130, text: '식후 2시간 이내', class: 'grid-second'})
