@@ -297,7 +297,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
 
         diagnosis
           .getPastChartList(result.patient_id)
-
+        $('#vital-sign-container').val(result.patient_id)
         $('#patient_id').val(result.patient_id);
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
@@ -684,10 +684,12 @@ $('#vitalSign').on('click', () => {
     /**
      * get data
      */
-    const parentId = 1;
-
+    let patientId = $('#vital-sign-container').val();
+    if (patientId == null) {
+        return;
+    }
     http
-        .getMethod(`/chart/vitalSign/${parentId}`)
+        .getMethod(`/chart/vitalSign/${patientId}`)
         .then((result) => {
             const { data, code } = result;
 
