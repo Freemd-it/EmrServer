@@ -58,18 +58,18 @@
 }
 
 .bb-grid .grid-first line {
-  stroke: rgb(31, 119, 180);
+  stroke: rgb(255, 127, 14);  /*#ff7f0e*/
 }
 
 .bb-grid .grid-second line {
-  stroke: rgb(255, 127, 14); 
+  stroke: rgb(31, 119, 180);
 }
 
 .bb-regions .bb-region.region-first rect {
-  fill: rgb(31, 119, 180);
+  fill: rgb(255, 127, 14); 
 }
 
 .bb-regions .bb-region.region-second rect {
-  fill: rgb(255, 127, 14); 
+  fill: '#1f77b4'; 
 
 }
