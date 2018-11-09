@@ -9,6 +9,7 @@ import http from '../utils/http';
 import { resultCode } from '../utils/constant';
 import diagnosis from './pastDiagnosisList';
 import moment from 'moment';
+import * as d3 from 'd3';
 import 'jquery-validation';
 
 /**
@@ -665,6 +666,7 @@ $('#vitalSign').on('click', () => {
         return returnToData;
 
     }, function (result) {
+        console.log(result)
         const { info, selectGraph } = result;
 
 
@@ -678,7 +680,76 @@ $('#vitalSign').on('click', () => {
             "bindto": `#${selectGraph}`
         });
 
-    })
+    });
+
+    const generateBloodGlucoseChart = (datas) => {
+
+        let xScale = ['x'];
+        xScale = xScale.concat(datas.map(d => d.createdAt.substring(0, 10)));
+        let bloodGlucoses = ['혈당'];
+        bloodGlucoses = bloodGlucoses.concat(datas.map(d => d.bloodGlucose));
+        let info = {data: {}, grid: {y: {lines: []}}};
+        info.data.columns = [xScale, bloodGlucoses];
+        info.data.type = 'bar';
+        info.data.x = 'x';
+        info.data.color = (color, d) => {
+            if (!d.index) {
+                return color;
+            }
+            if (datas[d.index].mealTerm <= 2) {
+                return 'black';
+            } else if (datas[d.index].mealTerm > 2 && datas[d.index].mealTerm < 8) {
+                return '#1f77b4';
+            } else {
+                return '#ff7f0e';
+            }
+        }
+        info.bar = { width: 10 };
+        info.axis = {'x': {'type': 'timeseries'}};
+        info.bindto = '#bloodGlucoseChart';
+        info.grid.y.lines.push({value: 100, text: '공복', class: 'grid-first'})
+        info.grid.y.lines.push({value: 140, text: '식후 2시간', class: 'grid-second'})
+
+        let chart = bb.generate(info);
+        chart.legend.hide();
+
+        let svg = d3.select('#bloodGlucoseChart').select('svg');
+        let g = svg.append('g')
+            .attr('transform', 'translate(0, 300)')
+
+        g.append('rect')
+            .attr('x', 400)
+            .attr('width', 8)
+            .attr('height', 8)
+            .attr('fill', 'black');
+        g.append('text')
+            .attr('x', 410)
+            .attr('y', 8)
+            .text('식후 2시간 이내');
+
+        g.append('rect')
+            .attr('x', 480)
+            .attr('width', 8)
+            .attr('height', 8)
+            .attr('fill', '#1f77b4');
+
+        g.append('text')
+            .attr('x', 490)
+            .attr('y', 8)
+            .text('식후 2시간 ~ 식후 8시간');
+
+        g.append('rect')
+            .attr('x', 600)
+            .attr('width', 8)
+            .attr('height', 8)
+            .attr('fill', '#ff7f0e');
+
+        g.append('text')
+            .attr('x', 610)
+            .attr('y', 8)
+            .text('공복');
+
+    }
 
 
     /**
@@ -699,6 +770,7 @@ $('#vitalSign').on('click', () => {
             return Promise.resolve(data);
 
         }).then(datas => {
+            console.table(datas);
             const startArd = 'createdAt';
             // heartRate tinyint(3), # HR 심박수
             // pulseRate tinyint(3), # PR 맥박수
@@ -731,12 +803,7 @@ $('#vitalSign').on('click', () => {
             }
             chartGenerator(BloodPressureChart);
 
-            const bloodGlucoseChart = {
-                vitalDatas: datas,
-                types: ['createdAt', 'bloodGlucose'],
-                selectGraph: 'bloodGlucoseChart'
-            }
-            chartGenerator(bloodGlucoseChart);
+            generateBloodGlucoseChart(datas);
 
             const bodyTemporatureChart = {
                 vitalDatas: datas,
@@ -747,7 +814,7 @@ $('#vitalSign').on('click', () => {
 
 
         }).catch((error) => {
-
+            console.error(error);
             /**
              * TODO 실패했을 때 표시
              */
