@@ -132,6 +132,7 @@ router.get('/history/:startTime/:endTime/:category', (req, res)=>{
   prescriptionModel.prescription.hasMany(medicine)
   options.include = [{model: medicine, attributes: [], required: true}] 
   options.raw = true
+  options.group = ['medicine.id']
   options.where = { useFlag: '1', createdAt: {between: [startTime, endTime]} }
   options.attributes = ['medicine.primaryCategory', 'medicine.secondaryCategory', 
     'medicine.name', 'medicine.ingredient',
