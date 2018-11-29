@@ -230,15 +230,11 @@ import exportFunc from '../utils/excel';
     selectedCondition.categoryMain = categoryMain ? categoryMain : ''
     selectedCondition.categorySmall = categorySmall ? categoryMain : ''
     selectedCondition.searchText = '';
-
-    medicine.find(function (x) {
-      if ($.trim(x.primaryCategory) === $.trim(management_main_category_value) && $.trim(x.secondaryCategory) === $.trim(management_small_category_value)) {
-        tableRenderMedicineManagement.push(x);
-      }
-    });
-
-    if ($('#medicine-management-table-body').children().length)
+    tableRenderMedicineManagement = medicine.filter(x => $.trim(x.primaryCategory) === $.trim(categoryMain) 
+      && $.trim(x.secondaryCategory) === $.trim(categorySmall));
+    if ($('#medicine-management-table-body').children().length) {
       $('#medicine-management-table-body *').remove();
+    }
 
     setMedicineTableBody(tableRenderMedicineManagement);
   })

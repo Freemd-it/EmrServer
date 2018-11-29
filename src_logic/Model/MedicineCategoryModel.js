@@ -1,6 +1,6 @@
 var sequelize = require('sequelize');
 var dbService = require('../Service/SequelizeService.js');
-var category = require('../Entity/MedicineCategory.js');
+var medicine = require('../Entity/Medicine')
 
 var MedicineCategoryModel = function(data){
     this.data = data;
@@ -8,8 +8,8 @@ var MedicineCategoryModel = function(data){
 
 MedicineCategoryModel.listMain = function(callback){
 
-    category.findAll({
-      attributes: [sequelize.fn('DISTINCT', sequelize.col('primaryCategory')) ,'primaryCategory']
+    medicine.findAll({
+      attributes: [[sequelize.fn('DISTINCT', sequelize.col('primaryCategory')) ,'primaryCategory']]
     })
     .then(result => {
         callback(result);
@@ -21,8 +21,8 @@ MedicineCategoryModel.listMain = function(callback){
 
 MedicineCategoryModel.listSmall = function(data, callback){
 
-    category.findAll({
-      attributes: ['secondaryCategory'],
+    medicine.findAll({
+      attributes: [[sequelize.fn('DISTINCT', sequelize.col('secondaryCategory')), 'secondaryCategory']],
       where: {
         primaryCategory: data.primaryCategory,
       }
