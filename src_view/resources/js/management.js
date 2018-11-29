@@ -159,12 +159,9 @@ import exportFunc from '../utils/excel';
     $('.dropdown').dropdown()
   }
 
-  var management_main_category_value = '';
-  var management_small_category_value = '';
   $('.management-main-category-select').change(() => {
-    management_main_category_value = $('.management-main-category-select option:selected').attr('value');
     var param = {
-      primaryCategory: management_main_category_value
+      primaryCategory: $.trim($('.management-main-category-select option:selected').text())
     }
 
     if ($('.management-small-category-select > select').children().length) {
@@ -199,11 +196,8 @@ import exportFunc from '../utils/excel';
           selectedCondition.categorySmall = categorySmall ? categorySmall : '';
           selectedCondition.searchText = '';
 
-          medicine.find(function (x) {
-            if ($.trim(x.primaryCategory) === $.trim(categoryMain) && $.trim(x.secondaryCategory) === $.trim(categorySmall)) {
-              tableRenderMedicineManagement.push(x);
-            }
-          });
+          tableRenderMedicineManagement = medicine.filter(x => $.trim(x.primaryCategory) === $.trim(categoryMain) 
+            && $.trim(x.secondaryCategory) === $.trim(categorySmall));
 
           if ($('#medicine-management-table-body').children().length)
             $('#medicine-management-table-body *').remove();
