@@ -142,9 +142,7 @@ $('.main-category-select').change(() => {
         tableRenderMedicine = medicine
           .filter(x => $.trim(x.primaryCategory) === $.trim(categoryMain) && $.trim(x.secondaryCategory) === $.trim(categorySmall))
           .reduce((acc, cur) => { if (acc.findIndex(x => x.name == cur.name) == -1 ) { acc.push(cur) } return acc; }, []);
-        console.log(medicine);
-        console.log(medicine.filter(x => $.trim(x.primaryCategory) === $.trim(categoryMain)));
-        console.log(tableRenderMedicine);
+
         if ($('#medicineTableBody').children().length)
           $('#medicineTableBody *').remove();
 
