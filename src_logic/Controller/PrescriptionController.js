@@ -132,12 +132,14 @@ router.get('/history/:startTime/:endTime/:category', (req, res)=>{
   prescriptionModel.prescription.hasMany(medicine)
   options.include = [{model: medicine, attributes: [], required: true}] 
   options.raw = true
+  options.group = ['medicine.id']
   options.where = { useFlag: '1', createdAt: {between: [startTime, endTime]} }
   options.attributes = ['medicine.primaryCategory', 'medicine.secondaryCategory', 
     'medicine.name', 'medicine.ingredient',
     'medicine.totalAmount', 'medicine.quantity',
     [sequelize.fn('SUM', sequelize.col('prescription.useTotal')), 'totalUsage'], 'createdAt']
-
+  
+  console.log(options)
   if (word.length > 0) {
     (category === '1') ? options.where.medicineName = { like: `%` + word + `%` } : options.where.medicineIngredient = { like: `%` + word + `%` }
   }
