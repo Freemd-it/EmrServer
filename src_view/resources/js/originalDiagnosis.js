@@ -1,17 +1,15 @@
-
 /**
  * Defendencies
  */
 import $ from 'jquery';
 import _ from 'lodash';
-import { bb } from "billboard.js";
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
 import diagnosis from './pastDiagnosisList';
 import moment from 'moment';
-import * as d3 from 'd3';
 import 'jquery-validation';
 
+var chartInfo = {};
 /**
  * init
  */
@@ -296,9 +294,10 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         cache: false,
     }).done(result => {
 
+        chartInfo = result;
+
         diagnosis
           .getPastChartList(result.patient_id)
-        $('#vital-sign-container').val(result.patient_id)
         $('#patient_id').val(result.patient_id);
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
@@ -598,170 +597,18 @@ $(document).on('click', '#past-chart-pre-diagnosis', () => {
 $('#vitalSign').on('click', () => {
     showAndHide('main-hide-and-show-row', 'vital-sign-container');
 
-    function _each(data, iter) {
-        if (Array.isArray(data)) {
-            for (let i = 0, len = data.length; i < len; i++) {
-                iter(data[i], i, data);
-            }
-        } else {
-            for (let i = 0, keys = Object.keys(data), len = keys.length; i < len; i++) {
-                iter(data[keys[i]], keys[i], i, data);
-            }
-        }
-    }
-
-    /**
-     *
-     * @param {array} vitalDatas
-     * @param {array} types      y 축 대상자들
-     * @param {string} standard  x 축 기준이 될 것
-     */
-    const dataInput = (vitalDatas, types, standard) => {
-        let new_columns = [];
-        const startIndex = 0;
-        const notFoundIndex = -1;
-
-        _.each(vitalDatas, (vitalData, vitalIndex) => {
-            _each(vitalData, (data, key, i) => {
-                // 초기화
-                if (!new_columns[i]) {
-                    new_columns[i] = [];
-                }
-                //types 에 포함되어있어야만 push
-                if (!_.eq(_.findIndex(types, (type) => type === key), notFoundIndex)) {
-                    if (_.eq(vitalIndex, startIndex)) {
-                        // key insert
-                        if (_.eq(key, standard)) {
-                            new_columns[i].push('x');
-                        } else {
-                            new_columns[i].push(key);
-                        }
-                    }
-                    //value insert
-                    if (_.eq(key, standard)) {
-                        new_columns[i].push(moment(data).format('YYYY-MM-DD'));
-                    } else {
-                        new_columns[i].push(data);
-                    }
-                }
-            });
-        })
-        return new_columns;
-    }
-
-
-    const chartGenerator = _.flow((chartDataInfo) => {
-        const { vitalDatas, types, selectGraph } = chartDataInfo;
-        const standard = 'createdAt';
-        const info = {
-            "x": "x",
-            "columns": []
-        };
-        info.columns = dataInput(vitalDatas, types, standard);
-
-        const returnToData = {
-            info,
-            selectGraph
-        }
-        return returnToData;
-
-    }, function (result) {
-        console.log(result)
-        const { info, selectGraph } = result;
-
-
-        var chart = bb.generate({
-            "data": info,
-            "axis": {
-                "x": {
-                    "type": "timeseries"
-                }
-            },
-            "bindto": `#${selectGraph}`
-        });
-
-    });
-
-    const generateBloodGlucoseChart = (datas) => {
-
-        let xScale = ['x'];
-        xScale = xScale.concat(datas.map(d => d.createdAt.substring(0, 10)));
-        let bloodGlucoses = ['혈당'];
-        bloodGlucoses = bloodGlucoses.concat(datas.map(d => d.bloodGlucose));
-        let info = {data: {}, grid: {y: {lines: []}}};
-        info.data.columns = [xScale, bloodGlucoses];
-        info.data.type = 'bar';
-        info.data.x = 'x';
-        info.data.color = (color, d) => {
-            if (!d.index) {
-                return color;
-            }
-            if (datas[d.index].mealTerm <= 2) {
-                return 'black';
-            } else if (datas[d.index].mealTerm > 2 && datas[d.index].mealTerm < 8) {
-                return '#1f77b4';
-            } else {
-                return '#ff7f0e';
-            }
-        }
-        info.bar = { width: 10 };
-        info.axis = {'x': {'type': 'timeseries'}};
-        info.bindto = '#bloodGlucoseChart';
-        info.grid.y.lines.push({value: 100, text: '공복', class: 'grid-first'})
-        info.grid.y.lines.push({value: 140, text: '식후 2시간', class: 'grid-second'})
-
-        let chart = bb.generate(info);
-        chart.legend.hide();
-
-        let svg = d3.select('#bloodGlucoseChart').select('svg');
-        let g = svg.append('g')
-            .attr('transform', 'translate(0, 300)')
-
-        g.append('rect')
-            .attr('x', 400)
-            .attr('width', 8)
-            .attr('height', 8)
-            .attr('fill', 'black');
-        g.append('text')
-            .attr('x', 410)
-            .attr('y', 8)
-            .text('식후 2시간 이내');
-
-        g.append('rect')
-            .attr('x', 480)
-            .attr('width', 8)
-            .attr('height', 8)
-            .attr('fill', '#1f77b4');
-
-        g.append('text')
-            .attr('x', 490)
-            .attr('y', 8)
-            .text('식후 2시간 ~ 식후 8시간');
-
-        g.append('rect')
-            .attr('x', 600)
-            .attr('width', 8)
-            .attr('height', 8)
-            .attr('fill', '#ff7f0e');
-
-        g.append('text')
-            .attr('x', 610)
-            .attr('y', 8)
-            .text('공복');
-
-    }
-
-
     /**
      * get data
      */
-    let patientId = $('#vital-sign-container').val();
+
+    const patientId = chartInfo.patient_id;
     if (patientId == null) {
         return;
     }
     http
         .getMethod(`/chart/vitalSign/${patientId}`)
         .then((result) => {
+            console.log({result});
             const { data, code } = result;
 
             if (!_.eq(code, resultCode.success)) {
@@ -769,50 +616,78 @@ $('#vitalSign').on('click', () => {
             }
             return Promise.resolve(data);
 
-        }).then(datas => {
-            console.table(datas);
-            const startArd = 'createdAt';
-            // heartRate tinyint(3), # HR 심박수
-            // pulseRate tinyint(3), # PR 맥박수
-            // bodyTemporature tinyint(3), # BT 체온
-            // systoleBloodPressure tinyint(3), # BP 혈압 수축기
-            // diastoleBloodPressure tinyint(3), # BP 혈압 이완기
-            // bloodGlucose tinyint(3), # Glucose 혈당
+        }).then(data => {
+            data = data.map(row => {
+                return { 
+                    date: moment(row.createdAt, "YYYY-MM-DDTkk:mm:ss.000Z").format("YYYYMMDD"),
+                    SBP: row.systoleBloodPressure,
+                    DBP: row.diastoleBloodPressure,
+                    heartRate: row.pulseRate,
+                    temperature: row.bodyTemporature,
+                    SpO2: row.heartRate,
+                    bloodGlucose: row.bloodGlucose,
+                    mealTerm: row.mealTerm,
+                }
+            }).filter(row => Object.values(row).every(elem => elem != null));
 
-            /**
-             * generator graph
-             */
-            const heartRateChart = {
-                vitalDatas: datas,
-                types: ['createdAt', 'heartRate'],
-                selectGraph: 'heartRateChart'
+            const colorInfo = {
+                'SBP': {
+                    start: 120, end: 140, colors: ['black', 'darkorange', 'red'],
+                },
+                'DBP': {
+                    start: 80, end: 90, colors: ['black', 'darkorange', 'red'],
+                },
+                'heartRate': {
+                    start: 60, end: 101, colors: ['green', 'black', 'red'],
+                },
+                'temperature': {
+                    start: 35.8, end: 37.9, colors: ['green', 'black', 'red'],
+                },
+                'SpO2': {
+                    start: 95, end: 100, colors: ['green', 'black', 'black'],
+                },
+                'bloodGlucoseEmpty': {
+                    start: 100, end: 126, colors: ['black', 'darkorange', 'red'],
+                },
+                'bloodGlucoseDefault': {
+                    start: 180, end: 200, colors: ['black', 'darkorange', 'red'],
+                },
             }
-            chartGenerator(heartRateChart);
 
-            const pulseRateChart = {
-                vitalDatas: datas,
-                types: ['createdAt', 'pulseRate'],
-                selectGraph: 'pulseRateChart'
+            const getColor = (type, value) => {
+                const info = colorInfo[type];
+                if (value < info.start) {
+                    return info.colors[0];
+                } else if (value >= info.start && value < info.end) {
+                    return info.colors[1];
+                } else {
+                    return info.colors[2];
+                }
             }
-            chartGenerator(pulseRateChart);
 
-            const BloodPressureChart = {
-                vitalDatas: datas,
-                types: ['createdAt', 'systoleBloodPressure', 'diastoleBloodPressure'],
-                selectGraph: 'bloodPressureChart'
+            const getBloodGlucoseColor = (mealTerm, value) => {
+                return mealTerm === 7 ? getColor('bloodGlucoseEmpty', value) : getColor('bloodGlucoseDefault', value);
             }
-            chartGenerator(BloodPressureChart);
 
-            generateBloodGlucoseChart(datas);
-
-            const bodyTemporatureChart = {
-                vitalDatas: datas,
-                types: ['createdAt', 'bodyTemporature'],
-                selectGraph: 'bodyTemporatureChart'
-            }
-            chartGenerator(bodyTemporatureChart);
-
-
+            const mealTermToLabel = ['2시간 이내', '2시간', '3시간', '4시간', '5시간', '6시간', '8시간(공복)'];
+            $('#vital-table-body').append(
+                data.map(row => {
+                    const { date, SBP, DBP, heartRate, 
+                        temperature, SpO2, bloodGlucose, mealTerm } = row;
+                    return `
+                        <tr class="ui fluid">
+                            <td>${date}</td>
+                            <td style="color: ${getColor('SBP', SBP)};">${SBP}</td>
+                            <td style="color: ${getColor('DBP', DBP)};">${DBP}</td>
+                            <td style="color: ${getColor('heartRate', heartRate)};">${heartRate}</td>
+                            <td style="color: ${getColor('temperature', temperature)};">${temperature}</td>
+                            <td style="color: ${getColor('SpO2', SpO2)};">${SpO2}</td>
+                            <td style="color: ${getBloodGlucoseColor(mealTerm, bloodGlucose)};">${bloodGlucose}</td>
+                            <td>${mealTermToLabel[mealTerm - 1]}</td>
+                        </tr>
+                    `;
+                })
+            );
         }).catch((error) => {
             console.error(error);
             /**
