@@ -40,7 +40,7 @@ EMR에서 제공하는 기능은 크게 다음과 같이 분류됩니다.
     ```
     yarn start:dev
     ```
-7. http://localhost:4000으로 이동하여 EMR이 잘 실행되는지 확인한다.
+7. http://localhost:4000으로 이동하여 EMR이 잘 실행되는지 확인합니다.
 
 ## Description for Database Permission
 
