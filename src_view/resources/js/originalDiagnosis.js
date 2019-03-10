@@ -596,21 +596,13 @@ $(document).on('click', '#past-chart-pre-diagnosis', () => {
  */
 $('#vitalSign').on('click', () => {
     showAndHide('main-hide-and-show-row', 'vital-sign-container');
-
-    /**
-     * get data
-     */
-
     const patientId = chartInfo.patient_id;
     if (patientId == null) {
         return;
     }
-    http
-        .getMethod(`/chart/vitalSign/${patientId}`)
+    http.getMethod(`/chart/vitalSign/${patientId}`)
         .then((result) => {
-            console.log({result});
             const { data, code } = result;
-
             if (!_.eq(code, resultCode.success)) {
                 return Promise.reject('fail vital data');
             }
@@ -631,27 +623,13 @@ $('#vitalSign').on('click', () => {
             }).filter(row => Object.values(row).every(elem => elem != null));
 
             const colorInfo = {
-                'SBP': {
-                    start: 120, end: 140, colors: ['black', 'darkorange', 'red'],
-                },
-                'DBP': {
-                    start: 80, end: 90, colors: ['black', 'darkorange', 'red'],
-                },
-                'heartRate': {
-                    start: 60, end: 101, colors: ['green', 'black', 'red'],
-                },
-                'temperature': {
-                    start: 35.8, end: 37.9, colors: ['green', 'black', 'red'],
-                },
-                'SpO2': {
-                    start: 95, end: 100, colors: ['green', 'black', 'black'],
-                },
-                'bloodGlucoseEmpty': {
-                    start: 100, end: 126, colors: ['black', 'darkorange', 'red'],
-                },
-                'bloodGlucoseDefault': {
-                    start: 180, end: 200, colors: ['black', 'darkorange', 'red'],
-                },
+                SBP: { start: 120, end: 140, colors: ['black', 'darkorange', 'red'] },
+                DBP: { start: 80, end: 90, colors: ['black', 'darkorange', 'red'] },
+                heartRate: { start: 60, end: 101, colors: ['green', 'black', 'red'] },
+                temperature: { start: 35.8, end: 37.9, colors: ['green', 'black', 'red'] },
+                SpO2: { start: 95, end: 100, colors: ['green', 'black', 'black'] },
+                bloodGlucoseEmpty: { start: 100, end: 126, colors: ['black', 'darkorange', 'red'] },
+                bloodGlucoseDefault: { start: 180, end: 200, colors: ['black', 'darkorange', 'red'] },
             }
 
             const getColor = (type, value) => {
