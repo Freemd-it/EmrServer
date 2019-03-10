@@ -666,7 +666,7 @@ $('#vitalSign').on('click', () => {
         return returnToData;
 
     }, function (result) {
-        console.log(result)
+        console.table(result)
         const { info, selectGraph } = result;
 
 
