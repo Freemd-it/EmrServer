@@ -7,6 +7,7 @@ import http from '../utils/http';
 import { resultCode } from '../utils/constant';
 import diagnosis from './pastDiagnosisList';
 import moment from 'moment';
+import * as d3 from 'd3';
 import 'jquery-validation';
 
 var chartInfo = {};
@@ -607,10 +608,10 @@ $('#vitalSign').on('click', () => {
                 return Promise.reject('fail vital data');
             }
             return Promise.resolve(data);
-
         }).then(data => {
             data = data.map(row => {
                 return { 
+                    id: row.id,
                     date: moment(row.createdAt, "YYYY-MM-DDTkk:mm:ss.000Z").format("YYYYMMDD"),
                     SBP: row.systoleBloodPressure,
                     DBP: row.diastoleBloodPressure,
@@ -629,7 +630,8 @@ $('#vitalSign').on('click', () => {
                 temperature: { start: 35.8, end: 37.9, colors: ['green', 'black', 'red'] },
                 SpO2: { start: 95, end: 100, colors: ['green', 'black', 'black'] },
                 bloodGlucoseEmpty: { start: 100, end: 126, colors: ['black', 'darkorange', 'red'] },
-                bloodGlucoseDefault: { start: 180, end: 200, colors: ['black', 'darkorange', 'red'] },
+                bloodGlucoseDefault: { start: 140, end: 200, colors: ['black', 'darkorange', 'red'] },
+                bloodGlucoseAfterMeal: { start: 180, end: 200, colors: ['black', 'darkorange', 'red'] },
             }
 
             const getColor = (type, value) => {
@@ -644,28 +646,32 @@ $('#vitalSign').on('click', () => {
             }
 
             const getBloodGlucoseColor = (mealTerm, value) => {
-                return mealTerm === 7 ? getColor('bloodGlucoseEmpty', value) : getColor('bloodGlucoseDefault', value);
+                switch (mealTerm) {
+                    case 1:
+                        return getColor('bloodGlucoseAfterMeal', value);
+                    case 8:
+                        return getColor('bloodGlucoseEmpty', value);
+                    default:
+                        return getColor('bloodGlucoseDefault', value);
+                }
             }
 
-            const mealTermToLabel = ['2시간 이내', '2시간', '3시간', '4시간', '5시간', '6시간', '8시간(공복)'];
-            $('#vital-table-body').append(
-                data.map(row => {
-                    const { date, SBP, DBP, heartRate, 
-                        temperature, SpO2, bloodGlucose, mealTerm } = row;
-                    return `
-                        <tr class="ui fluid">
-                            <td>${date}</td>
-                            <td style="color: ${getColor('SBP', SBP)};">${SBP}</td>
-                            <td style="color: ${getColor('DBP', DBP)};">${DBP}</td>
-                            <td style="color: ${getColor('heartRate', heartRate)};">${heartRate}</td>
-                            <td style="color: ${getColor('temperature', temperature)};">${temperature}</td>
-                            <td style="color: ${getColor('SpO2', SpO2)};">${SpO2}</td>
-                            <td style="color: ${getBloodGlucoseColor(mealTerm, bloodGlucose)};">${bloodGlucose}</td>
-                            <td>${mealTermToLabel[mealTerm - 1]}</td>
-                        </tr>
-                    `;
-                })
-            );
+            const mealTermToLabel = ['2시간 이내', '2시간', '3시간', '4시간', '5시간', '6시간', '7시간', '8시간(공복)'];
+            const selection = d3.select('#vital-table-body').selectAll('tr')
+              .data(data, d => d.id)
+              .enter()
+              .append('tr')
+                .attr('class', 'ui fluid');
+
+            selection.append('td').text(d => d.date);
+            selection.append('td').style('color', d => getColor('SBP', d.SBP)).text(d => d.SBP);
+            selection.append('td').style('color', d => getColor('DBP', d.DBP)).text(d => d.DBP);
+            selection.append('td').style('color', d => getColor('heartRate', d.heartRate)).text(d => d.heartRate);
+            selection.append('td').style('color', d => getColor('temperature', d.temperature)).text(d => d.temperature.toFixed(1));
+            selection.append('td').style('color', d => getColor('SpO2', d.SpO2)).text(d => d.SpO2);
+            selection.append('td').style('color', d => getBloodGlucoseColor(d.mealTerm, d.bloodGlucose)).text(d => d.bloodGlucose);
+            selection.append('td').text(d => mealTermToLabel[d.mealTerm - 1]);
+
         }).catch((error) => {
             console.error(error);
             /**
