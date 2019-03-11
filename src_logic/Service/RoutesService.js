@@ -37,7 +37,7 @@ RoutesService.Init = function () {
         const authResult = pattern1.test(req.originalUrl) || pattern2.test(req.originalUrl)
 
         if (!req.session.passport && !authResult){
-          res.redirect('/login')
+          return res.redirect('/login')
         } else {
           res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         }

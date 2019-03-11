@@ -40,7 +40,6 @@ router.post('/update', function (req, res) {
         status: req.body.updateStatus,
         chartNumber: req.body.chartNumber,
     };
-    console.log('req.body', req.body)
     history.update({
         pastHistory: req.body.pastHistory,
         pastHistoryComment: req.body.pastHistoryComment,
@@ -104,11 +103,10 @@ router.get('/vitalSign/:patient_id', function (req, res, next) {
     const options = {};
     options.where = { patient_id: patient_id }
     options.include = { model: patient }
-    options.limit = 10
     options.order = [['createdAt', 'DESC']]
 
     chartModel
-        .find(options)
+        .findAll(options)
         .then(result => respondJson(res, resultCode.success, result))
         .catch((error) => respondOnError(res, resultCode.fail, error))
 

@@ -6,9 +6,7 @@ import 'jquery-validation';
  */
 $('#patient_form').validate({
     onkeyup:false,
-    onfocusout : function(element){
-        $(element).valid();
-    },
+    onfocusout: false,
     rules:{
         name: {
             required: true,
@@ -79,7 +77,7 @@ $('#patient_form').validate({
           numbers: "음주경력을 양의 정수 형식으로 입력해주세요"
         }
     },
-    showErrors:function(errorMap, errorList){
+    showErrors: function(errorMap, errorList){
         if(this.numberOfInvalids()) {
             $.uiAlert({
                 textHead: '[경고]',
@@ -369,6 +367,7 @@ $('input[name="pastMedication"]').on('change', () => {
 $('#sendToPart2').on('click', () => {
 
     if(!$('#patient_form').valid()){
+        console.log('here');
       return;
     }
 

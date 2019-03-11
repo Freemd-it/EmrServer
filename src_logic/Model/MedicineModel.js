@@ -16,6 +16,7 @@ MedicineModel.list = function(data, callback){
       ]
     })
     .then(result => {
+        console.log('/management/list', result)
         callback(result);
     })
     .catch(error => {
@@ -29,7 +30,6 @@ MedicineModel.listTwo = async function(options){
 }
 
 MedicineModel.search = function(data, callback){
-
     if (data.option === '1') {
       medicine.findAll({
         attributes: [
@@ -40,6 +40,7 @@ MedicineModel.search = function(data, callback){
         }
       })
       .then(result => {
+        console.log('result', result)
         callback(result);
       })
       .catch(error => {

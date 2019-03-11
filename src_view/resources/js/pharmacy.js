@@ -27,14 +27,12 @@ $(document).ready(() => {
   if (window.location.pathname === '/pharmacy') {
     getPharmacyOcsData('now');
   }
-
   $.ajax({
     type: 'GET',
     url: window.location.pathname === '/management' ? '/medicine/list/management' : '/medicine/list',
     dataType: 'json',
     cache: false,
   }).done(result => {
-
     window.localStorage.setItem('medicine', JSON.stringify(result));
 
     var getAutoCompleteNameObject = [];
@@ -141,13 +139,9 @@ $('.main-category-select').change(() => {
         var medicine = JSON.parse(window.localStorage.getItem('medicine'));
         var categoryMain = $('.main-category-select option:selected').text();
         var categorySmall = $('.small-category-select option:selected').text();
-        tableRenderMedicine = [];
-
-        medicine.find(function (x) {
-          if ($.trim(x.primaryCategory) === $.trim(categoryMain) && $.trim(x.secondaryCategory) === $.trim(categorySmall)) {
-            tableRenderMedicine.push(x);
-          }
-        });
+        tableRenderMedicine = medicine
+          .filter(x => $.trim(x.primaryCategory) === $.trim(categoryMain) && $.trim(x.secondaryCategory) === $.trim(categorySmall))
+          .reduce((acc, cur) => { if (acc.findIndex(x => x.name == cur.name) == -1 ) { acc.push(cur) } return acc; }, []);
 
         if ($('#medicineTableBody').children().length)
           $('#medicineTableBody *').remove();

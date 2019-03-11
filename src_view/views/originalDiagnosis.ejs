@@ -61,31 +61,22 @@
             <div class="main-hide-and-show">
                 <div class="main-hide-and-show-row" id="vital-sign-container">
                     <div>
-                        <div class="ui text menu">
-                            <div class="header item">심박수</div>
-                        </div>
-                        <div id="heartRateChart"></div>
-
-                        <div class="ui text menu">
-                            <div class="header item">맥박수</div>
-                        </div>
-                        <div id="pulseRateChart"></div>
-
-                        <div class="ui text menu">
-                            <div class="header item">혈압 수축기</div>
-                        </div>
-                        <div id="bloodPressureChart"></div>
-
-                        <div class="ui text menu">
-                            <div class="header item">혈당</div>
-                        </div>
-                        <div id="bloodGlucoseChart"></div>
-
-                        <div class="ui text menu">
-                            <div class="header item">BT체온</div>
-                        </div>
-                        <div id="bodyTemporatureChart"></div>
-
+                        <table class="ui celled table form" style="text-align:center;">
+                            <thead>
+                                <tr>
+                                    <th width="20%">날짜</th>
+                                    <th width="10%">SBP</th>
+                                    <th width="10%">DBP</th>
+                                    <th width="10%">HR</th>
+                                    <th width="10%">Temp</th>
+                                    <th width="10%">SpO2</th>
+                                    <th width="10%">Glucose</th>
+                                    <th width="20%">상태</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vital-table-body">
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -405,7 +396,7 @@
 
                       <div class="two fields">
                           <div class="field">
-                              <label>HR <scan style="font-size : 10px;">(Heart Rate , 심박수)</scan></label>
+                              <label>SpO2 <scan style="font-size : 10px;">(Saturation of Peripheral Oxygen , 산소포화도)</scan></label>
                               <input type="text" id="heartRate" name="heartRate">
                           </div>
 
@@ -476,13 +467,13 @@
                         </div>
 
                         <div class="field">
-                            <label>Impression</label>
-                            <textarea class="impression" name="impression" rows="5"></textarea>
+                            <label>Present illness / Medication history</label>
+                            <textarea class="presentIllness" name="presentIllness" rows="3"></textarea>
                         </div>
 
                         <div class="field">
-                            <label>Present illness / Medication</label>
-                            <textarea class="presentIllness" name="presentIllness" rows="3"></textarea>
+                            <label>Impression</label>
+                            <textarea class="impression" name="impression" rows="5"></textarea>
                         </div>
                     </form>
 
