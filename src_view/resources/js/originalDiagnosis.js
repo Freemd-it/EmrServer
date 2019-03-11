@@ -672,24 +672,6 @@ $('#vitalSign').on('click', () => {
             selection.append('td').style('color', d => getBloodGlucoseColor(d.mealTerm, d.bloodGlucose)).text(d => d.bloodGlucose);
             selection.append('td').text(d => mealTermToLabel[d.mealTerm - 1]);
 
-            // $('#vital-table-body').append(
-            //     data.map(row => {
-            //         const { date, SBP, DBP, heartRate, 
-            //             temperature, SpO2, bloodGlucose, mealTerm } = row;
-            //         return `
-            //             <tr class="ui fluid">
-            //                 <td>${date}</td>
-            //                 <td style="color: ${getColor('SBP', SBP)};">${SBP}</td>
-            //                 <td style="color: ${getColor('DBP', DBP)};">${DBP}</td>
-            //                 <td style="color: ${getColor('heartRate', heartRate)};">${heartRate}</td>
-            //                 <td style="color: ${getColor('temperature', temperature)};">${temperature.toFixed(1)}</td>
-            //                 <td style="color: ${getColor('SpO2', SpO2)};">${SpO2}</td>
-            //                 <td style="color: ${getBloodGlucoseColor(mealTerm, bloodGlucose)};">${bloodGlucose}</td>
-            //                 <td>${mealTermToLabel[mealTerm - 1]}</td>
-            //             </tr>
-            //         `;
-            //     })
-            // );
         }).catch((error) => {
             console.error(error);
             /**
