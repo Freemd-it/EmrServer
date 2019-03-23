@@ -336,10 +336,11 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
             // CC 갯수에 따라 화면 렌더링
         }
 
+        
         $('#name').val(result.patient.name);
         $('#gender').val(result.patient.gender);
         $('#birth').val(result.patient.birth.slice(0, 10));
-        $('#height').val(result.patient.height + 'cm');
+        $('#age').val(moment().diff(moment(result.patient.birth.slice(0, 10)), 'years'));
         $('#weight').val(result.patient.weight + 'kg');
         $('#bmi').val(result.patient.BMI);
         $('#smoking').val(result.patient.smokingAmount);
