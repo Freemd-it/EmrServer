@@ -32,9 +32,7 @@ import exportFunc from '../utils/excel';
   function setValidate(formId) {
     $(formId).validate({
       onkeyup: false,
-      onfocusout: function (element) {
-        $(element).valid();
-      },
+      onfocusout: false,
       rules: {
         name: {
           required: true,
@@ -47,14 +45,14 @@ import exportFunc from '../utils/excel';
         amount: {
           required: true,
           number: true,
-          min: -1,
-          max: 999
+          min: 1,
+          max: 9999
         },
         quantity: {
           required: true,
           number: true,
-          min: -1,
-          max: 999
+          min: 0,
+          max: 9999
         },
         property: {
           maxlength: 255
@@ -75,12 +73,13 @@ import exportFunc from '../utils/excel';
         amount: {
           required: "약품 1통당 개수를 입력해 주세요",
           numbers: "약품 1통당 개수를 0 이상의 정수로 입력해 주세요",
-          max: "약품 1통당 개수는 최대 999까지 입력 가능합니다"
+          min: "약품 1통당 개수를 1 이상의 정수로 입력해 주세요",
+          max: "약품 1통당 개수는 최대 9999까지 입력 가능합니다"
         },
         quantity: {
           required: "재고량을 입력해 주세요",
           numbers: "재고량을 0 이상의 정수로 입력해 주세요",
-          max: "재고량은 최대 999까지 입력 가능합니다"
+          max: "재고량은 최대 9999까지 입력 가능합니다"
         },
         property: {
           maxlength: "약효는 최대 255자까지 입력 가능합니다"
