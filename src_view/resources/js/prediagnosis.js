@@ -155,6 +155,7 @@ $(document).on('click', '.pre-diagnosis-table-content', (e) => {
     }).done(result => {
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
+        $('#preGender').val(result.patient.gender);
         $('#patient_id').val(result.patient_id);
         $('#getPastCC').attr('disabled', false);
         $('#pastDiagnosisRecord').attr('disabled', false);
