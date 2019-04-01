@@ -340,7 +340,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#name').val(result.patient.name);
         $('#gender').val(result.patient.gender);
         $('#birth').val(result.patient.birth.slice(0, 10));
-        $('#age').val(moment().diff(moment(result.patient.birth.slice(0, 10)), 'years'));
+        $('#age').val("만 " + moment().diff(moment(result.patient.birth.slice(0, 10)), 'years') + "세");
         $('#weight').val(result.patient.weight + 'kg');
         $('#bmi').val(result.patient.BMI);
         $('#smoking').val(result.patient.smokingAmount);
