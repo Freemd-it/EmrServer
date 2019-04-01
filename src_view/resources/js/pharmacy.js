@@ -261,6 +261,7 @@ $(document).on('click', '.pharmacopoeia-hover', (e) => {
                     <option selected value="qd">qd</option>
                     <option value="bid">bid</option>
                     <option value="tid">tid</option>
+                    <option value="qid">qid</option>
                     <option value="hs">hs</option>
                  </select>
                </td>

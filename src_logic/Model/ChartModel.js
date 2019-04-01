@@ -11,6 +11,7 @@ const medicineModel = require('./MedicineModel');
 const prescriptionModel = require('./PrescriptionModel');
 const { removeHrTag } = require('../Utils/removeHrTag')
 const moment = require('moment');
+const util = require('../Utils/util');
 
 var ChartModel = function (data) {
     this.data = data;
@@ -126,7 +127,7 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                  */
                 var totalSum = JSON.parse(data.prescription)
                 totalSum.forEach((record) => {
-                  record.useTotal = record.doses * statusConvert(record.dosesCountByDay) * record.dosesDay
+                  record.useTotal = record.doses * util.convertDoseCount(record.dosesCountByDay) * record.dosesDay
                 })
                 data.prescription = JSON.stringify(totalSum)
 
@@ -179,7 +180,7 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
               const clearanceParam = _.map(results, result => {
                 const row = {};
                 row.medicine_id = result.dataValues.medicine_id;
-                row.integerToSubstract = (result.dataValues.doses) * statusConvert(result.dataValues.dosesCountByDay) * result.dataValues.dosesDay;
+                row.integerToSubstract = (result.dataValues.doses) * util.convertDoseCount(result.dataValues.dosesCountByDay) * result.dataValues.dosesDay;
                 return row
               });
 
@@ -322,15 +323,6 @@ ChartModel.find = async function (options) {
 ChartModel.findAll = async function (options) {
 
     return chart.findAll(options)
-}
-
-function statusConvert (param) {
-  switch (param) {
-    case 'qd' : return 1; break;
-    case 'bid' : return 2; break;
-    case 'tid' : return 3; break;
-    case 'hs' : return 4; break;
-  }
 }
 
 module.exports = ChartModel;
