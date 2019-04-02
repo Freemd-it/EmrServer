@@ -338,6 +338,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
 
         $('#name').val(result.patient.name);
         $('#gender').val(result.patient.gender);
+        $('#age').val("만 " + moment().diff(moment(result.patient.birth.slice(0, 10)), 'years') + "세");
         $('#birth').val(result.patient.birth.slice(0, 10));
         $('#height').val(result.patient.height + 'cm');
         $('#weight').val(result.patient.weight + 'kg');
