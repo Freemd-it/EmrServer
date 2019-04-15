@@ -307,7 +307,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         // 차트 번호, 이름 화면 렌더링
 
         $('#heartRate').val(result.heartRate);
-        $('#pulseRate').val(result.pulseRate);
+        $('#SpO2').val(result.SpO2);
         $('#bodyTemporature').val(result.bodyTemporature);
         $('#systoleBloodPressure').val(result.systoleBloodPressure);
         $('#diastoleBloodPressure').val(result.diastoleBloodPressure);
@@ -620,9 +620,9 @@ function updateVitalSign() {
                     date: moment(row.createdAt, "YYYY-MM-DDTkk:mm:ss.000Z").format("YYYYMMDD"),
                     SBP: row.systoleBloodPressure,
                     DBP: row.diastoleBloodPressure,
-                    heartRate: row.pulseRate,
+                    heartRate: row.heartRate,
                     temperature: row.bodyTemporature,
-                    SpO2: row.heartRate,
+                    SpO2: row.SpO2,
                     bloodGlucose: row.bloodGlucose,
                     mealTerm: row.mealTerm,
                 }
