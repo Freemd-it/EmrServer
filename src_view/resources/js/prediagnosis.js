@@ -30,7 +30,7 @@ $('#chartForm').validate({
             number: true,
             min: -1
         },
-        pulseRate: {
+        SpO2: {
             number: true,
             min: -1
         },
@@ -56,9 +56,9 @@ $('#chartForm').validate({
             number: "심박수는 숫자 형식으로 입력해주세요",
             min: "심박수는 음수를 입력할 수 없습니다."
         },
-        pulseRate: {
-            number: "맥박수는 숫자 형식으로 입력해주세요",
-            min: "맥박수는 음수를 입력할 수 없습니다."
+        SpO2: {
+            number: "산소포화도는 숫자 형식으로 입력해주세요",
+            min: "산소포화도는 음수를 입력할 수 없습니다."
         },
         bodyTemporature: {
             number: "체온은 숫자 형식으로 입력해주세요",
@@ -209,7 +209,7 @@ $(document).on('click', '.pre-diagnosis-table-content', (e) => {
 $(document).on('click', '.negative.send.ui.button', () => {
     const patient_id = $('#patient_id').val();
     const heartRate = $('#heartRate').val();
-    const pulseRate = $('#pulseRate').val();
+    const SpO2 = $('#SpO2').val();
     const bodyTemporature = $('#bodyTemporature').val();
     const systoleBloodPressure = $('#systoleBloodPressure').val();
     const diastoleBloodPressure = $('#diastoleBloodPressure').val();
@@ -231,7 +231,7 @@ $(document).on('click', '.negative.send.ui.button', () => {
     const docs = {
         patient_id,
         heartRate,
-        pulseRate,
+        SpO2,
         bodyTemporature,
         systoleBloodPressure,
         diastoleBloodPressure,

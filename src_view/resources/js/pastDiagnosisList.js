@@ -89,7 +89,7 @@ function renderPastOriginalDiagnosis(data) {
   $('#past-preChartId').val(data.chartNumber);
   $('#past-preName').val(data.patient.name);
   $('#past-heartRate').val(data.heartRate);
-  $('#past-pulseRate').val(data.pulseRate);
+  $('#past-SpO2').val(data.SpO2);
   $('#past-bodyTemporature').val(data.bodyTemporature);
   $('#past-systoleBloodPressure').val(data.systoleBloodPressure);
   $('#past-diastoleBloodPressure').val(data.diastoleBloodPressure);
