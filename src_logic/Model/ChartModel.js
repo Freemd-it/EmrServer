@@ -100,7 +100,6 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                     chartNumber: data.chartNumber
                 }
             }).then(results => {
-
                 complaintModel.Insert(data, result => {
                   if (result === 1) {
                     ocsModel.preDiagonosis(data.chartNumber, callback)
