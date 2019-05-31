@@ -96,10 +96,11 @@
                                   <input type="text" id="gender" name="gender">
                               </div>
 
-                              <div class="field">
-                                  <label>생년월일</label>
-                                  <input type="text" id="birth" name="birth">
-                              </div>
+                              <div class="field" style="position: relative;">
+                                <label>생년월일</label>
+                                <input type="text" id="birth" name="birth" style="position: absolute; width: calc(100% - 15px);">
+                                <input type="text" id="age" name="age" style="position: absolute; width: 40%; right: 15px; border: 0; text-align: end;" disabled>
+                            </div>
                           </div>
 
                           <div class="three fields">
@@ -397,12 +398,12 @@
                       <div class="two fields">
                           <div class="field">
                               <label>SpO2 <scan style="font-size : 10px;">(Saturation of Peripheral Oxygen , 산소포화도)</scan></label>
-                              <input type="text" id="heartRate" name="heartRate">
+                              <input type="text" id="SpO2" name="SpO2">
                           </div>
 
                           <div class="field">
-                              <label>PR <scan style="font-size : 10px;">(Pulse Rate , 맥박수)</scan></label>
-                              <input type="text" id="pulseRate" name="pulseRate">
+                              <label>HR <scan style="font-size : 10px;">(Heart Rate , 심박수)</scan></label>
+                              <input type="text" id="heartRate" name="heartRate">
                           </div>
                       </div>
 

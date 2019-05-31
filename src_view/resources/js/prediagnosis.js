@@ -6,7 +6,7 @@ import _ from 'lodash';
 /**
  * chrtForm 유효성 검사
  */
- function validateHandler (errorMap, errorList){
+ function validateHandler (_, errorList) {
      if(this.numberOfInvalids()) {
          $.uiAlert({
              textHead: '[경고]',
@@ -30,7 +30,7 @@ $('#chartForm').validate({
             number: true,
             min: -1
         },
-        pulseRate: {
+        SpO2: {
             number: true,
             min: -1
         },
@@ -56,9 +56,9 @@ $('#chartForm').validate({
             number: "심박수는 숫자 형식으로 입력해주세요",
             min: "심박수는 음수를 입력할 수 없습니다."
         },
-        pulseRate: {
-            number: "맥박수는 숫자 형식으로 입력해주세요",
-            min: "맥박수는 음수를 입력할 수 없습니다."
+        SpO2: {
+            number: "산소포화도는 숫자 형식으로 입력해주세요",
+            min: "산소포화도는 음수를 입력할 수 없습니다."
         },
         bodyTemporature: {
             number: "체온은 숫자 형식으로 입력해주세요",
@@ -82,20 +82,29 @@ $('#chartForm').validate({
 
 $('#CCform').validate({
   onkeyup: false,
+  onfocusout: false,
   rules: {
     CC: {
-      maxlength:255
+      required: true,
+      minlength: 1,
+      maxlength: 255
     },
     HistoryOfCC:{
-      maxlength:500
+      required: true,
+      minlength: 1,
+      maxlength: 500
     }
   },
   messages: {
     CC: {
+      required: "C.C를 입력해주세요, 입력할 내용이 없다면 항목에 해당하는 카드를 삭제해주세요.",
+      minlength: "C.C를 입력해주세요, 입력할 내용이 없다면 항목에 해당하는 카드를 삭제해주세요.",
       maxlength: "C.C는 최대 {0}자 까지 입력 가능합니다."
     },
     HistoryOfCC: {
-      maxlength: "History Of CC는 최대 {0}자 까지 가능합니다."
+      required: "History of C.C를 입력해주세요, 입력할 내용이 없다면 항목에 해당하는 카드를 삭제해주세요.",
+      minlength: "History of C.C를 입력해주세요, 입력할 내용이 없다면 항목에 해당하는 카드를 삭제해주세요.",
+      maxlength: "History of C.C는 최대 {0}자 까지 가능합니다."
     }
   },
   showErrors: validateHandler
@@ -155,12 +164,15 @@ $(document).on('click', '.pre-diagnosis-table-content', (e) => {
     }).done(result => {
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
+        $('#preGender').val(result.patient.gender);
         $('#patient_id').val(result.patient_id);
         $('#getPastCC').attr('disabled', false);
         $('#pastDiagnosisRecord').attr('disabled', false);
 
         let idx = 1; /* 과거력 조회용 인덱스 */
-        
+        if (result.patient.histories.length === 0) {
+            return;
+        }
         for (let i of result.patient.histories[0].pastHistory) {
                 let id = '#disease'+idx;
                 if(i == 1) {
@@ -206,16 +218,20 @@ $(document).on('click', '.pre-diagnosis-table-content', (e) => {
 
 /* 예진 완료시 데이터 전송하기 */
 $(document).on('click', '.negative.send.ui.button', () => {
+
+    if (!$('#CCform').valid()) {
+        return;
+    }
     const patient_id = $('#patient_id').val();
     const heartRate = $('#heartRate').val();
-    const pulseRate = $('#pulseRate').val();
+    const SpO2 = $('#SpO2').val();
     const bodyTemporature = $('#bodyTemporature').val();
     const systoleBloodPressure = $('#systoleBloodPressure').val();
     const diastoleBloodPressure = $('#diastoleBloodPressure').val();
     const bloodGlucose = $('#bloodGlucose').val();
     const mealTerm = $('#mealTerm').val();
     const chartNumber = $('#preChartId').val();
-    const ccData = $('#CCform').serializeArray();
+    const ccData = $('#CCform').serializeArray().filter(d => d.value != '');
     const pastHistory = getDiseaseHistory();
     const pastHistoryComment = $('#diseaseDescription').val();
     const allergy = getAllergyHistory();
@@ -230,7 +246,7 @@ $(document).on('click', '.negative.send.ui.button', () => {
     const docs = {
         patient_id,
         heartRate,
-        pulseRate,
+        SpO2,
         bodyTemporature,
         systoleBloodPressure,
         diastoleBloodPressure,

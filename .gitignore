@@ -13,3 +13,6 @@ dist/*
 package-lock.json
 logs/*
 Config/*
+
+*.bundle.js
+public/dist/index.bundle.js

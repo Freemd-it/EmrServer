@@ -296,7 +296,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
     }).done(result => {
 
         chartInfo = result;
-
+        updateVitalSign();
         diagnosis
           .getPastChartList(result.patient_id)
         $('#patient_id').val(result.patient_id);
@@ -307,7 +307,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         // 차트 번호, 이름 화면 렌더링
 
         $('#heartRate').val(result.heartRate);
-        $('#pulseRate').val(result.pulseRate);
+        $('#SpO2').val(result.SpO2);
         $('#bodyTemporature').val(result.bodyTemporature);
         $('#systoleBloodPressure').val(result.systoleBloodPressure);
         $('#diastoleBloodPressure').val(result.diastoleBloodPressure);
@@ -338,6 +338,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
 
         $('#name').val(result.patient.name);
         $('#gender').val(result.patient.gender);
+        $('#age').val("만 " + moment().diff(moment(result.patient.birth.slice(0, 10)), 'years') + "세");
         $('#birth').val(result.patient.birth.slice(0, 10));
         $('#height').val(result.patient.height + 'cm');
         $('#weight').val(result.patient.weight + 'kg');
@@ -597,6 +598,10 @@ $(document).on('click', '#past-chart-pre-diagnosis', () => {
  */
 $('#vitalSign').on('click', () => {
     showAndHide('main-hide-and-show-row', 'vital-sign-container');
+    updateVitalSign();
+});
+
+function updateVitalSign() {
     const patientId = chartInfo.patient_id;
     if (patientId == null) {
         return;
@@ -615,9 +620,9 @@ $('#vitalSign').on('click', () => {
                     date: moment(row.createdAt, "YYYY-MM-DDTkk:mm:ss.000Z").format("YYYYMMDD"),
                     SBP: row.systoleBloodPressure,
                     DBP: row.diastoleBloodPressure,
-                    heartRate: row.pulseRate,
+                    heartRate: row.heartRate,
                     temperature: row.bodyTemporature,
-                    SpO2: row.heartRate,
+                    SpO2: row.SpO2,
                     bloodGlucose: row.bloodGlucose,
                     mealTerm: row.mealTerm,
                 }
@@ -658,27 +663,27 @@ $('#vitalSign').on('click', () => {
 
             const mealTermToLabel = ['2시간 이내', '2시간', '3시간', '4시간', '5시간', '6시간', '7시간', '8시간(공복)'];
             const selection = d3.select('#vital-table-body').selectAll('tr')
-              .data(data, d => d.id)
-              .enter()
+              .data(data, d => d.id);
+             
+            selection.exit().remove();
+            const enterSelection = selection.enter()
               .append('tr')
                 .attr('class', 'ui fluid');
 
-            selection.append('td').text(d => d.date);
-            selection.append('td').style('color', d => getColor('SBP', d.SBP)).text(d => d.SBP);
-            selection.append('td').style('color', d => getColor('DBP', d.DBP)).text(d => d.DBP);
-            selection.append('td').style('color', d => getColor('heartRate', d.heartRate)).text(d => d.heartRate);
-            selection.append('td').style('color', d => getColor('temperature', d.temperature)).text(d => d.temperature.toFixed(1));
-            selection.append('td').style('color', d => getColor('SpO2', d.SpO2)).text(d => d.SpO2);
-            selection.append('td').style('color', d => getBloodGlucoseColor(d.mealTerm, d.bloodGlucose)).text(d => d.bloodGlucose);
-            selection.append('td').text(d => mealTermToLabel[d.mealTerm - 1]);
+            enterSelection.append('td').text(d => d.date);
+            enterSelection.append('td').style('color', d => getColor('SBP', d.SBP)).text(d => d.SBP);
+            enterSelection.append('td').style('color', d => getColor('DBP', d.DBP)).text(d => d.DBP);
+            enterSelection.append('td').style('color', d => getColor('heartRate', d.heartRate)).text(d => d.heartRate);
+            enterSelection.append('td').style('color', d => getColor('temperature', d.temperature)).text(d => d.temperature.toFixed(1));
+            enterSelection.append('td').style('color', d => getColor('SpO2', d.SpO2)).text(d => d.SpO2);
+            enterSelection.append('td').style('color', d => getBloodGlucoseColor(d.mealTerm, d.bloodGlucose)).text(d => d.bloodGlucose);
+            enterSelection.append('td').text(d => mealTermToLabel[d.mealTerm - 1]);
 
         }).catch((error) => {
             console.error(error);
             /**
              * TODO 실패했을 때 표시
              */
-        })
-
-});
-
+        });
+}
 init();
