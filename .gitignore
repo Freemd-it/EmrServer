@@ -15,3 +15,4 @@ logs/*
 Config/*
 
 *.bundle.js
+public/dist/index.bundle.js
