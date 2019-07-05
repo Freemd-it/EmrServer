@@ -6,6 +6,7 @@ import _ from 'lodash';
 import http from '../utils/http';
 import { resultCode } from '../utils/constant';
 import diagnosis from './pastDiagnosisList';
+import tableDrawer from '../utils/tableDrawer';
 import moment from 'moment';
 import * as d3 from 'd3';
 import 'jquery-validation';
@@ -45,11 +46,11 @@ const showAndHide = (rowsClass, newId) => {
 *Impression, Present illness / Medication,  Treatment note / Medication -> 300자 이내
 *
 */
-function validateHandler (errorMap, errorList){
-    if(this.numberOfInvalids()) {
+function validateHandler(errorMap, errorList) {
+    if (this.numberOfInvalids()) {
         $.uiAlert({
             textHead: '[경고]',
-            text: errorList[0].message,
+            text: errorList && errorList[0].message,
             bgcolor: '#FF5A5A',
             textcolor: '#fff',
             position: 'top-center',
@@ -61,75 +62,75 @@ function validateHandler (errorMap, errorList){
 
 //본진 정보
 $('#diagonosisChartForm').validate({
-  onkeyup: false,
-  rules: {
-    impression: {
-      maxlength:300
+    onkeyup: false,
+    rules: {
+        impression: {
+            maxlength: 300
+        },
+        presentIllness: {
+            maxlength: 300
+        }
     },
-    presentIllness: {
-      maxlength:300
-    }
-  },
-  messages:{
-    impression:{
-      maxlength: "impression은 최대 {0}자 까지 입력 가능 합니다."
+    messages: {
+        impression: {
+            maxlength: "impression은 최대 {0}자 까지 입력 가능 합니다."
+        },
+        presentIllness: {
+            maxlength: "Present illness / Medication은 최대 {0}자까지 입력 가능합니다."
+        }
     },
-    presentIllness:{
-      maxlength: "Present illness / Medication은 최대 {0}자까지 입력 가능합니다."
-    }
-  },
-  showErrors: validateHandler
+    showErrors: validateHandler
 });
 
 $('#Treatmentform').validate({
-  onkeyup: false,
-  rules:{
-    treatmentNote:{
-      maxlength: 300
-    }
-  },
-  messages:{
-    treatmentNote:{
-      maxlength: "Treatment note는 최대 {0}자까지 입력 가능합니다."
-    }
-  },
-  showErrors: validateHandler
+    onkeyup: false,
+    rules: {
+        treatmentNote: {
+            maxlength: 300
+        }
+    },
+    messages: {
+        treatmentNote: {
+            maxlength: "Treatment note는 최대 {0}자까지 입력 가능합니다."
+        }
+    },
+    showErrors: validateHandler
 });
 
 //약전 validation
 $('#prescriptionForm').validate({
-  onkeyup : false,
-  rules: {
-    currentDoses:{
-      required: true,
-      number: true,
-      min: -1
+    onkeyup: false,
+    rules: {
+        currentDoses: {
+            required: true,
+            number: true,
+            min: -1
+        },
+        currentDosesDay: {
+            required: true,
+            number: true,
+            min: -1
+        },
+        currentRemarks: {
+            maxlength: 100
+        }
     },
-    currentDosesDay:{
-      required: true,
-      number: true,
-      min: -1
+    messages: {
+        currentDoses: {
+            required: "1회 투약량을 입력해주세요!",
+            numbers: "1회 투약량은 1이상의 정수만 입력 가능합니다.",
+            min: "1회 투약량은 1이상의 정수만 입력 가능합니다."
+        },
+        currentDosesDay: {
+            required: "복용 일수를 입력해주세요!",
+            numbers: "복용 일수는 1이상의 정수만 입력 가능합니다.",
+            min: "복용 일수는 1이상의 정수만 입력 가능합니다."
+        },
+        currentRemarks: {
+            maxlength: "비고란은 최대 {0}자까지 입력 가능합니다."
+        }
     },
-    currentRemarks:{
-      maxlength: 100
-    }
-  },
-  messages: {
-    currentDoses: {
-      required: "1회 투약량을 입력해주세요!",
-      numbers: "1회 투약량은 1이상의 정수만 입력 가능합니다.",
-      min: "1회 투약량은 1이상의 정수만 입력 가능합니다."
-    },
-    currentDosesDay: {
-      required: "복용 일수를 입력해주세요!",
-      numbers: "복용 일수는 1이상의 정수만 입력 가능합니다.",
-      min: "복용 일수는 1이상의 정수만 입력 가능합니다."
-    },
-    currentRemarks:{
-      maxlength: "비고란은 최대 {0}자까지 입력 가능합니다."
-    }
-  },
-  showErrors:validateHandler
+    showErrors: validateHandler
 });
 
 
@@ -157,15 +158,16 @@ $('.diagnosisWaitings').on('click', () => {
 
     }).then((result) => {
 
-      const { data } = result;
-      for(let i = 0; i < data.length; i++) {
-          $('#tableBody').append(
-              `<tr id=${data[i].chartNumber} class="diagnosis-table-content">
+        const { data } = result;
+        for (let i = 0; i < data.length; i++) {
+            $('#tableBody').append(
+                `<tr id=${data[i].chartNumber} class="diagnosis-table-content">
                      <td id=${data[i].chartNumber}>${data[i].chartNumber}</td>
                      <td id=${data[i].chartNumber}>${data[i].name}</td>
                      <td id=${data[i].chartNumber}>${data[i].birth}</td>
               </tr>`
-          )}
+            )
+        }
     }).catch(error => console.log(error));
 
     $('.ui.longer.modal.waitingPatientList').modal('show');
@@ -196,15 +198,16 @@ $('.waitingTab').on('click', () => {
 
     }).then((result) => {
 
-      const { data } = result;
-      for(let i = 0; i < data.length; i++) {
-          $('#tableBody').append(
-              `<tr id=${data[i].chartNumber} class="diagnosis-table-content">
+        const { data } = result;
+        for (let i = 0; i < data.length; i++) {
+            $('#tableBody').append(
+                `<tr id=${data[i].chartNumber} class="diagnosis-table-content">
                      <td id=${data[i].chartNumber}>${data[i].chartNumber}</td>
                      <td id=${data[i].chartNumber}>${data[i].name}</td>
                      <td id=${data[i].chartNumber}>${data[i].birth}</td>
               </tr>`
-          )}
+            )
+        }
     }).catch(error => console.log(error));
 
     $(".completeTab").removeClass("active");
@@ -213,53 +216,35 @@ $('.waitingTab').on('click', () => {
 
 $('.completeTab').on('click', () => {
 
-    if ($('#tableBody').children().length)
+    if ($('#tableBody').children().length) {
         $('#tableBody *').remove();
-
-    const docs = {
-        status: '7',
-    };
-
+    }
     $.ajax({
         type: 'GET',
         url: '/waitingList',
-        data: docs,
+        data: { status: '7' },
         dataType: 'json',
         cache: false,
-    }).done(result => {
-
-        for (let i = 0; i < result.length; i++) {
-
-            const { code, data } = result;
-
-            if (!_.eq(code, resultCode.success)) {
-                return Promise.reject(`fail get complete paitents ${data.error}`);
-            }
-            return Promise.resolve(data);
-            // $('#tableBody').append(
-            //     `<tr id=${result[i].chartNumber} class="diagnosis-table-content">
-            //            <td id=${result[i].chartNumber}>${result[i].chartNumber}</td>
-            //            <td id=${result[i].chartNumber}>${result[i].name}</td>
-            //            <td id=${result[i].chartNumber}>${result[i].birth}</td>
-            //     </tr>`
-            //
-            // )
+    })
+    .done(result => {
+        if (!_.eq(result.code, resultCode.success)) {
+            return Promise.reject(`fail get complete paitents ${data.error}`);
         }
+        return result.data;
     })
     .then(result => {
-      const { data } = result;
-      $('#tableBody').append(
-          _.map(data, row => {
-            const { chartNumber, name, birth } = row;
-            return `<tr id="${chartNumber}" flag="complete" class="diagnosis-table-content">
-                        <td id=${chartNumber} flag="complete">${chartNumber}</td>
-                        <td id=${chartNumber} flag="complete">${name}</td>
-                        <td id=${chartNumber} flag="complete">${birth}</td>
-                 </tr>`
-          })
-      );
+        $('#tableBody').append(
+            result.data.map(row => {
+                const { chartNumber, name, birth } = row;
+                return `<tr id="${chartNumber}" flag="complete" class="diagnosis-table-content">
+                    <td id=${chartNumber} flag="complete">${chartNumber}</td>
+                    <td id=${chartNumber} flag="complete">${name}</td>
+                    <td id=${chartNumber} flag="complete">${birth}</td>
+                </tr>`
+            })
+        );
     })
-    .catch(error => console.log(error))
+    .catch(error => console.log(error));
 
     $(".waitingTab").removeClass("active");
     $(".completeTab").addClass("active");
@@ -277,7 +262,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
     $('.presentIllness').val('');
     $('.treatmentNote').val('');
     $('#prescription-table-body').empty().append(
-      `<tr>
+        `<tr>
         <td class="defaultPrescriptionTableBody" style="text-align:center;" colspan="7">조제를 시작할 환자를 선택해주세요.</td>
       </tr>`
     );
@@ -298,7 +283,7 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         chartInfo = result;
         updateVitalSign();
         diagnosis
-          .getPastChartList(result.patient_id)
+            .getPastChartList(result.patient_id)
         $('#patient_id').val(result.patient_id);
         $('#preChartId').val(result.chartNumber);
         $('#preName').val(result.patient.name);
@@ -349,15 +334,15 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         $('#drinkingPeriod').val(result.patient.drinkingPeriod);
 
         let idx = 1; /* 과거력 조회용 인덱스 */
-        if(completeFlag) renderCompleteChart(result)
+        if (completeFlag) renderCompleteChart(result)
 
         if (result.patient.histories.length == 0) {
             return;
         }
 
         for (let i of result.patient.histories[0].pastHistory) {
-            let id = '#disease'+idx;
-            if(i == 1) {
+            let id = '#disease' + idx;
+            if (i == 1) {
                 $(id).prop("checked", true);
             }
             idx++;
@@ -366,8 +351,8 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
         idx = 1;
 
         for (let i of result.patient.histories[0].allergy) {
-            let id = '#allergy'+idx;
-            if(i == 1) {
+            let id = '#allergy' + idx;
+            if (i == 1) {
                 $(id).prop("checked", true);
             }
             idx++;
@@ -400,50 +385,24 @@ $(document).on('click', '.diagnosis-table-content', (e) => {
 });
 
 function renderCompleteChart(data) {
+    http.getMethod(`/prescription/${data.chartNumber}`)
+        .then(result => {
+            const { data, code } = result;
+            if (!_.eq(code, resultCode.success)) {
+                return Promise.reject(`get fail prescriptions data ${data.error}`);
+            }
+            return Promise.resolve(data);
+        })
+        .then(data => tableDrawer.updatePrescriptionTable(data))
+        .catch(error => console.log(error));
 
-  http
-      .getMethod(`/prescription/${data.chartNumber}`)
-      .then(result => {
-          const { data, code } = result;
-
-          if (!_.eq(code, resultCode.success)) {
-              return Promise.reject(`get fail prescriptions data ${data.error}`);
-          }
-          return Promise.resolve(data);
-      })
-      .then(data => {
-
-        if ($('#prescription-table-body .defaultPrescriptionTableBody').length)
-          $('#prescription-table-body .defaultPrescriptionTableBody').remove();
-        $('#prescription-table-body').empty();
-        $('#prescription-table-body').append(`<tr></tr>`);
-
-        $('#prescription-table-body').append(
-            _.map(data.prescriptions, data => {
-              const { id, medicineName, medicineIngredient, doses, dosesCountByDay, dosesDay, remarks } = data;
-              return ` <tr prescription-id="${id}" class="ui fluid">
-                <td>${medicineName}</td>
-                <td>${medicineIngredient}</td>
-                <td>${doses}</td>
-                <td>${dosesCountByDay}</td>
-                <td>${dosesDay}</td>
-                <td>${remarks === '' ? '-' : remarks}</td>
-                <td>-</td>
-              </tr>`
-            })
-        );
-      })
-      .catch(error => console.log(error))
-
-  $('.impression').val(data.impression);
-  $('.presentIllness').val(data.presentIllness);
-  $('.treatmentNote').val(data.treatmentNote);
-  $('#doctorSignedComplete').attr('disabled', true);
-  $('#pharmacopoeia').attr('disabled', true);
+    $('.impression').val(data.impression);
+    $('.presentIllness').val(data.presentIllness);
+    $('.treatmentNote').val(data.treatmentNote);
 }
 
 $(document).on('click', '#doctorSignedComplete', (e) => {
-    if(!$('#diagonosisChartForm').valid() || !$('#Treatmentform').valid() || !$('#prescriptionForm').valid()) return;
+    if (!$('#diagonosisChartForm').valid() || !$('#Treatmentform').valid() || !$('#prescriptionForm').valid()) return;
 
 
     var prescriptionLength = $('#prescription-table-body').children().length - 1;
@@ -483,12 +442,12 @@ $(document).on('click', '#doctorSignedComplete', (e) => {
         if (result[0] === 0) {
 
             $('.treatmentNote').val('');
-            $('#diagonosisChartForm, #preDiagonosisChartForm, #patientChartForm').each(function(){
+            $('#diagonosisChartForm, #preDiagonosisChartForm, #patientChartForm').each(function () {
                 this.reset();
             });
 
             if ($('#originalDiagnosisCCsegment').children().length) {
-              $('#originalDiagnosisCCsegment *').remove();
+                $('#originalDiagnosisCCsegment *').remove();
             }
 
             if ($('#prescription-table-body').children().length > 0) {
@@ -615,7 +574,7 @@ function updateVitalSign() {
             return Promise.resolve(data);
         }).then(data => {
             data = data.map(row => {
-                return { 
+                return {
                     id: row.id,
                     date: moment(row.createdAt, "YYYY-MM-DDTkk:mm:ss.000Z").format("YYYYMMDD"),
                     SBP: row.systoleBloodPressure,
@@ -663,11 +622,11 @@ function updateVitalSign() {
 
             const mealTermToLabel = ['2시간 이내', '2시간', '3시간', '4시간', '5시간', '6시간', '7시간', '8시간(공복)'];
             const selection = d3.select('#vital-table-body').selectAll('tr')
-              .data(data, d => d.id);
-             
+                .data(data, d => d.id);
+
             selection.exit().remove();
             const enterSelection = selection.enter()
-              .append('tr')
+                .append('tr')
                 .attr('class', 'ui fluid');
 
             enterSelection.append('td').text(d => d.date);

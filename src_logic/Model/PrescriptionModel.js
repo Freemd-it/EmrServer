@@ -6,8 +6,10 @@ var PrescriptionModel = function () {}
 
 PrescriptionModel.createAll = function (data, callback) {
 
-    var medicines = JSON.parse(data.prescription);
-    prescription.bulkCreate(medicines).then(result => callback(result));
+    const medicines = JSON.parse(data.prescription);
+    prescription.bulkCreate(medicines).then(result => {
+        return callback(result)
+    });
 }
 
 PrescriptionModel.find = async function (options) {
@@ -42,7 +44,7 @@ PrescriptionModel.delete = async function (options) {
     const { where = {} } = options;
     return await prescription.destroy({
       where: where
-    })
+    });
 }
 
 
