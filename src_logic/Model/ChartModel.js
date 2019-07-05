@@ -13,6 +13,48 @@ const { removeHrTag } = require('../Utils/removeHrTag')
 const moment = require('moment');
 const util = require('../Utils/util');
 
+/**
+ * @function setCustomUpdateQuery
+ * @param {Array} array 업데이트될 내용을 담고 있는 배열 (id가 42일 때 amount 컬럼을 -30 한다.)
+ * @description update medicines set amount = case when id = 42 then amount - 30 when id = 43 then amount - 20 end where id in (42, 43);
+ * 위와 같은 형식의 다중 조건 쿼리를 문자열로 만들어줌
+ */
+function setCustomUpdateQuery(array, sign = 1) {
+
+    const inArray = [];
+    const whenArray = [];
+    const signText = sign === 1 ? '+' : '-';
+
+    const now = moment().format('YYYY-MM-DD HH:mm:ss');
+    let query = `update medicines set updatedAt = '${now}', totalAmount = case`;
+    let index = 0;
+
+    array.forEach((data) => {
+        index = inArray.indexOf(data.medicine_id);
+        if (index === -1) {
+            whenArray.push({ medicine_id: data.medicine_id, updatedAmount: data.updatedAmount });
+            inArray.push(data.medicine_id);
+        } else {
+            whenArray[index].updatedAmount += data.updatedAmount;
+        }
+    })
+
+    whenArray.forEach((data) => {
+        query += ` when id = ${data.medicine_id} then totalAmount ${signText} ${data.updatedAmount}`;
+    })
+
+    query += ` end where id in (`;
+
+    inArray.forEach((data, index) => {
+        if (index === inArray.length - 1) {
+            query += data + `)`;
+        } else {
+            query += data + `, `;
+        }
+    });
+    return query;
+}
+
 var ChartModel = function (data) {
     this.data = data;
 }
@@ -35,7 +77,7 @@ ChartModel.create = function (data, callback) {
         }).then(result => {
             result['name'] = data.name;
             ocsModel.receipt(data, result, ocsResult => {
-              callback(result)
+                callback(result)
             })
         })
     });
@@ -52,12 +94,12 @@ ChartModel.getChartByChartNumber = function (data, callback) {
             {
                 model: patient,
                 include: [
-                  history
+                    history
                 ]
             }
         ]
     }).then(result => {
-        
+
         const chartInfo = result
         if (data.complaintsKey) {
             return new Promise(function GETComplaints(resolve, reject) {
@@ -101,156 +143,129 @@ ChartModel.updateChartByChartNumber = function (data, callback) {
                 }
             }).then(results => {
                 complaintModel.Insert(data, result => {
-                  if (result === 1) {
-                    ocsModel.preDiagonosis(data.chartNumber, callback)
-                  }
+                    if (result === 1) {
+                        ocsModel.preDiagonosis(data.chartNumber, callback)
+                    }
                 })
             })
     }
     else if (data.updateStatus === '3') {
-        let medicines = JSON.parse(data.prescription);
         chart.update({
             status: 3,
             impression: removeHrTag(data.impression),
             presentIllness: removeHrTag(data.presentIllness),
             treatmentNote: removeHrTag(data.treatmentNote),
-        }, {
-                where: {
-                    chartNumber: data.chartNumber
+        }, { where: { chartNumber: data.chartNumber } })
+            // 최종적으로 처방이 완료된 (useFlag == 1) 약품 목록을 가져옴
+            .then(_ => prescriptionModel.find({ where: { chartNumber: data.chartNumber, useFlag: 1 } }))
+            .then(results => {
+                // 그런 약이 없으면 따로 처리를 안함
+                if (results.length === 0) {
+                    return;
                 }
-            }).then(result => {
-
-                /**
-                 * @description 약 총 사용 수 계산 : 1회 투약량 * 1일 복용횟수(ex. qd, bid, tid, hs) * 복용일수 = 약 총 사용량
-                 */
-                var totalSum = JSON.parse(data.prescription)
-                totalSum.forEach((record) => {
-                  record.useTotal = record.doses * util.convertDoseCount(record.dosesCountByDay) * record.dosesDay
-                })
-                data.prescription = JSON.stringify(totalSum)
-
-                prescriptionModel.createAll(data, result => {
-                  ocsModel.originalDiagnosis(data.chartNumber, callback)
+                const clearanceParam = _.map(results, result => {
+                    const row = {};
+                    row.medicine_id = result.dataValues.medicine_id;
+                    row.updatedAmount = (result.dataValues.doses) * util.convertDoseCount(result.dataValues.dosesCountByDay) * result.dataValues.dosesDay;
+                    return row
                 });
+                // 약품 사용량을 되돌림
+                return medicineModel.clearance(setCustomUpdateQuery(clearanceParam));
             })
+            // 처방 기록을 지움
+            .then(_ => prescriptionModel.delete({ where: { chartNumber: data.chartNumber } }))
+            // 처방 기록을 새로 씀
+            .then(_ => {
+                 // 약 총 사용 수 계산 : 1회 투약량 * 1일 복용횟수(ex. qd, bid, tid, hs) * 복용일수 = 약 총 사용량
+                const totalSum = JSON.parse(data.prescription);
+                totalSum.forEach((record) => {
+                    record.useTotal = record.doses * util.convertDoseCount(record.dosesCountByDay) * record.dosesDay;
+                });
+                data.prescription = JSON.stringify(totalSum);
+                prescriptionModel.createAll(data, _ => {
+                    ocsModel.originalDiagnosis(data.chartNumber, callback);
+                });
+            });
     }
     else if (statusInPharmacy.includes(data.updateStatus)) {
 
         chart.update({
             status: data.updateStatus,
         },
-        {
-          where: {
-            chartNumber: data.chartNumber
-          }
-        })
-        .then(result => {
-          callback(result)
-        })
-        .catch(error => {
-          callback(error)
-        })
+            {
+                where: {
+                    chartNumber: data.chartNumber
+                }
+            })
+            .then(result => {
+                callback(result)
+            })
+            .catch(error => {
+                callback(error)
+            })
     }
     else if (data.updateStatus === '7') {
 
         chart.update({
             status: data.updateStatus,
         },
-        {
-          where: {
-            chartNumber: data.chartNumber
-          }
-        })
-        .then(result => {
+            {
+                where: {
+                    chartNumber: data.chartNumber
+                }
+            })
+            .then(result => {
 
-          const options = {};
-          options.where = { chartNumber: data.chartNumber }
-          options.order = [['id']];
+                const options = {};
+                options.where = { chartNumber: data.chartNumber }
+                options.order = [['id']];
 
-          prescriptionModel
-              .find(options)
-              .then(results => {
+                prescriptionModel
+                    .find(options)
+                    .then(results => {
 
-              const flagUpdateOptions = {}
-              flagUpdateOptions.update = { useFlag: 1 }
-              flagUpdateOptions.where = { id: _.map(results, result => { return result.id}) }
+                        const flagUpdateOptions = {}
+                        flagUpdateOptions.update = { useFlag: 1 }
+                        flagUpdateOptions.where = { id: _.map(results, result => { return result.id }) }
 
-              const clearanceParam = _.map(results, result => {
-                const row = {};
-                row.medicine_id = result.dataValues.medicine_id;
-                row.integerToSubstract = (result.dataValues.doses) * util.convertDoseCount(result.dataValues.dosesCountByDay) * result.dataValues.dosesDay;
-                return row
-              });
+                        const clearanceParam = _.map(results, result => {
+                            const row = {};
+                            row.medicine_id = result.dataValues.medicine_id;
+                            row.updatedAmount = (result.dataValues.doses) * util.convertDoseCount(result.dataValues.dosesCountByDay) * result.dataValues.dosesDay;
+                            return row
+                        });
 
-              /**
-               * @description prescriptions 테이블 내 useFlag 업데이트 후 medicines 테이블에서 남은 약 갯수 차감
-               */
-              prescriptionModel
-              .update(flagUpdateOptions)
-              .then(result => {
+                        /**
+                         * @description prescriptions 테이블 내 useFlag 업데이트 후 medicines 테이블에서 남은 약 갯수 차감
+                         */
+                        prescriptionModel
+                            .update(flagUpdateOptions)
+                            .then(result => {
 
-                   /**
-                    * @function lastCallback
-                    * @description custom update query 세팅 후 실행
-                    * # sequelize 모듈에 case when 사용 가능한 update 쿼리 모듈이 없음
-                    */
-                   medicineModel
-                   .clearance(setCustomUpdateQuery(clearanceParam))
-                   .then(result => {
-                   /* status 7일 때 컨트롤러로 최종 콜백하는 부분 */
-                     callback(result)
-                   })
-                   .catch(error => {
-                     callback(error)
-                   })
-               })
+                                /**
+                                 * @function lastCallback
+                                 * @description custom update query 세팅 후 실행
+                                 * # sequelize 모듈에 case when 사용 가능한 update 쿼리 모듈이 없음
+                                 */
+                                medicineModel
+                                    .clearance(setCustomUpdateQuery(clearanceParam, sign = -1))
+                                    .then(result => {
+                                        /* status 7일 때 컨트롤러로 최종 콜백하는 부분 */
+                                        callback(result)
+                                    })
+                                    .catch(error => {
+                                        callback(error)
+                                    })
+                            })
 
-              /**
-               * @function setCustomUpdateQuery
-               * @param {Array} array 업데이트될 내용을 담고 있는 배열 (id가 42일 때 amount 컬럼을 -30 한다.)
-               * @description update medicines set amount = case when id = 42 then amount - 30 when id = 43 then amount - 20 end where id in (42, 43);
-               * 위와 같은 형식의 다중 조건 쿼리를 문자열로 만들어줌
-               */
-              function setCustomUpdateQuery (array) {
-
-                  const inArray = [];
-                  const whenArray = [];
-
-                  var now = moment().format('YYYY-MM-DD HH:mm:ss');
-                  var query = `update medicines set updatedAt = '${now}', totalAmount = case`;
-                  var index = 0;
-
-                  array.forEach((data) => {
-                    index = inArray.indexOf(data.medicine_id);
-                    if (index === -1) {
-                      whenArray.push({medicine_id: data.medicine_id, integerToSubstract: data.integerToSubstract});
-                      inArray.push(data.medicine_id);
-                    } else {
-                      whenArray[index].integerToSubstract += data.integerToSubstract;
-                    }
-                  })
-
-                  whenArray.forEach((data) => {
-                    query += ` when id = ` + data.medicine_id + ` then totalAmount - ` + data.integerToSubstract;
-                  })
-
-                  query += ` end where id in (`;
-
-                  inArray.forEach((data, index) => {
-                    if (index === inArray.length - 1) query += data + `)`;
-                    else query += data + `, `;
-                  })
-
-                  return query;
-              }
-             })
-             .catch(error => {
-               callback(error)
-             })
-        })
-        .catch(error => {
-          callback(error)
-        })
+                    })
+                    .catch(error => {
+                        callback(error)
+                    })
+            })
+            .catch(error => {
+                callback(error)
+            })
     }
 }
 

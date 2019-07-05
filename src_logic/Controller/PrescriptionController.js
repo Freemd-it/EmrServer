@@ -30,7 +30,7 @@ router.get('/:chartNumber', (req, res) => {
       .find(options)
       .then(result => {
 
-        const viewPermission = ['super', 'pharmacist', '3partLeader'];
+        const viewPermission = ['super', 'pharmacist', '3partLeader', 'doctor'];
         const prescriptions = result
         options.include = [{ model: patient, required: true }]
 
