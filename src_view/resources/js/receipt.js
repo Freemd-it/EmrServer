@@ -367,7 +367,6 @@ $('input[name="pastMedication"]').on('change', () => {
 $('#sendToPart2').on('click', () => {
 
     if(!$('#patient_form').valid()){
-        console.log('here');
       return;
     }
 
