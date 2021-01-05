@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "async": "^2.4.1",
-    "axios": "^0.17.1",
+    "axios": "^0.21.1",
     "billboard.js": "^1.1.1",
     "body-parser": "~1.15.2",
     "compression": "^1.6.2",
