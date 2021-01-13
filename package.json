@@ -34,7 +34,7 @@
     "is-empty": "^1.2.0",
     "jade": "~1.11.0",
     "jquery": "^3.2.1",
-    "jquery-validation": "^1.17.0",
+    "jquery-validation": "^1.19.3",
     "jwt-simple": "^0.5.1",
     "lodash": "^4.15.0",
     "method-override": "^2.3.9",
