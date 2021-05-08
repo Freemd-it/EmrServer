@@ -36,7 +36,7 @@
     "jquery": "^3.2.1",
     "jquery-validation": "^1.17.0",
     "jwt-simple": "^0.5.1",
-    "lodash": "^4.15.0",
+    "lodash": "^4.17.21",
     "method-override": "^2.3.9",
     "moment": "^2.19.4",
     "morgan": "~1.7.0",
